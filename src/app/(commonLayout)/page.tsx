@@ -18,14 +18,15 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>AI-Powered Healthcare - Find Your Perfect Doctor</title>
+        <title>Tour Booking Platform</title>
         <meta
           name="description"
-          content="Discover top-rated doctors tailored to your needs with our AI-powered healthcare platform. Get personalized recommendations and book appointments effortlessly."
+          content="Discover and book amazing tours around Bangladesh with our easy-to-use platform."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      
       <main>
         <HeroSection />
         <div className="bg-gray-100">

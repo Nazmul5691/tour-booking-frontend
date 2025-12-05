@@ -12,7 +12,7 @@ import Image from "next/image";
 const PublicNavbar = () => {
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/tours", label: "Tours" },
+    { href: "/allTours", label: "Tours" },
     { href: "/destination", label: "Destination" },
     { href: "/about", label: "About" },
     { href: "/blog", label: "Blog" },

@@ -2,7 +2,7 @@ import DoctorProfileContent from "@/components/modules/DoctorDetails/DoctorProfi
 import DoctorReviews from "@/components/modules/DoctorDetails/DoctorReviews";
 import { getDoctorById } from "@/services/admin/doctorManagement";
 
-const DoctorDetailPage = async ({
+const TourDetailsPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -17,4 +17,4 @@ const DoctorDetailPage = async ({
   );
 };
 
-export default DoctorDetailPage;
+export default TourDetailsPage;

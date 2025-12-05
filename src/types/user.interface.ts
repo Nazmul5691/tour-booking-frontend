@@ -1,18 +1,59 @@
-import { UserRole } from "@/lib/auth-utils";
-import { IAdmin } from "./admin.interface";
-import { IDoctor } from "./doctor.interface";
-import { IPatient } from "./patient.interface";
 
-export interface UserInfo {
-    id: string;
+import { IBooking } from "./booking.interface";
+import { GUIDE_STATUS } from "./guide.interface";
+
+export enum Role {
+    SUPER_ADMIN = "SUPER_ADMIN",
+    ADMIN = "ADMIN",
+    USER = "USER",
+    GUIDE = "GUIDE"
+}
+
+// auth providers
+/***
+ * email, password
+ * google authentication
+ */
+
+export interface IAuthProvider {
+    // provider: string;       //"google", "credentials"
+    provider: "google" | "credentials";       //"google", "credentials"
+    providerId: string;
+}
+
+export enum IsActive {
+    ACTIVE = "ACTIVE",
+    INACTIVE = "INACTIVE",
+    BLOCKED = "BLOCKED"
+}
+
+
+export interface IGuideInfo {
+    bio?: string;
+    location?: string;
+    languages?: string[];
+    experienceYears?: number;
+    perTourCharge?: number;
+    availableTours?: string[];
+}
+
+
+export interface IUser {
+    _id?: string;
     name: string;
     email: string;
-    role: UserRole;
-    needPasswordChange: boolean;
-    status: "ACTIVE" | "BLOCKED" | "DELETED";
-    admin?: IAdmin;
-    patient?: IPatient;
-    doctor?: IDoctor;
-    createdAt: string;
-    updatedAt: string;
+    password?: string;
+    phone?: string;
+    picture?: string;
+    address?: string;
+    isDeleted?: string;
+    isActive?: IsActive;
+    isVerified?: boolean;
+    role: Role;
+    auths: IAuthProvider[];
+    bookings?: string[] | IBooking[];
+    // guides?: Types.ObjectId[];
+    guideInfo?: IGuideInfo;
+    guideStatus?: GUIDE_STATUS;
+    createdAt?: Date
 }
