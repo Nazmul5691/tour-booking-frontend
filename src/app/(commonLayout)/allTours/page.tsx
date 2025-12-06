@@ -52,7 +52,7 @@ const AllToursPage = async ({
         {/* Page Title Header */}
         <div className="text-center my-8">
           <h1 className="text-3xl md:text-[40px] font-bold text-white drop-shadow-lg mb-4">
-            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 bg-clip-text text-transparent">
               Our Exclusive Tours
             </span>
           </h1>

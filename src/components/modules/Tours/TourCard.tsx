@@ -115,9 +115,9 @@ export default function TourCard({ item, tourTypes }: TourCardProps) {
 
           <Button
             asChild
-            className="text-sm text-white bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 font-semibold"
+            className="text-sm text-white bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 font-semibold"
           >
-            <Link href={`/tours/${item._id}`}>View Details</Link>
+            <Link href={`/allTours/tours/${item.slug}`}>View Details</Link>
           </Button>
         </div>
 

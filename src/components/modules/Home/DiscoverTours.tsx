@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getAllTours } from "@/services/admin/tourManagement";
 import { MapPin, Calendar, Users, Clock } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function DiscoverTours() {
@@ -109,9 +110,9 @@ export default function DiscoverTours() {
                                 </div>
 
                                 <div className="flex justify-between items-center mt-4">
-                                    <Button className="bg-blue-600 hover:cursor-pointer hover:bg-blue-700 rounded-full text-white px-5 py-2 text-sm">
+                                    <Link href={`/allTours/tours/${tour.slug}`} className="bg-blue-600 hover:cursor-pointer hover:bg-blue-700 rounded-full text-white px-5 py-2 text-sm">
                                         Explore Tour
-                                    </Button>
+                                    </Link>
                                     <div className="flex items-center text-gray-400 text-xs gap-1">
                                         <Users size={14} /> Max {tour.maxGuest}
                                     </div>
