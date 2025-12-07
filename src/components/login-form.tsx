@@ -1,14 +1,16 @@
 "use client";
 import { loginUser } from "@/services/auth/loginUser";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import InputFieldError from "./shared/InputFieldError";
 import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (state && !state.success && state.message) {
@@ -29,14 +31,14 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               name="email"
               type="email"
               placeholder="m@example.com"
-              //   required
+            //   required
             />
 
             <InputFieldError field="email" state={state} />
           </Field>
 
           {/* Password */}
-          <Field>
+          {/* <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <Input
               id="password"
@@ -46,7 +48,28 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
               //   required
             />
             <InputFieldError field="password" state={state} />
+          </Field> */}
+          <Field className="relative">
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <div className="relative w-full">
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                className="absolute inset-y-0 right-2 flex items-center px-1 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            <InputFieldError field="password" state={state} />
           </Field>
+
         </div>
         <FieldGroup className="mt-4">
           <Field>

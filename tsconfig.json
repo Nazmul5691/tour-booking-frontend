@@ -37,7 +37,7 @@
     "**/*.mts",
     ".next\\dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts"
-  ],
+, "src/app/(commonLayout)/(auth)/forget-password-reset"  ],
   "exclude": [
     "node_modules"
   ]

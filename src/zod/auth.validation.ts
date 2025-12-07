@@ -42,12 +42,19 @@ export const loginValidationZodSchema = z.object({
         .email({ message: "Invalid Email address format" }),
 
     password: z
-    .string({
+        .string({
             required_error: "Password is required",
             invalid_type_error: "Password is required and must be at least 6 characters long",
         })
-        
+
 });
+
+
+
+export const forgotPasswordSchema = z.object({
+    email: z.string().email({ message: "Valid email is required" }),
+});
+
 
 export const resetPasswordSchema = z
     .object({

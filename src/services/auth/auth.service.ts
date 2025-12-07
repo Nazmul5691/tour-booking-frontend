@@ -3,7 +3,7 @@ import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/lib/auth-uti
 import { verifyAccessToken } from "@/lib/jwtHanlders";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { resetPasswordSchema } from "@/zod/auth.validation";
+import { forgotPasswordSchema, resetPasswordSchema } from "@/zod/auth.validation";
 import { parse } from "cookie";
 import jwt from "jsonwebtoken";
 import { revalidateTag } from "next/cache";
@@ -133,6 +133,147 @@ export async function resetPassword(_prevState: any, formData: FormData) {
             formData: validationPayload,
         };
     }
+}
+
+
+// export async function forgetPassword(_prevState: any, formData: FormData) {
+//     try {
+//         const email = formData.get("email") as string;
+
+//         // Validate email
+//         const validated = zodValidator({ email }, forgotPasswordSchema);
+//         if (!validated.success && validated.errors) {
+//             return {
+//                 success: false,
+//                 message: "Validation failed",
+//                 formData: { email },
+//                 errors: validated.errors,
+//             };
+//         }
+
+//         // Call backend API
+//         const res = await serverFetch.post("/auth/forgot-password", {
+//             body: JSON.stringify({ email }),
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//         });
+
+//         const result = await res.json();
+
+//         if (!result.success) {
+//             return {
+//                 success: false,
+//                 message: result.message || "Failed to send reset link",
+//                 formData: { email },
+//             };
+//         }
+
+//         return {
+//             success: true,
+//             message: result.message || "Reset link sent successfully",
+//         };
+//     } catch (error: any) {
+//         return {
+//             success: false,
+//             message:
+//                 process.env.NODE_ENV === "development"
+//                     ? error.message
+//                     : "Something went wrong",
+//             formData: { email: formData.get("email") as string },
+//         };
+//     }
+// }
+
+
+
+
+/**
+ * Forget Password server action
+ */
+export async function forgetPassword(_prevState: any, formData: FormData) {
+    try {
+        const email = (formData.get("email") as string) || "";
+
+        // Validate email
+        const validated = zodValidator({ email }, forgotPasswordSchema);
+
+        if (!validated.success && validated.errors) {
+            return {
+                success: false,
+                message: "Validation failed",
+                formData: { email },
+                errors: validated.errors,
+            };
+        }
+
+        // Call backend API
+        const res = await serverFetch.post("/auth/forgot-password", {
+            body: JSON.stringify({ email }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await res.json();
+
+        if (!result.success) {
+            return {
+                success: false,
+                message: result.message || "Failed to send reset link",
+                formData: { email },
+            };
+        }
+
+        return {
+            success: true,
+            message: result.message || "Reset link sent successfully",
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Something went wrong",
+            formData: { email: formData.get("email") as string },
+        };
+    }
+}
+
+
+
+export async function forgotPasswordReset(_prevState: any, formData: FormData) {
+    const payload = {
+        id: formData.get("id") as string,
+        token: formData.get("token") as string,
+        newPassword: formData.get("newPassword") as string,
+        confirmPassword: formData.get("confirmPassword") as string,
+    };
+
+    // Validate
+    const validated = zodValidator(
+        { newPassword: payload.newPassword, confirmPassword: payload.confirmPassword },
+        resetPasswordSchema
+    );
+
+    if (!validated.success && validated.errors) {
+        return {
+            success: false,
+            message: "Validation failed",
+            formData: payload,
+            errors: validated.errors,
+        };
+    }
+
+    // Call backend
+    const res = await serverFetch.post("/auth/forgot-password-reset", {
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/json" },
+    });
+
+    const result = await res.json();
+    return result;
 }
 
 

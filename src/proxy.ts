@@ -1,10 +1,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from './lib/auth-utils';
+import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute } from './lib/auth-utils';
 // import { getUserInfo } from './services/auth/getUserInfo';
 import { deleteCookie, getCookie } from './services/auth/tokenHandlers';
 import { getNewAccessToken } from './services/auth/auth.service';
+import { Role } from './types/user.interface';
 
 
 
@@ -33,7 +34,7 @@ export async function proxy(request: NextRequest) {
 
     const accessToken = await getCookie("accessToken") || null;
 
-    let userRole: UserRole | null = null;
+    let userRole: Role | null = null;
     if (accessToken) {
         const verifiedToken: JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET as string);
 
@@ -55,7 +56,7 @@ export async function proxy(request: NextRequest) {
 
     // Rule 1 : User is logged in and trying to access auth route. Redirect to default dashboard
     if (accessToken && isAuth) {
-        return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url))
+        return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url))
     }
 
 
@@ -98,7 +99,7 @@ export async function proxy(request: NextRequest) {
     // Rule 5 : User is trying to access role based protected route
     if (routerOwner === "ADMIN" || routerOwner === "DOCTOR" || routerOwner === "USER") {
         if (userRole !== routerOwner) {
-            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url))
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url))
         }
     }
 
