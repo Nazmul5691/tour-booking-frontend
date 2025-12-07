@@ -2,6 +2,7 @@ import { IDivision } from "./division.interface";
 import { IGuide } from "./guide.interface";
 
 export interface ITourType {
+    _id: string;
     name: string;
 }
 

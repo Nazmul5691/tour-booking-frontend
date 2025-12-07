@@ -159,23 +159,23 @@ export const adminNavItems: NavSection[] = [
         ],
     },
     {
-        title: "Hospital Management",
+        title: "Tour Management",
         items: [
             {
-                title: "Appointments",
-                href: "/admin/dashboard/appointments-management",
+                title: "Tour",
+                href: "/admin/dashboard/tour-management",
                 icon: "Calendar", // ✅ String
                 roles: ["ADMIN"],
             },
             {
-                title: "Schedules",
-                href: "/admin/dashboard/schedules-management",
+                title: "Divisions",
+                href: "/admin/dashboard/divisions-management",
                 icon: "Clock", // ✅ String
                 roles: ["ADMIN"],
             },
             {
-                title: "Specialities",
-                href: "/admin/dashboard/specialities-management",
+                title: "Tour Types",
+                href: "/admin/dashboard/tourTypes-management",
                 icon: "Hospital", // ✅ String
                 roles: ["ADMIN"],
             },

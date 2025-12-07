@@ -1,7 +1,7 @@
 
 import ForgotPasswordResetForm from "@/components/forgotPasswordResetForm";
 
-const ResetPasswordReset = async ({
+const ForgotPasswordReset = async ({
   searchParams,
 }: {
   searchParams?: Promise<{ redirect?: string }>;
@@ -14,7 +14,7 @@ const ResetPasswordReset = async ({
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Reset Your Password</h1>
           <p className="text-muted-foreground">
-            Enter your new password below to reset your account passwordssss
+            Enter your new password below to reset your account password
           </p>
         </div>
         {/* <ForgotPasswordResetForm redirect={redirect} /> */}
@@ -24,4 +24,4 @@ const ResetPasswordReset = async ({
   );
 };
 
-export default ResetPasswordReset;
+export default ForgotPasswordReset;

@@ -33,7 +33,7 @@ const ForgotPasswordResetForm = ({ redirect }: { redirect?: string }) => {
         <form action={formAction}>
             <input type="hidden" name="id" value={id || ""} />
             <input type="hidden" name="token" value={token || ""} />
-            {/* {redirect && <Input type="hidden" name="redirect" value={redirect} />} */}
+            {redirect && <Input type="hidden" name="redirect" value={redirect} />}
             <FieldGroup>
                 <div className="grid grid-cols-1 gap-4">
                     {/* New Password */}

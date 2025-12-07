@@ -1,6 +1,6 @@
-import AdminsFilter from "@/components/modules/Admin/AdminsManagement.tsx/AdminsFilter";
-import AdminsManagementHeader from "@/components/modules/Admin/AdminsManagement.tsx/AdminsManagementHeader";
-import AdminsTable from "@/components/modules/Admin/AdminsManagement.tsx/AdminsTable";
+import AdminsFilter from "@/components/modules/Admin/AdminsManagement/AdminsFilter";
+import AdminsManagementHeader from "@/components/modules/Admin/AdminsManagement/AdminsManagementHeader";
+import AdminsTable from "@/components/modules/Admin/AdminsManagement/AdminsTable";
 import TablePagination from "@/components/shared/TablePagination";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
