@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
+import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/lib/auth-utils";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
 import { loginValidationZodSchema } from "@/zod/auth.validation";
@@ -9,6 +10,7 @@ import { parse } from "cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { setCookie } from "./tokenHandlers";
+import { Role } from "@/types/user.interface";
 
 
 
@@ -85,7 +87,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         }
 
-        const userRole: UserRole = verifiedToken.role;
+        const userRole: Role = verifiedToken.role;
 
         if (!result.success) {
             throw new Error(result.message || "Login failed");
@@ -126,3 +128,13 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
         return { success: false, message: `${process.env.NODE_ENV === 'development' ? error.message : "Login Failed. You might have entered incorrect email or password."}` };
     }
 }
+
+
+
+
+
+
+
+
+
+

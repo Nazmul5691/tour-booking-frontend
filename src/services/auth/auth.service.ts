@@ -1,5 +1,5 @@
 "use server";
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
+import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/lib/auth-utils";
 import { verifyAccessToken } from "@/lib/jwtHanlders";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
@@ -10,6 +10,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
 import { deleteCookie, getCookie, setCookie } from "./tokenHandlers";
+import { Role } from "@/types/user.interface";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function updateMyProfile(formData: FormData) {
@@ -84,13 +85,13 @@ export async function resetPassword(_prevState: any, formData: FormData) {
 
         const verifiedToken = jwt.verify(accessToken as string, process.env.JWT_SECRET!) as jwt.JwtPayload;
 
-        const userRole: UserRole = verifiedToken.role;
+        const userRole: Role = verifiedToken.role;
 
         const user = await getUserInfo();
         // API Call
         const response = await serverFetch.post("/auth/reset-password", {
             body: JSON.stringify({
-                id: user?.id,
+                id: user?._id,
                 password: validationPayload.newPassword,
             }),
             headers: {
@@ -133,6 +134,7 @@ export async function resetPassword(_prevState: any, formData: FormData) {
         };
     }
 }
+
 
 export async function getNewAccessToken() {
     try {

@@ -6,7 +6,8 @@ import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-// import LogoutButton from "./LogoutButton";
+import LogoutButton from "./LogoutButton";
+import { getCookie } from "@/services/auth/tokenHandlers";
 
 // const PublicNavbar = async () => {
 const PublicNavbar = () => {
@@ -23,6 +24,7 @@ const PublicNavbar = () => {
 
 
   const [scrolled, setScrolled] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -35,6 +37,17 @@ const PublicNavbar = () => {
     ? "bg-black/80 backdrop-blur-md shadow-md"
     : "bg-gradient-to-b from-black/60 to-transparent backdrop-blur-sm";
 
+
+  useEffect(() => {
+    // Define an async function inside useEffect
+    const fetchToken = async () => {
+      // ✅ Await is now safe inside this function
+      const token = await getCookie("accessToken");
+      setAccessToken(token);
+    };
+
+    fetchToken();
+  }, []); // Run only once on mount
   // const accessToken = await getCookie("accessToken");
 
   return (
@@ -42,12 +55,12 @@ const PublicNavbar = () => {
       <div className="container mx-auto px-4 flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-              src="/images/dream-tour.png"
-              alt="Dream Tour Logo"
-              className="h-10 w-auto"
-              height={10}
-              width={100}
-            />
+            src="/images/dream-tour.png"
+            alt="Dream Tour Logo"
+            className="h-10 w-auto"
+            height={10}
+            width={100}
+          />
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
@@ -63,14 +76,14 @@ const PublicNavbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-2">
-          {/* {accessToken ? (
+          {accessToken ? (
             <LogoutButton />
           ) : (
             <Link href="/login">
               <Button>Login</Button>
             </Link>
-          )} */}
-          <Button> login</Button>
+          )}
+          {/* <Button> login</Button> */}
         </div>
 
         {/* Mobile Menu */}

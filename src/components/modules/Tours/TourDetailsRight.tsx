@@ -44,7 +44,7 @@ export default function TourDetailsRight({ tour }: TourDetailsRightProps) {
 
             {/* Book Now Button */}
             <Button className="w-full bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 font-semibold">
-                <Link href={`/booking/${tour._id}`}>Book Now</Link>
+                <Link href={`/bookTour/${tour.slug}`}>Book Now</Link>
             </Button>
         </div>
     );

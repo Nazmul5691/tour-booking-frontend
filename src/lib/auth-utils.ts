@@ -1,6 +1,9 @@
-export type UserRole = "ADMIN" | "DOCTOR" | "PATIENT";
+
 
 // exact : ["/my-profile", "settings"]
+
+import { Role } from "@/types/user.interface";
+
 //   patterns: [/^\/dashboard/, /^\/patient/], // Routes starting with /dashboard/* /patient/*
 export type RouteConfig = {
     exact: string[],
@@ -25,6 +28,14 @@ export const adminProtectedRoutes: RouteConfig = {
 }
 
 export const patientProtectedRoutes: RouteConfig = {
+    patterns: [
+        /^\/dashboard/,
+    ],  // Routes starting with /dashboard/*
+    exact: [], // "/dashboard"
+}
+
+
+export const userProtectedRoutes: RouteConfig = {
     patterns: [/^\/dashboard/], // Routes starting with /dashboard/*
     exact: [], // "/dashboard"
 }
@@ -41,15 +52,15 @@ export const isRouteMatches = (pathname: string, routes: RouteConfig): boolean =
     // if pathname === /dashboard/my-appointments => matches /^\/dashboard/ => true
 }
 
-export const getRouteOwner = (pathname: string): "ADMIN" | "DOCTOR" | "PATIENT" | "COMMON" | null => {
+export const getRouteOwner = (pathname: string): "ADMIN" | "DOCTOR" | "USER" | "COMMON" | null => {
     if (isRouteMatches(pathname, adminProtectedRoutes)) {
         return "ADMIN";
     }
     if (isRouteMatches(pathname, doctorProtectedRoutes)) {
         return "DOCTOR";
     }
-    if (isRouteMatches(pathname, patientProtectedRoutes)) {
-        return "PATIENT";
+    if (isRouteMatches(pathname, userProtectedRoutes)) {
+        return "USER";
     }
     if (isRouteMatches(pathname, commonProtectedRoutes)) {
         return "COMMON";
@@ -57,20 +68,23 @@ export const getRouteOwner = (pathname: string): "ADMIN" | "DOCTOR" | "PATIENT" 
     return null;
 }
 
-export const getDefaultDashboardRoute = (role: UserRole): string => {
+export const getDefaultDashboardRoute = (role: Role): string => {
     if (role === "ADMIN") {
         return "/admin/dashboard";
     }
-    if (role === "DOCTOR") {
-        return "/doctor/dashboard";
+    // if (role === "DOCTOR") {
+    //     return "/doctor/dashboard";
+    // }
+    if (role === "GUIDE") {
+        return "/guide/dashboard";
     }
-    if (role === "PATIENT") {
+    if (role === "USER") {
         return "/dashboard";
     }
     return "/";
 }
 
-export const isValidRedirectForRole = (redirectPath: string, role: UserRole): boolean => {
+export const isValidRedirectForRole = (redirectPath: string, role: Role): boolean => {
     const routeOwner = getRouteOwner(redirectPath);
 
     if (routeOwner === null || routeOwner === "COMMON") {

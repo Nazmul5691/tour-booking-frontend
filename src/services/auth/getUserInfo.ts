@@ -1,54 +1,116 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use server"
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+// "use server"
+
+// import { serverFetch } from "@/lib/server-fetch";
+// import { IUser } from "@/types/user.interface";
+// import jwt, { JwtPayload } from "jsonwebtoken";
+// import { getCookie } from "./tokenHandlers";
+
+// export const getUserInfo = async (): Promise<IUser | any> => {
+//     let userInfo: IUser | any;
+//     try {
+
+//         const response = await serverFetch.get("/auth/me", {
+//             cache: "force-cache",
+//             next: { tags: ["user-info"] }
+//         })
+
+//         const result = await response.json();
+
+//         if (result.success) {
+//             const accessToken = await getCookie("accessToken");
+
+//             if (!accessToken) {
+//                 throw new Error("No access token found");
+//             }
+
+//             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as JwtPayload;
+
+//             userInfo = {
+//                 name: verifiedToken.name || "Unknown User",
+//                 email: verifiedToken.email,
+//                 role: verifiedToken.role,
+//             }
+//         }
+
+//         userInfo = {
+//             name: result.data.admin?.name || result.data.doctor?.name || result.data.user?.name || result.data.name || "Unknown User",
+//             ...result.data
+//         };
+
+
+
+//         return userInfo;
+//     } catch (error: any) {
+//         console.log(error);
+//         return {
+//             id: "",
+//             name: "Unknown User",
+//             email: "",
+//             role: "PATIENT",
+//         };
+//     }
+
+// }
+
+
+
+
+"use server";
 
 import { serverFetch } from "@/lib/server-fetch";
-import { UserInfo } from "@/types/user.interface";
+import { IUser } from "@/types/user.interface";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { getCookie } from "./tokenHandlers";
 
-export const getUserInfo = async (): Promise<UserInfo | any> => {
-    let userInfo: UserInfo | any;
+export const getUserInfo = async (): Promise<IUser> => {
     try {
-
         const response = await serverFetch.get("/auth/me", {
             cache: "force-cache",
-            next: { tags: ["user-info"] }
-        })
+            next: { tags: ["user-info"] },
+        });
 
         const result = await response.json();
 
-        if (result.success) {
-            const accessToken = await getCookie("accessToken");
-
-            if (!accessToken) {
-                throw new Error("No access token found");
-            }
-
-            const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as JwtPayload;
-
-            userInfo = {
-                name: verifiedToken.name || "Unknown User",
-                email: verifiedToken.email,
-                role: verifiedToken.role,
-            }
+        // ✅ Case 1: API returned user data properly
+        if (result?.success && result?.data) {
+            return {
+                name:
+                    result.data?.admin?.name ??
+                    result.data?.doctor?.name ??
+                    result.data?.user?.name ??
+                    result.data?.name ??
+                    "Unknown User",
+                email: result.data?.email ?? "",
+                role: result.data?.role,
+                ...result.data,
+            };
         }
 
-        userInfo = {
-            name: result.data.admin?.name || result.data.doctor?.name || result.data.patient?.name || result.data.name || "Unknown User",
-            ...result.data
-        };
+        // ✅ Case 2: API failed → fallback to JWT
+        const accessToken = await getCookie("accessToken");
+        if (!accessToken) throw new Error("No access token");
 
+        const verifiedToken = jwt.verify(
+            accessToken,
+            process.env.JWT_SECRET as string
+        ) as JwtPayload;
 
-
-        return userInfo;
-    } catch (error: any) {
-        console.log(error);
         return {
-            id: "",
+            name: verifiedToken.name || "Unknown User",
+            email: verifiedToken.email,
+            role: verifiedToken.role,
+            auths: [],
+        };
+    } catch (error) {
+        console.error("getUserInfo error:", error);
+
+        // ✅ Final fallback (never breaks UI)
+        return {
             name: "Unknown User",
             email: "",
-            role: "PATIENT",
+            role: "USER" as IUser["role"],
+            auths: [],
         };
     }
-
-}
+};
