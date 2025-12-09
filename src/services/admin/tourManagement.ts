@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 
 
@@ -470,72 +471,7 @@ export async function getTourBySlug(slug: string): Promise<any> {
   }
 }
 
-// ---------------- UPDATE TOUR ----------------
-// export async function updateTour(
-//   id: string, _prevState: any, formData: FormData
-// ): Promise<any> {
-//   const validationPayload = {
-//     title: formData.get("title") as string | undefined,
-//     description: formData.get("description") as string | undefined,
-//     location: formData.get("location") as string | undefined,
-//     costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
-//     startDate: formData.get("startDate") as string | undefined,
-//     endDate: formData.get("endDate") as string | undefined,
-//     tourType: formData.get("tourType") as string | undefined,
-//     included: formData.getAll("included") as string[],
-//     excluded: formData.getAll("excluded") as string[],
-//     amenities: formData.getAll("amenities") as string[],
-//     tourPlan: formData.getAll("tourPlan") as string[],
-//     maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
-//     minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
-//     division: formData.get("division") as string | undefined,
-//     departureLocation: formData.get("departureLocation") as string | undefined,
-//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
-//     guides: formData.getAll("guides") as string[],
-//     discountDate: formData.get("discountDate") as string | undefined,
-//     discountPercentage: formData.get("discountPercentage") ? Number(formData.get("discountPercentage")) : undefined,
-//     deleteImages: formData.getAll("deleteImages") as string[],
-//   };
 
-//   // Validate using Zod
-//   const validatedPayload = zodValidator(validationPayload, updateTourZodSchema);
-//   if (!validatedPayload.success) {
-//     return {
-//       success: false,
-//       message: "Validation failed",
-//       formData: validationPayload,
-//       errors: validatedPayload.errors,
-//     };
-//   }
-
-//   const backendFormData = new FormData();
-//   for (const key in validatedPayload.data) {
-//     const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
-//     if (Array.isArray(value)) {
-//       value.forEach((item) => backendFormData.append(key, item));
-//     } else if (value !== undefined) {
-//       backendFormData.append(key, String(value));
-//     }
-//   }
-
-//   const files = formData.getAll("files");
-//   files.forEach((file) => {
-//     if (file instanceof File) backendFormData.append("files", file);
-//   });
-
-//   try {
-//     const response = await serverFetch.patch(`/tour/${id}`, { body: backendFormData });
-//     const result = await response.json();
-//     return result;
-//   } catch (error: any) {
-//     console.error("Update tour error:", error);
-//     return {
-//       success: false,
-//       message: process.env.NODE_ENV === "development" ? error.message : "Failed to update tour",
-//       formData: validationPayload,
-//     };
-//   }
-// }
 export async function updateTour(
   id: string,
   _prevState: any,
@@ -549,7 +485,7 @@ export async function updateTour(
   };
 
   // ----------------------------------------
-  // 1️⃣ Build validation payload
+  // 1️⃣ Build validation payload & Collect all array fields
   // ----------------------------------------
   const validationPayload = {
     title: formData.get("title") as string | undefined,
@@ -584,11 +520,13 @@ export async function updateTour(
       .getAll("tourPlan")
       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
 
-    
+    deleteImages: formData
+      .getAll("deleteImages")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
   };
 
   // ----------------------------------------
-  // 2️⃣ Zod validation
+  // 2️⃣ Zod validation (if successful, proceed)
   // ----------------------------------------
   const validated = zodValidator(validationPayload, updateTourZodSchema);
 
@@ -601,27 +539,26 @@ export async function updateTour(
   }
 
   const data = validated.data;
+
+  // ✅ FIX: Conditional check for 'data'
   if (!data) {
-    return { success: false, message: "Unexpected validation error" };
+    return { success: false, message: "Unexpected validation error: Data is missing." };
   }
 
   // ----------------------------------------
-  // 3️⃣ Normalize payload (PREVENT SERVER CRASH)
+  // 3️⃣ Normalize payload & Convert to FormData for server
   // ----------------------------------------
+  const backendFormData = new FormData();
+
   const normalizedPayload = {
     ...data,
     included: data.included ?? [],
     excluded: data.excluded ?? [],
     amenities: data.amenities ?? [],
     tourPlan: data.tourPlan ?? [],
-    guides: data.guides ?? [],
     deleteImages: data.deleteImages ?? [],
   };
 
-  // ----------------------------------------
-  // 4️⃣ Convert to FormData
-  // ----------------------------------------
-  const backendFormData = new FormData();
 
   Object.entries(normalizedPayload).forEach(([key, value]) => {
     if (Array.isArray(value)) {
@@ -632,34 +569,38 @@ export async function updateTour(
   });
 
   // ----------------------------------------
-  // 5️⃣ Append files
+  // 4️⃣ Append file objects
   // ----------------------------------------
   formData.getAll("files").forEach((file) => {
     if (file instanceof File) backendFormData.append("files", file);
   });
 
   // ----------------------------------------
-  // 6️⃣ Send to backend
+  // 5️⃣ Send to backend
   // ----------------------------------------
   try {
     const response = await serverFetch.patch(`/tour/${id}`, {
-      body: backendFormData, // ✅ DO NOT SET Content-Type
+      body: backendFormData,
     });
+
+    if (!response.ok) {
+      let errorData = { message: `HTTP Error ${response.status}` };
+      try {
+        errorData = await response.json();
+      } catch (e) { } // Silent catch for JSON parsing failure
+      throw new Error(errorData.message);
+    }
 
     return await response.json();
   } catch (error: any) {
-    console.error("❌ Update tour error:", error);
+    console.error("❌ Update tour error:", error.message);
 
     return {
       success: false,
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Failed to update tour",
+      message: error.message
     };
   }
 }
-
 
 // ---------------- DELETE TOUR ----------------
 export async function deleteTour(id: string): Promise<any> {

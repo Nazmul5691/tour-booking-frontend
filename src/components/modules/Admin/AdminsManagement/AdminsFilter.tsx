@@ -19,7 +19,7 @@ const AdminsFilter = () => {
         <SearchFilter paramName="email" placeholder="Email" />
 
         {/* Contact Number Filter */}
-        <SearchFilter paramName="contactNumber" placeholder="Contact" />
+        <SearchFilter paramName="phone" placeholder="Contact" />
 
         <ClearFiltersButton />
       </div>

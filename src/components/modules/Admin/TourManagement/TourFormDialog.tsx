@@ -1,12 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/set-state-in-effect */
+// /* eslint-disable react-hooks/set-state-in-effect */
+// /* eslint-disable @typescript-eslint/no-unused-vars */
 
 
-
+// /* eslint-disable @typescript-eslint/no-explicit-any */
 // "use client";
 
-// import { useFormState, useFormStatus } from "react-dom";
-// import { useEffect, useState } from "react";
+// import { useFormStatus } from "react-dom";
+// import { useActionState, useEffect, useState } from "react";
 // import {
 //   Dialog,
 //   DialogContent,
@@ -26,23 +28,17 @@
 //   SelectValue,
 // } from "@/components/ui/select";
 // import { Badge } from "@/components/ui/badge";
-// import { X, Plus, Edit } from "lucide-react";
+// import { X, Plus } from "lucide-react";
 // import { toast } from "sonner";
 
-// // Import your interfaces (ITour, ITourType)
 // import { ITour, ITourType } from "@/types/tour.interface";
 // import { IDivision } from "@/types/division.interface";
-// import { createTour, getAllTourTypes, updateTour } from "@/services/admin/tourManagement";
+// import { createTour, updateTour } from "@/services/admin/tourManagement";
 
-// // --- Local Helper Types ---
-// type TourType = ITourType;
-// type Division = IDivision;
-
-// interface ITourWithImages extends Omit<ITour, 'images'> {
+// interface ITourWithImages extends Omit<ITour, "images"> {
 //   images?: string[];
 // }
 
-// // --- Component for the Form Submission Button ---
 // const SubmitButton = ({ isUpdate }: { isUpdate: boolean }) => {
 //   const { pending } = useFormStatus();
 //   return (
@@ -52,22 +48,10 @@
 //   );
 // };
 
-// // --- Multi-Input Component ---
-// interface MultiInputProps {
-//   label: string;
-//   name: string;
-//   initialValues: (string | { _id: string, [key: string]: any })[] | undefined; 
-//   errors: string[] | undefined;
-// }
-
-// const MultiInput = ({ label, name, initialValues = [], errors }: MultiInputProps) => {
-//   const initialStringValues = initialValues.map(item => {
-//     if (typeof item === 'object' && item !== null && '_id' in item) {
-//       return item._id; 
-//     }
-//     return String(item);
-//   });
-
+// const MultiInput = ({ label, name, initialValues = [], errors }: any) => {
+//   const initialStringValues = initialValues
+//     .map((item: any) => (typeof item === "object" && item?._id ? item._id : String(item)))
+//     .filter((v: string) => v.trim() !== "");
 //   const [items, setItems] = useState<string[]>(initialStringValues);
 //   const [inputValue, setInputValue] = useState("");
 
@@ -111,15 +95,12 @@
 //   );
 // };
 
-// // --- Tour Form Dialog Props (UPDATED) ---
 // interface TourFormDialogProps {
-//   initialTourData?: ITourWithImages; 
-//   allDivisions: Division[]; 
+//   initialTourData?: ITourWithImages;
+//   allDivisions: IDivision[];
 //   onSuccess: () => void;
-//   // 🚀 NEW: Props for external control
 //   open: boolean;
 //   onClose: () => void;
-//   // 🚀 NEW: tourTypes added to props
 //   tourTypes: { _id: string; name: string }[];
 // }
 
@@ -129,48 +110,59 @@
 //   errors: null,
 // };
 
-// // --- Main Tour Form Dialog Component (UPDATED) ---
 // export const TourFormDialog = ({
 //   initialTourData,
 //   allDivisions,
 //   onSuccess,
-//   // Use props for external control
 //   open,
 //   onClose,
-//   tourTypes, // Use prop for tour types
+//   tourTypes,
 // }: TourFormDialogProps) => {
 //   const isUpdate = !!initialTourData;
 
 //   const getInitialId = (field: string | { _id: string } | undefined): string | undefined => {
 //     if (!field) return undefined;
-//     return typeof field === 'object' ? field._id : field;
+//     return typeof field === "object" ? field._id : field;
 //   };
 
-//   // 🚀 CORRECTED ACTION: Pass all three arguments (id, _prevState, formData) 
-//   // to match the server action definition.
-//   const action = isUpdate 
-//     ? (_prevState: any, formData: FormData) => updateTour(initialTourData._id as string, _prevState, formData) 
+//   const action = isUpdate
+//     ? (prevState: any, formData: FormData) => updateTour(initialTourData._id as string, prevState, formData)
 //     : createTour;
 
-//   const [state, formAction] = useFormState(action, initialState);
-//   const [imagesToDelete, setImagesToDelete] = useState<string[]>(initialTourData?.images || []);
-//   const [existingImages, setExistingImages] = useState<string[]>(initialTourData?.images || []);
+//   const [state, formAction] = useActionState(action, initialState);
 
-//   // Removed internal fetching of tour types since it is passed via props
+//   const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
+//   // 🚀 FIX 2: Get existing images directly from the prop (or initial data), no need for useState
+//   const existingImages: string[] = initialTourData?.images || [];
 
-//   // Effect to handle success/failure and close the dialog
+//   const [divisionValue, setDivisionValue] = useState<string | undefined>(
+//     getInitialId(initialTourData?.division)
+//   );
+
+//   // 🚀 FIX 1 & 2: Use useEffect to reset internal state when the dialog is opened 
+//   // for a *different* tour (i.e., when initialTourData changes).
+//   useEffect(() => {
+//     // Reset division value
+//     setDivisionValue(getInitialId(initialTourData?.division));
+//     // Clear images marked for deletion when opening a new tour for edit
+//     setImagesToDelete([]);
+//   }, [initialTourData]); // Depend on initialTourData
+
+
 //   useEffect(() => {
 //     if (state && state.message) {
 //       if (state.success) {
 //         toast.success(state.message || (isUpdate ? "Tour updated successfully!" : "Tour created successfully!"));
-//         onClose(); // Use the onClose prop to close the dialog
+//         onClose();
 //         onSuccess();
 //       } else {
-//         console.error("Form submission errors:", state.errors);
+//         if (process.env.NODE_ENV === "development") {
+//           console.error("Form submission errors:", state.errors);
+//         }
 //         toast.error(state.message || (isUpdate ? "Failed to update tour." : "Failed to create tour."));
 //       }
 //     }
-//   }, [state, isUpdate, onSuccess, onClose]); 
+//   }, [state, isUpdate, onSuccess, onClose]);
 
 //   const handleImageDeleteToggle = (url: string) => {
 //     if (imagesToDelete.includes(url)) {
@@ -180,28 +172,21 @@
 //     }
 //   };
 
-//   // 🚀 Dialog now uses the external `open` and `onClose` props
 //   return (
 //     <Dialog open={open} onOpenChange={onClose}>
-//       <DialogTrigger asChild>
-//         {/* Only show the trigger button if it's NOT an update operation (where the trigger comes from the table row) */}
-//         {!isUpdate && (
-//              <Button variant="default">
-//                 <Plus className="mr-2 h-4 w-4" /> Create Tour
-//              </Button>
-//         )}
-//       </DialogTrigger>
+//       <DialogTrigger asChild></DialogTrigger>
 //       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
 //         <DialogHeader>
 //           <DialogTitle>{isUpdate ? "Update Tour" : "Create New Tour"}</DialogTitle>
 //         </DialogHeader>
+
 //         <form action={formAction} className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
 
 //           {isUpdate && imagesToDelete.map((url, index) => (
 //             <input key={index} type="hidden" name="deleteImages" value={url} />
 //           ))}
 
-//           {/* ... (rest of the form fields remain the same) ... */}
+//           {/* --- Title --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="title">Title <span className="text-red-500">*</span></Label>
 //             <Input
@@ -213,26 +198,24 @@
 //             {state?.errors?.title && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.title[0]}</p>}
 //           </div>
 
+//           {/* --- Division (Fix 1 applied here via value={divisionValue}) --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="division">Division <span className="text-red-500">*</span></Label>
-//             <Select
-//               name="division"
-//               defaultValue={getInitialId(initialTourData?.division)}
-//             >
+//             {/* The value={divisionValue} is correctly controlled by state, which is now updated in useEffect */}
+//             <Select name="division" value={divisionValue} onValueChange={setDivisionValue}>
 //               <SelectTrigger>
 //                 <SelectValue placeholder="Select Division" />
 //               </SelectTrigger>
 //               <SelectContent>
 //                 {allDivisions.map((div) => (
-//                   <SelectItem key={div._id} value={div._id}>
-//                     {div.name}
-//                   </SelectItem>
+//                   <SelectItem key={div._id} value={div._id}>{div.name}</SelectItem>
 //                 ))}
 //               </SelectContent>
 //             </Select>
 //             {state?.errors?.division && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.division[0]}</p>}
 //           </div>
 
+//           {/* --- Tour Type --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="tourType">Tour Type <span className="text-red-500">*</span></Label>
 //             <Select
@@ -244,15 +227,14 @@
 //               </SelectTrigger>
 //               <SelectContent>
 //                 {tourTypes.map((type) => (
-//                   <SelectItem key={type._id} value={type._id}>
-//                     {type.name}
-//                   </SelectItem>
+//                   <SelectItem key={type._id} value={type._id}>{type.name}</SelectItem>
 //                 ))}
 //               </SelectContent>
 //             </Select>
 //             {state?.errors?.tourType && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.tourType[0]}</p>}
 //           </div>
 
+//           {/* --- Location --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="location">Location</Label>
 //             <Input
@@ -264,6 +246,7 @@
 //             {state?.errors?.location && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.location[0]}</p>}
 //           </div>
 
+//           {/* --- Cost From --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="costFrom">Cost From</Label>
 //             <Input
@@ -272,32 +255,35 @@
 //               type="number"
 //               defaultValue={initialTourData?.costFrom || ""}
 //               placeholder="e.g., 13500"
-//               step="any"
 //             />
 //             {state?.errors?.costFrom && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.costFrom[0]}</p>}
 //           </div>
 
+//           {/* --- Start Date --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="startDate">Start Date</Label>
 //             <Input
 //               id="startDate"
 //               name="startDate"
 //               type="date"
-//               defaultValue={initialTourData?.startDate ? new Date(initialTourData.startDate).toISOString().split('T')[0] : ""}
+//               defaultValue={initialTourData?.startDate ? new Date(initialTourData.startDate).toISOString().split("T")[0] : ""}
 //             />
 //             {state?.errors?.startDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.startDate[0]}</p>}
 //           </div>
+
+//           {/* --- End Date --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="endDate">End Date</Label>
 //             <Input
 //               id="endDate"
 //               name="endDate"
 //               type="date"
-//               defaultValue={initialTourData?.endDate ? new Date(initialTourData.endDate).toISOString().split('T')[0] : ""}
+//               defaultValue={initialTourData?.endDate ? new Date(initialTourData.endDate).toISOString().split("T")[0] : ""}
 //             />
 //             {state?.errors?.endDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.endDate[0]}</p>}
 //           </div>
 
+//           {/* --- Departure Location --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="departureLocation">Departure Location</Label>
 //             <Input
@@ -308,6 +294,8 @@
 //             />
 //             {state?.errors?.departureLocation && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.departureLocation[0]}</p>}
 //           </div>
+
+//           {/* --- Arrival Location --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="arrivalLocation">Arrival Location</Label>
 //             <Input
@@ -319,6 +307,7 @@
 //             {state?.errors?.arrivalLocation && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.arrivalLocation[0]}</p>}
 //           </div>
 
+//           {/* --- Max Guest --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="maxGuest">Maximum Guest</Label>
 //             <Input
@@ -330,6 +319,8 @@
 //             />
 //             {state?.errors?.maxGuest && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.maxGuest[0]}</p>}
 //           </div>
+
+//           {/* --- Min Age --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="minAge">Minimum Age</Label>
 //             <Input
@@ -342,16 +333,19 @@
 //             {state?.errors?.minAge && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.minAge[0]}</p>}
 //           </div>
 
+//           {/* --- Discount Date --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="discountDate">Discount Date</Label>
 //             <Input
 //               id="discountDate"
 //               name="discountDate"
 //               type="date"
-//               defaultValue={initialTourData?.discountDate ? new Date(initialTourData.discountDate).toISOString().split('T')[0] : ""}
+//               defaultValue={initialTourData?.discountDate ? new Date(initialTourData.discountDate).toISOString().split("T")[0] : ""}
 //             />
 //             {state?.errors?.discountDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.discountDate[0]}</p>}
 //           </div>
+
+//           {/* --- Discount Percentage --- */}
 //           <div className="space-y-2">
 //             <Label htmlFor="discountPercentage">Discount Percentage</Label>
 //             <Input
@@ -360,58 +354,34 @@
 //               type="number"
 //               defaultValue={initialTourData?.discountPercentage || ""}
 //               placeholder="e.g., 20"
-//               step="any"
 //             />
 //             {state?.errors?.discountPercentage && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.discountPercentage[0]}</p>}
 //           </div>
 
+//           {/* --- Description --- */}
 //           <div className="col-span-1 md:col-span-2 space-y-2">
 //             <Label htmlFor="description">Description</Label>
 //             <Textarea
 //               id="description"
 //               name="description"
 //               defaultValue={initialTourData?.description || ""}
-//               placeholder="Enter a detailed description of the tour."
 //               rows={4}
+//               placeholder="Enter a detailed description of the tour."
 //             />
 //             {state?.errors?.description && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.description[0]}</p>}
 //           </div>
 
-//           <MultiInput
-//             label="Included Items"
-//             name="included"
-//             initialValues={initialTourData?.included}
-//             errors={state?.errors?.included}
-//           />
-//           <MultiInput
-//             label="Excluded Items"
-//             name="excluded"
-//             initialValues={initialTourData?.excluded}
-//             errors={state?.errors?.excluded}
-//           />
-//           <MultiInput
-//             label="Amenities"
-//             name="amenities"
-//             initialValues={initialTourData?.amenities}
-//             errors={state?.errors?.amenities}
-//           />
-//           <MultiInput
-//             label="Tour Plan Steps"
-//             name="tourPlan"
-//             initialValues={initialTourData?.tourPlan}
-//             errors={state?.errors?.tourPlan}
-//           />
+//           {/* --- MultiInput fields --- */}
+//           <MultiInput label="Included Items" name="included" initialValues={initialTourData?.included} errors={state?.errors?.included} />
+//           <MultiInput label="Excluded Items" name="excluded" initialValues={initialTourData?.excluded} errors={state?.errors?.excluded} />
+//           <MultiInput label="Amenities" name="amenities" initialValues={initialTourData?.amenities} errors={state?.errors?.amenities} />
+//           <MultiInput label="Tour Plan Steps" name="tourPlan" initialValues={initialTourData?.tourPlan} errors={state?.errors?.tourPlan} />
 
-
+//           {/* --- Image Upload --- */}
 //           <div className="col-span-1 md:col-span-2 space-y-2">
 //             <Label htmlFor="files">Images {isUpdate ? "(Select new images to upload)" : "(Select images)"}</Label>
-//             <Input
-//               id="files"
-//               name="files"
-//               type="file"
-//               multiple
-//               accept="image/*"
-//             />
+//             <Input id="files" name="files" type="file" multiple accept="image/*" />
+
 //             {isUpdate && existingImages.length > 0 && (
 //               <div className="pt-2">
 //                 <p className="text-sm font-medium mb-2">Existing Images:</p>
@@ -445,9 +415,11 @@
 //             )}
 //           </div>
 
+//           {/* --- Submit Button --- */}
 //           <div className="col-span-1 md:col-span-2 flex justify-end pt-4">
 //             <SubmitButton isUpdate={isUpdate} />
 //           </div>
+
 //         </form>
 //       </DialogContent>
 //     </Dialog>
@@ -458,6 +430,11 @@
 
 
 
+
+
+
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useFormStatus } from "react-dom";
@@ -484,21 +461,15 @@ import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
 import { toast } from "sonner";
 
-// Import your interfaces and service functions
+// Assuming these types/interfaces are correctly defined elsewhere
 import { ITour, ITourType } from "@/types/tour.interface";
 import { IDivision } from "@/types/division.interface";
-// Assuming these are defined in your services/admin/tourManagement file
-import { createTour, updateTour } from "@/services/admin/tourManagement";
+import { createTour, updateTour } from "@/services/admin/tourManagement"; // Import server actions
 
-// --- Local Helper Types ---
-type TourType = ITourType;
-type Division = IDivision;
-
-interface ITourWithImages extends Omit<ITour, 'images'> {
+interface ITourWithImages extends Omit<ITour, "images"> {
   images?: string[];
 }
 
-// --- Component for the Form Submission Button ---
 const SubmitButton = ({ isUpdate }: { isUpdate: boolean }) => {
   const { pending } = useFormStatus();
   return (
@@ -508,24 +479,10 @@ const SubmitButton = ({ isUpdate }: { isUpdate: boolean }) => {
   );
 };
 
-// --- Multi-Input Component for Array Fields ---
-interface MultiInputProps {
-  label: string;
-  name: string;
-  initialValues: (string | { _id: string, [key: string]: any })[] | undefined;
-  errors: string[] | undefined;
-}
-
-const MultiInput = ({ label, name, initialValues = [], errors }: MultiInputProps) => {
-  const initialStringValues = initialValues.map(item => {
-    // If the item is an object (e.g., from initial load), use its ID or string representation
-    if (typeof item === 'object' && item !== null && '_id' in item) {
-      // Assuming array fields store IDs or strings, we prioritize the string
-      return String(item._id || item);
-    }
-    return String(item);
-  }).filter(v => v.trim() !== ''); // Filter out any empty strings from initial data
-
+const MultiInput = ({ label, name, initialValues = [], errors }: any) => {
+  const initialStringValues = initialValues
+    .map((item: any) => (typeof item === "object" && item?._id ? item._id : String(item)))
+    .filter((v: string) => v.trim() !== "");
   const [items, setItems] = useState<string[]>(initialStringValues);
   const [inputValue, setInputValue] = useState("");
 
@@ -560,7 +517,7 @@ const MultiInput = ({ label, name, initialValues = [], errors }: MultiInputProps
           <Badge key={index} variant="secondary" className="cursor-pointer">
             {item}
             <X className="ml-1 h-3 w-3" onClick={() => handleRemoveItem(item)} />
-            {/* 🚀 CRITICAL: This hidden input sends the data to the FormData object */}
+            {/* Hidden input for server action to collect all values */}
             <input type="hidden" name={name} value={item} />
           </Badge>
         ))}
@@ -570,10 +527,9 @@ const MultiInput = ({ label, name, initialValues = [], errors }: MultiInputProps
   );
 };
 
-// --- Tour Form Dialog Props ---
 interface TourFormDialogProps {
   initialTourData?: ITourWithImages;
-  allDivisions: Division[];
+  allDivisions: IDivision[];
   onSuccess: () => void;
   open: boolean;
   onClose: () => void;
@@ -586,8 +542,6 @@ const initialState = {
   errors: null,
 };
 
-
-// --- Main Tour Form Dialog Component ---
 export const TourFormDialog = ({
   initialTourData,
   allDivisions,
@@ -598,24 +552,31 @@ export const TourFormDialog = ({
 }: TourFormDialogProps) => {
   const isUpdate = !!initialTourData;
 
-  // Helper to get ID from object (for initial select values)
   const getInitialId = (field: string | { _id: string } | undefined): string | undefined => {
     if (!field) return undefined;
-    return typeof field === 'object' ? field._id : field;
+    return typeof field === "object" ? field._id : field;
   };
 
-  // Define the server action based on whether we are creating or updating
   const action = isUpdate
     ? (prevState: any, formData: FormData) => updateTour(initialTourData._id as string, prevState, formData)
     : createTour;
 
-  // 🚀 FIX: Use useActionState instead of useFormState
   const [state, formAction] = useActionState(action, initialState);
 
-  const [imagesToDelete, setImagesToDelete] = useState<string[]>(initialTourData?.images || []);
-  const [existingImages] = useState<string[]>(initialTourData?.images || []);
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
+  const existingImages: string[] = initialTourData?.images || [];
 
-  // Effect to handle success/failure and close the dialog
+  const [divisionValue, setDivisionValue] = useState<string | undefined>(
+    getInitialId(initialTourData?.division)
+  );
+
+  // Reset state on initialTourData change (dialog open/new tour)
+  useEffect(() => {
+    setDivisionValue(getInitialId(initialTourData?.division));
+    setImagesToDelete([]);
+  }, [initialTourData]);
+
+
   useEffect(() => {
     if (state && state.message) {
       if (state.success) {
@@ -623,8 +584,7 @@ export const TourFormDialog = ({
         onClose();
         onSuccess();
       } else {
-        // Only log errors in development environment
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === "development") {
           console.error("Form submission errors:", state.errors);
         }
         toast.error(state.message || (isUpdate ? "Failed to update tour." : "Failed to create tour."));
@@ -642,25 +602,20 @@ export const TourFormDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogTrigger asChild>
-        {/* The trigger button is only shown if it's the Create flow */}
-        {/* {!isUpdate && (
-          <Button variant="default">
-            <Plus className="mr-2 h-4 w-4" /> Create Tourrr
-          </Button>
-        )} */}
-      </DialogTrigger>
+      <DialogTrigger asChild></DialogTrigger>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isUpdate ? "Update Tour" : "Create New Tour"}</DialogTitle>
         </DialogHeader>
+
         <form action={formAction} className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
 
+          {/* --- Hidden inputs for images to delete --- */}
           {isUpdate && imagesToDelete.map((url, index) => (
             <input key={index} type="hidden" name="deleteImages" value={url} />
           ))}
 
-          {/* --- Row 1: Title & Division --- */}
+          {/* --- Title --- */}
           <div className="space-y-2">
             <Label htmlFor="title">Title <span className="text-red-500">*</span></Label>
             <Input
@@ -672,27 +627,23 @@ export const TourFormDialog = ({
             {state?.errors?.title && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.title[0]}</p>}
           </div>
 
+          {/* --- Division --- */}
           <div className="space-y-2">
             <Label htmlFor="division">Division <span className="text-red-500">*</span></Label>
-            <Select
-              name="division"
-              defaultValue={getInitialId(initialTourData?.division)}
-            >
+            <Select name="division" value={divisionValue} onValueChange={setDivisionValue}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Division" />
               </SelectTrigger>
               <SelectContent>
                 {allDivisions.map((div) => (
-                  <SelectItem key={div._id} value={div._id}>
-                    {div.name}
-                  </SelectItem>
+                  <SelectItem key={div._id} value={div._id}>{div.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {state?.errors?.division && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.division[0]}</p>}
           </div>
 
-          {/* --- Row 2: Tour Type & Location --- */}
+          {/* --- Tour Type --- */}
           <div className="space-y-2">
             <Label htmlFor="tourType">Tour Type <span className="text-red-500">*</span></Label>
             <Select
@@ -704,15 +655,14 @@ export const TourFormDialog = ({
               </SelectTrigger>
               <SelectContent>
                 {tourTypes.map((type) => (
-                  <SelectItem key={type._id} value={type._id}>
-                    {type.name}
-                  </SelectItem>
+                  <SelectItem key={type._id} value={type._id}>{type.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {state?.errors?.tourType && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.tourType[0]}</p>}
           </div>
 
+          {/* --- Location --- */}
           <div className="space-y-2">
             <Label htmlFor="location">Location</Label>
             <Input
@@ -724,7 +674,7 @@ export const TourFormDialog = ({
             {state?.errors?.location && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.location[0]}</p>}
           </div>
 
-          {/* --- Row 3: Cost From & Start Date --- */}
+          {/* --- Cost From --- */}
           <div className="space-y-2">
             <Label htmlFor="costFrom">Cost From</Label>
             <Input
@@ -733,34 +683,35 @@ export const TourFormDialog = ({
               type="number"
               defaultValue={initialTourData?.costFrom || ""}
               placeholder="e.g., 13500"
-              step="any"
             />
             {state?.errors?.costFrom && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.costFrom[0]}</p>}
           </div>
 
+          {/* --- Start Date --- */}
           <div className="space-y-2">
             <Label htmlFor="startDate">Start Date</Label>
             <Input
               id="startDate"
               name="startDate"
               type="date"
-              defaultValue={initialTourData?.startDate ? new Date(initialTourData.startDate).toISOString().split('T')[0] : ""}
+              defaultValue={initialTourData?.startDate ? new Date(initialTourData.startDate).toISOString().split("T")[0] : ""}
             />
             {state?.errors?.startDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.startDate[0]}</p>}
           </div>
 
-          {/* --- Row 4: End Date & Departure Location --- */}
+          {/* --- End Date --- */}
           <div className="space-y-2">
             <Label htmlFor="endDate">End Date</Label>
             <Input
               id="endDate"
               name="endDate"
               type="date"
-              defaultValue={initialTourData?.endDate ? new Date(initialTourData.endDate).toISOString().split('T')[0] : ""}
+              defaultValue={initialTourData?.endDate ? new Date(initialTourData.endDate).toISOString().split("T")[0] : ""}
             />
             {state?.errors?.endDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.endDate[0]}</p>}
           </div>
 
+          {/* --- Departure Location --- */}
           <div className="space-y-2">
             <Label htmlFor="departureLocation">Departure Location</Label>
             <Input
@@ -772,7 +723,7 @@ export const TourFormDialog = ({
             {state?.errors?.departureLocation && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.departureLocation[0]}</p>}
           </div>
 
-          {/* --- Row 5: Arrival Location & Max Guest --- */}
+          {/* --- Arrival Location --- */}
           <div className="space-y-2">
             <Label htmlFor="arrivalLocation">Arrival Location</Label>
             <Input
@@ -784,6 +735,7 @@ export const TourFormDialog = ({
             {state?.errors?.arrivalLocation && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.arrivalLocation[0]}</p>}
           </div>
 
+          {/* --- Max Guest --- */}
           <div className="space-y-2">
             <Label htmlFor="maxGuest">Maximum Guest</Label>
             <Input
@@ -796,7 +748,7 @@ export const TourFormDialog = ({
             {state?.errors?.maxGuest && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.maxGuest[0]}</p>}
           </div>
 
-          {/* --- Row 6: Min Age & Discount Date --- */}
+          {/* --- Min Age --- */}
           <div className="space-y-2">
             <Label htmlFor="minAge">Minimum Age</Label>
             <Input
@@ -809,18 +761,19 @@ export const TourFormDialog = ({
             {state?.errors?.minAge && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.minAge[0]}</p>}
           </div>
 
+          {/* --- Discount Date --- */}
           <div className="space-y-2">
             <Label htmlFor="discountDate">Discount Date</Label>
             <Input
               id="discountDate"
               name="discountDate"
               type="date"
-              defaultValue={initialTourData?.discountDate ? new Date(initialTourData.discountDate).toISOString().split('T')[0] : ""}
+              defaultValue={initialTourData?.discountDate ? new Date(initialTourData.discountDate).toISOString().split("T")[0] : ""}
             />
             {state?.errors?.discountDate && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.discountDate[0]}</p>}
           </div>
 
-          {/* --- Row 7: Discount Percentage --- */}
+          {/* --- Discount Percentage --- */}
           <div className="space-y-2">
             <Label htmlFor="discountPercentage">Discount Percentage</Label>
             <Input
@@ -829,67 +782,34 @@ export const TourFormDialog = ({
               type="number"
               defaultValue={initialTourData?.discountPercentage || ""}
               placeholder="e.g., 20"
-              step="any"
             />
             {state?.errors?.discountPercentage && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.discountPercentage[0]}</p>}
           </div>
-          {/* Empty spacer for alignment */}
-          <div className="space-y-2"></div>
 
-
-          {/* --- Description (Full Width) --- */}
+          {/* --- Description --- */}
           <div className="col-span-1 md:col-span-2 space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               name="description"
               defaultValue={initialTourData?.description || ""}
-              placeholder="Enter a detailed description of the tour."
               rows={4}
+              placeholder="Enter a detailed description of the tour."
             />
             {state?.errors?.description && <p className="text-sm font-medium text-red-500 mt-1">{state.errors.description[0]}</p>}
           </div>
 
-          {/* --- Multi-Inputs (Array Fields) --- */}
-          <MultiInput
-            label="Included Items"
-            name="included"
-            initialValues={initialTourData?.included}
-            errors={state?.errors?.included}
-          />
-          <MultiInput
-            label="Excluded Items"
-            name="excluded"
-            initialValues={initialTourData?.excluded}
-            errors={state?.errors?.excluded}
-          />
-          <MultiInput
-            label="Amenities"
-            name="amenities"
-            initialValues={initialTourData?.amenities}
-            errors={state?.errors?.amenities}
-          />
-          <MultiInput
-            label="Tour Plan Steps"
-            name="tourPlan"
-            initialValues={initialTourData?.tourPlan}
-            errors={state?.errors?.tourPlan}
-          />
-        
-          {/* Empty spacer for MultiInput alignment */}
-          <div></div>
+          {/* --- MultiInput fields --- */}
+          <MultiInput label="Included Items" name="included" initialValues={initialTourData?.included} errors={state?.errors?.included} />
+          <MultiInput label="Excluded Items" name="excluded" initialValues={initialTourData?.excluded} errors={state?.errors?.excluded} />
+          <MultiInput label="Amenities" name="amenities" initialValues={initialTourData?.amenities} errors={state?.errors?.amenities} />
+          <MultiInput label="Tour Plan Steps" name="tourPlan" initialValues={initialTourData?.tourPlan} errors={state?.errors?.tourPlan} />
 
-
-          {/* --- Image Upload (Full Width) --- */}
+          {/* --- Image Upload & Display --- */}
           <div className="col-span-1 md:col-span-2 space-y-2">
             <Label htmlFor="files">Images {isUpdate ? "(Select new images to upload)" : "(Select images)"}</Label>
-            <Input
-              id="files"
-              name="files"
-              type="file"
-              multiple
-              accept="image/*"
-            />
+            <Input id="files" name="files" type="file" multiple accept="image/*" />
+
             {isUpdate && existingImages.length > 0 && (
               <div className="pt-2">
                 <p className="text-sm font-medium mb-2">Existing Images:</p>
@@ -901,7 +821,6 @@ export const TourFormDialog = ({
                         key={index}
                         className={`relative group w-20 h-20 rounded-md overflow-hidden border-2 transition-all ${isMarkedForDeletion ? "border-red-500 opacity-50" : "border-gray-200"}`}
                       >
-                        {/* Placeholder/Display for image - replace with actual Image component if available */}
                         <div className="w-full h-full bg-gray-100 flex items-center justify-center text-xs text-center p-1">
                           Image {index + 1}
                         </div>
@@ -924,10 +843,11 @@ export const TourFormDialog = ({
             )}
           </div>
 
-          {/* --- Submit Button (Full Width) --- */}
+          {/* --- Submit Button --- */}
           <div className="col-span-1 md:col-span-2 flex justify-end pt-4">
             <SubmitButton isUpdate={isUpdate} />
           </div>
+
         </form>
       </DialogContent>
     </Dialog>

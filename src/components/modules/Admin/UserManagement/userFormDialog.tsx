@@ -1,3 +1,4 @@
+"use client";
 import InputFieldError from "@/components/shared/InputFieldError";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,28 +9,28 @@ import {
 } from "@/components/ui/dialog";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { updatePatient } from "@/services/admin/patientsManagement";
-import { IPatient } from "@/types/patient.interface";
+import { updateUser } from "@/services/admin/userManagement";
+import { IUser } from "@/types/user.interface";
 import { useActionState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
-interface IPatientFormDialogProps {
+interface IUserFormDialogProps {
   open: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  patient?: IPatient;
+  user?: IUser;
 }
 
-const PatientFormDialog = ({
+const UserFormDialog = ({
   open,
   onClose,
   onSuccess,
-  patient,
-}: IPatientFormDialogProps) => {
+  user,
+}: IUserFormDialogProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const [state, formAction, isPending] = useActionState(
-    updatePatient.bind(null, patient?.id as string),
+    updateUser.bind(null, user?._id as string),
     null
   );
 
@@ -56,7 +57,7 @@ const PatientFormDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] flex flex-col p-0">
         <DialogHeader className="px-6 pt-6 pb-4">
-          <DialogTitle>Edit Patient</DialogTitle>
+          <DialogTitle>Edit User</DialogTitle>
         </DialogHeader>
 
         <form
@@ -72,7 +73,7 @@ const PatientFormDialog = ({
                 id="name"
                 name="name"
                 placeholder="John Doe"
-                defaultValue={state?.formData?.name || patient?.name || ""}
+                defaultValue={state?.formData?.name || user?.name || ""}
               />
               <InputFieldError field="name" state={state} />
             </Field>
@@ -83,8 +84,8 @@ const PatientFormDialog = ({
                 id="email"
                 name="email"
                 type="email"
-                placeholder="patient@example.com"
-                defaultValue={state?.formData?.email || patient?.email || ""}
+                placeholder="user@example.com"
+                defaultValue={state?.formData?.email || user?.email || ""}
                 disabled={isPending}
               />
               <InputFieldError field="email" state={state} />
@@ -95,9 +96,9 @@ const PatientFormDialog = ({
               <Input
                 id="contactNumber"
                 name="contactNumber"
-                placeholder="+1234567890"
+                placeholder="01234567890"
                 defaultValue={
-                  state?.formData?.contactNumber || patient?.contactNumber || ""
+                  state?.formData?.contactNumber || user?.phone || ""
                 }
               />
               <InputFieldError field="contactNumber" state={state} />
@@ -110,7 +111,7 @@ const PatientFormDialog = ({
                 name="address"
                 placeholder="123 Main St, City, Country"
                 defaultValue={
-                  state?.formData?.address || patient?.address || ""
+                  state?.formData?.address || user?.address || ""
                 }
               />
               <InputFieldError field="address" state={state} />
@@ -137,4 +138,4 @@ const PatientFormDialog = ({
   );
 };
 
-export default PatientFormDialog;
+export default UserFormDialog;

@@ -3,15 +3,20 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { updatePatientZodSchema } from "@/zod/patient.validation";
+import { IsActive } from "@/types/user.interface";
+import { updateUserZodSchema } from "@/zod/user.validation";
 
-/**
- * GET ALL PATIENTS
- * API: GET /patient?queryParams
- */
-export async function getPatients(queryString?: string) {
+
+export async function getAllUsers(queryString?: string) {
     try {
-        const response = await serverFetch.get(`/patient${queryString ? `?${queryString}` : ""}`);
+        const response = await serverFetch.get(`/user/all-users${queryString ? `?${queryString}` : ""}`,
+            {
+                // cache: "force-cache",
+                cache: "no-cache",
+                // next: { tags: ["tours-list"] },
+            }
+
+        );
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -23,13 +28,10 @@ export async function getPatients(queryString?: string) {
     }
 }
 
-/**
- * GET PATIENT BY ID
- * API: GET /patient/:id
- */
-export async function getPatientById(id: string) {
+
+export async function getSingleUserById(id: string) {
     try {
-        const response = await serverFetch.get(`/patient/${id}`)
+        const response = await serverFetch.get(`user/${id}`)
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -41,18 +43,15 @@ export async function getPatientById(id: string) {
     }
 }
 
-/**
- * UPDATE PATIENT
- * API: PATCH /patient/:id
- */
-export async function updatePatient(id: string, _prevState: any, formData: FormData) {
+
+export async function updateUser(id: string, _prevState: any, formData: FormData) {
     const validationPayload: any = {
         name: formData.get("name") as string,
         contactNumber: formData.get("contactNumber") as string,
         address: formData.get("address") as string,
     };
 
-    const validation = zodValidator(validationPayload, updatePatientZodSchema);
+    const validation = zodValidator(validationPayload, updateUserZodSchema);
     if (!validation.success && validation.errors) {
         return {
             success: false,
@@ -72,7 +71,7 @@ export async function updatePatient(id: string, _prevState: any, formData: FormD
     }
     try {
 
-        const response = await serverFetch.patch(`/patient/${id}`, {
+        const response = await serverFetch.patch(`/user/${id}`, {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(validation.data),
         });
@@ -89,13 +88,30 @@ export async function updatePatient(id: string, _prevState: any, formData: FormD
     }
 }
 
+
+export async function updateUserStatus(
+    userId: string,
+    isActive: IsActive
+) {
+    try {
+        const response = await serverFetch.patch(`/user/${userId}/status`, {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isActive }),
+        });
+        return await response.json();
+    } catch (error: any) {
+        console.error(error);
+        return { success: false, message: error.message || "Something went wrong" };
+    }
+}
+
 /**
  * SOFT DELETE PATIENT
  * API: DELETE /patient/soft/:id
  */
-export async function softDeletePatient(id: string) {
+export async function deleteUser(id: string) {
     try {
-        const response = await serverFetch.delete(`/patient/soft/${id}`)
+        const response = await serverFetch.delete(`/user/${id}`)
         const result = await response.json();
         return result;
     } catch (error: any) {
@@ -107,20 +123,4 @@ export async function softDeletePatient(id: string) {
     }
 }
 
-/**
- * HARD DELETE PATIENT
- * API: DELETE /patient/:id
- */
-export async function deletePatient(id: string) {
-    try {
-        const response = await serverFetch.delete(`/patient/${id}`)
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.log(error);
-        return {
-            success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-        };
-    }
-}
+

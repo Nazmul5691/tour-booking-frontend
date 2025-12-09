@@ -114,23 +114,6 @@ export const userNavItems: NavSection[] = [
             },
         ],
     },
-    {
-        title: "Medical Records",
-        items: [
-            {
-                title: "My Prescriptions",
-                href: "/dashboard/my-prescriptions",
-                icon: "FileText", // ✅ String
-                roles: ["USER"],
-            },
-            {
-                title: "Health Records",
-                href: "/dashboard/health-records",
-                icon: "Activity", // ✅ String
-                roles: ["USER"],
-            },
-        ],
-    },
 
 ]
 

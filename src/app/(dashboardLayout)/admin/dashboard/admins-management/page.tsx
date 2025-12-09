@@ -28,7 +28,7 @@ const AdminAdminsManagementPage = async ({
       <AdminsFilter />
 
       <Suspense fallback={<TableSkeleton columns={8} rows={10} />}>
-        <AdminsTable admins={adminsResult?.data || []} />
+        <AdminsTable admins={adminsResult?.data || []} loggedInUserRole={""} />
         <TablePagination
           currentPage={adminsResult?.meta?.page || 1}
           totalPages={totalPages || 1}

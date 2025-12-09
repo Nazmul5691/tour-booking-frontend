@@ -55,5 +55,6 @@ export interface IUser {
     // guides?: Types.ObjectId[];
     guideInfo?: IGuideInfo;
     guideStatus?: GUIDE_STATUS;
-    createdAt?: Date
+    createdAt?: Date,
+    updatedAt? : Date
 }
