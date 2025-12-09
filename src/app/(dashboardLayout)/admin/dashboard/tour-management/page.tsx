@@ -1,26 +1,39 @@
-
-
+// app/admin/dashboard/tour-management/page.tsx
 import TourFilters from "@/components/modules/Admin/TourManagement/TourFilters";
-import ToursTable from "@/components/modules/Admin/TourManagement/tourTable";
-import RefreshButton from "@/components/shared/RefreshButton";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
-import { getAllTours } from "@/services/admin/tourManagement";
 import { Suspense } from "react";
+import { getAllTours, getAllTourTypes } from "@/services/admin/tourManagement";
+import ToursTable from "@/components/modules/Admin/TourManagement/tourTable";
+import { getAllDivisions } from "@/services/admin/divisionsManagement";
+import { queryStringFormatter } from "@/lib/formatters";
+import TourManagementHeader from "@/components/modules/Admin/TourManagement/toursManagementHeader";
 
-const AdminTourManagementPage = async () => {
-  const result = await getAllTours();
-  const tours = result.data || [];
+const AdminTourManagementPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const searchParamsObj = await searchParams;
+  const queryString = queryStringFormatter(searchParamsObj);
 
-  // fetch divisions & tourTypes as well
-  const divisions = result.divisions || [];
-  const tourTypes = result.tourTypes || [];
+  const toursRes = await getAllTours(queryString);
+  const divisionsRes = await getAllDivisions();
+  const tourTypesRes = await getAllTourTypes();
+
+  const tours = toursRes?.data ?? [];
+  const divisions = divisionsRes?.data ?? [];
+  const tourTypes = tourTypesRes?.data ?? [];
+
+
 
   return (
     <div className="space-y-6">
+      <TourManagementHeader
+        divisions={divisions}
+        tourTypes={tourTypes}
+      />
       <TourFilters divisions={divisions} tourTypes={tourTypes} />
-      <div className="flex">
-        <RefreshButton />
-      </div>
+      
       <Suspense fallback={<TableSkeleton columns={5} rows={10} />}>
         <ToursTable tours={tours} divisions={divisions} tourTypes={tourTypes} />
       </Suspense>

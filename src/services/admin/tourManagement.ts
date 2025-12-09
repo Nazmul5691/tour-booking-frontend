@@ -1,5 +1,5 @@
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 "use server";
 
@@ -9,50 +9,390 @@ import { createTourTypeZodSchema, createTourZodSchema, updateTourZodSchema } fro
 
 
 
+
 // tours
-// ---------------- CREATE TOUR ----------------
-export async function createTour(_prevState: any, formData: FormData) {
-  // Build validation payload (excluding files)
-  const validationPayload = {
-    title: formData.get("title") as string,
-    description: formData.get("description") as string | undefined,
-    location: formData.get("location") as string | undefined,
-    costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
-    startDate: formData.get("startDate") as string | undefined,
-    endDate: formData.get("endDate") as string | undefined,
-    tourType: formData.get("tourType") as string,
-    included: formData.getAll("included") as string[],
-    excluded: formData.getAll("excluded") as string[],
-    amenities: formData.getAll("amenities") as string[],
-    tourPlan: formData.getAll("tourPlan") as string[],
-    maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
-    minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
-    division: formData.get("division") as string,
-    departureLocation: formData.get("departureLocation") as string | undefined,
-    arrivalLocation: formData.get("arrivalLocation") as string | undefined,
-    guides: formData.getAll("guides") as string[],
-    discountDate: formData.get("discountDate") as string | undefined,
-    discountPercentage: formData.get("discountPercentage")
-      ? Number(formData.get("discountPercentage"))
-      : undefined,
+// // ---------------- CREATE TOUR ----------------
+// export async function createTour(_prevState: any, formData: FormData) {
+//   // Build validation payload (excluding files)
+//   const validationPayload = {
+//     title: formData.get("title") as string,
+//     description: formData.get("description") as string | undefined,
+//     location: formData.get("location") as string | undefined,
+//     costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
+//     startDate: formData.get("startDate") as string | undefined,
+//     endDate: formData.get("endDate") as string | undefined,
+//     tourType: formData.get("tourType") as string,
+//     included: formData.getAll("included") as string[],
+//     excluded: formData.getAll("excluded") as string[],
+//     amenities: formData.getAll("amenities") as string[],
+//     tourPlan: formData.getAll("tourPlan") as string[],
+//     maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
+//     minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
+//     division: formData.get("division") as string,
+//     departureLocation: formData.get("departureLocation") as string | undefined,
+//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+//     guides: formData.getAll("guides") as string[],
+//     discountDate: formData.get("discountDate") as string | undefined,
+//     discountPercentage: formData.get("discountPercentage")
+//       ? Number(formData.get("discountPercentage"))
+//       : undefined,
+//   };
+
+//   // Validate using Zod
+//   const validatedPayload = zodValidator(validationPayload, createTourZodSchema);
+
+//   if (!validatedPayload.success) {
+//     return {
+//       success: false,
+//       message: "Validation failed",
+//       formData: validationPayload,
+//       errors: validatedPayload.errors,
+//     };
+//   }
+
+//   // Build FormData for backend (files included)
+//   const backendFormData = new FormData();
+//   for (const key in validatedPayload.data) {
+//     const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+//     if (Array.isArray(value)) {
+//       value.forEach((item) => backendFormData.append(key, item));
+//     } else if (value !== undefined) {
+//       backendFormData.append(key, String(value));
+//     }
+//   }
+
+//   const files = formData.getAll("files");
+//   files.forEach((file) => {
+//     if (file instanceof File) {
+//       backendFormData.append("files", file);
+//     }
+//   });
+
+//   try {
+//     const response = await serverFetch.post("/tour/create", { body: backendFormData });
+//     const result = await response.json();
+//     return result;
+//   } catch (error: any) {
+//     console.error("Create tour error:", error);
+//     return {
+//       success: false,
+//       message: process.env.NODE_ENV === "development" ? error.message : "Failed to create tour",
+//       formData: validationPayload,
+//     };
+//   }
+// }
+
+
+
+
+// export async function getAllTours(queryString?: string) {
+//     try {
+//         const response = await serverFetch.get(`/tour${queryString ? `?${queryString}` : ""}`, {
+//             cache: "force-cache",
+//             next: { tags: ["tours-list"] }
+//         })
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.log(error);
+//         return {
+//             success: false,
+//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+//         };
+//     }
+// }
+
+
+
+// export async function getTourBySlug(slug: string) {
+//     try {
+//         const response = await serverFetch.get(`/tour/${slug}`)
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.log(error);
+//         return {
+//             success: false,
+//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+//         };
+//     }
+// }
+
+
+
+// // ---------------- UPDATE TOUR ----------------
+// export async function updateTour(_prevState: any, formData: FormData, id: string) {
+//   // Build validation payload (excluding files)
+//   const validationPayload = {
+//     title: formData.get("title") as string | undefined,
+//     description: formData.get("description") as string | undefined,
+//     location: formData.get("location") as string | undefined,
+//     costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
+//     startDate: formData.get("startDate") as string | undefined,
+//     endDate: formData.get("endDate") as string | undefined,
+//     tourType: formData.get("tourType") as string | undefined,
+//     included: formData.getAll("included") as string[],
+//     excluded: formData.getAll("excluded") as string[],
+//     amenities: formData.getAll("amenities") as string[],
+//     tourPlan: formData.getAll("tourPlan") as string[],
+//     maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
+//     minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
+//     division: formData.get("division") as string | undefined,
+//     departureLocation: formData.get("departureLocation") as string | undefined,
+//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+//     guides: formData.getAll("guides") as string[],
+//     discountDate: formData.get("discountDate") as string | undefined,
+//     discountPercentage: formData.get("discountPercentage")
+//       ? Number(formData.get("discountPercentage"))
+//       : undefined,
+//     deleteImages: formData.getAll("deleteImages") as string[],
+//   };
+
+//   // Validate using Zod
+//   const validatedPayload = zodValidator(validationPayload, updateTourZodSchema);
+
+//   if (!validatedPayload.success) {
+//     return {
+//       success: false,
+//       message: "Validation failed",
+//       formData: validationPayload,
+//       errors: validatedPayload.errors,
+//     };
+//   }
+
+//   // Build FormData for backend (files included)
+//   const backendFormData = new FormData();
+//   for (const key in validatedPayload.data) {
+//     const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+//     if (Array.isArray(value)) {
+//       value.forEach((item) => backendFormData.append(key, item));
+//     } else if (value !== undefined) {
+//       backendFormData.append(key, String(value));
+//     }
+//   }
+
+//   const files = formData.getAll("files");
+//   files.forEach((file) => {
+//     if (file instanceof File) {
+//       backendFormData.append("files", file);
+//     }
+//   });
+
+//   try {
+//     const response = await serverFetch.patch(`/tour/${id}`, { body: backendFormData });
+//     const result = await response.json();
+//     return result;
+//   } catch (error: any) {
+//     console.error("Update tour error:", error);
+//     return {
+//       success: false,
+//       message: process.env.NODE_ENV === "development" ? error.message : "Failed to update tour",
+//       formData: validationPayload,
+//     };
+//   }
+// }
+
+// // ---------------- DELETE TOUR ----------------
+// export async function deleteTour(id: string) {
+//     try {
+//         const response = await serverFetch.delete(`/tour/${id}`);
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.error("Delete tour error:", error);
+//         return { success: false, message: process.env.NODE_ENV === "development" ? error.message : "Failed to delete tour" };
+//     }
+// }
+
+
+
+
+// export async function createTour(
+//   _prevState: any,
+//   formData: FormData
+// ): Promise<any> {
+//   // Build validation payload (excluding files)
+//   const validationPayload = {
+//     // String Fields (OK)
+//     title: formData.get("title") as string | undefined,
+//     description: formData.get("description") as string | undefined,
+//     location: formData.get("location") as string | undefined,
+//     startDate: formData.get("startDate") as string | undefined,
+//     endDate: formData.get("endDate") as string | undefined,
+//     tourType: formData.get("tourType") as string | undefined,
+//     division: formData.get("division") as string | undefined,
+//     departureLocation: formData.get("departureLocation") as string | undefined,
+//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+//     discountDate: formData.get("discountDate") as string | undefined,
+
+//     // 🚀 Numerical Fields: Use parseNumber
+//     costFrom: parseNumber(formData.get("costFrom")),
+//     maxGuest: parseNumber(formData.get("maxGuest")),
+//     minAge: parseNumber(formData.get("minAge")),
+//     discountPercentage: parseNumber(formData.get("discountPercentage")),
+
+//     // 🚀 Array Fields: Use formData.getAll() and ensure the array is either empty or contains non-empty strings
+//     included: formData.getAll("included").filter((item): item is string => typeof item === 'string' && item.trim() !== ''),
+//     excluded: formData.getAll("excluded").filter((item): item is string => typeof item === 'string' && item.trim() !== ''),
+//     amenities: formData.getAll("amenities").filter((item): item is string => typeof item === 'string' && item.trim() !== ''),
+//     tourPlan: formData.getAll("tourPlan").filter((item): item is string => typeof item === 'string' && item.trim() !== ''),
+//     guides: formData.getAll("guides").filter((item): item is string => typeof item === 'string' && item.trim() !== ''),
+//     // files are not included in the Zod schema, which is correct
+//   };
+
+//   // Validate using Zod
+//   const validatedPayload = zodValidator(validationPayload, createTourZodSchema);
+
+//   if (!validatedPayload.success) {
+//     return {
+//       success: false,
+//       message: "Validation failed",
+//       formData: validationPayload,
+//       errors: validatedPayload.errors,
+//     };
+//   }
+
+//   // Build FormData for backend (files included)
+//   const backendFormData = new FormData();
+//   for (const key in validatedPayload.data) {
+//     const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+//     if (Array.isArray(value)) {
+//       value.forEach((item) => backendFormData.append(key, item));
+//     } else if (value !== undefined) {
+//       backendFormData.append(key, String(value));
+//     }
+//   }
+
+//   const files = formData.getAll("files");
+//   files.forEach((file) => {
+//     if (file instanceof File) backendFormData.append("files", file);
+//   });
+
+//   try {
+//     const response = await serverFetch.post("/tour/create", { body: backendFormData });
+//     const result = await response.json();
+//     return result;
+//   } catch (error: any) {
+//     console.error("Create tour error:", error);
+//     return {
+//       success: false,
+//       message: process.env.NODE_ENV === "development" ? error.message : "Failed to create tour",
+//       formData: validationPayload,
+//     };
+//   }
+// }
+
+
+// --- Helper Function: Define this at the top of your tourManagement.ts ---
+
+
+// --- CORRECTED createTour function ---
+
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export async function createTour(
+  _prevState: any,
+  formData: FormData
+): Promise<any> {
+
+  // -----------------------------
+  // Helper: safely parse numbers
+  // -----------------------------
+  const parseNumber = (value: FormDataEntryValue | null) => {
+    if (value === null || value === "") return undefined;
+
+    const num = Number(value);
+    return isNaN(num) ? undefined : num;
   };
 
-  // Validate using Zod
-  const validatedPayload = zodValidator(validationPayload, createTourZodSchema);
+  // ----------------------------------------
+  // 1️⃣ Build payload for ZOD validation
+  // ----------------------------------------
+  const validationPayload = {
+    // ✅ Required fields
+    title: (formData.get("title") || "") as string,
+    tourType: (formData.get("tourType") || "") as string,
+    division: (formData.get("division") || "") as string,
 
-  if (!validatedPayload.success) {
+    // ✅ Optional strings
+    description: formData.get("description") as string | undefined,
+    location: formData.get("location") as string | undefined,
+    startDate: formData.get("startDate") as string | undefined,
+    endDate: formData.get("endDate") as string | undefined,
+    departureLocation: formData.get("departureLocation") as string | undefined,
+    arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+    discountDate: formData.get("discountDate") as string | undefined,
+
+    // ✅ Numbers
+    costFrom: parseNumber(formData.get("costFrom")),
+    maxGuest: parseNumber(formData.get("maxGuest")),
+    minAge: parseNumber(formData.get("minAge")),
+    discountPercentage: parseNumber(formData.get("discountPercentage")),
+
+    // ✅ Arrays
+    included: formData
+      .getAll("included")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    excluded: formData
+      .getAll("excluded")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    amenities: formData
+      .getAll("amenities")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    tourPlan: formData
+      .getAll("tourPlan")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+  };
+
+  console.log("✅ Submitted Data (Zod Input):", validationPayload);
+
+  // ----------------------------------------
+  // 2️⃣ ZOD validation
+  // ----------------------------------------
+  const validated = zodValidator(validationPayload, createTourZodSchema);
+
+  if (!validated.success) {
     return {
       success: false,
-      message: "Validation failed",
-      formData: validationPayload,
-      errors: validatedPayload.errors,
+      message: "Validation failed. Please check the form.",
+      errors: validated.errors,
     };
   }
 
-  // Build FormData for backend (files included)
+  // ✅ ✅ CRITICAL FIX: TypeScript-safe narrowing
+  const data = validated.data;
+  if (!data) {
+    return {
+      success: false,
+      message: "Unexpected validation error",
+    };
+  }
+
+  // ----------------------------------------
+  // 3️⃣ Normalize payload
+  // ----------------------------------------
+  const normalizedPayload = {
+    ...data,
+
+    included: data.included ?? [],
+    excluded: data.excluded ?? [],
+    amenities: data.amenities ?? [],
+    tourPlan: data.tourPlan ?? [],
+    guides: [],
+  };
+
+  // ----------------------------------------
+  // 4️⃣ Convert to FormData
+  // ----------------------------------------
   const backendFormData = new FormData();
-  for (const key in validatedPayload.data) {
-    const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+
+  for (const key in normalizedPayload) {
+    const value = normalizedPayload[key as keyof typeof normalizedPayload];
+
     if (Array.isArray(value)) {
       value.forEach((item) => backendFormData.append(key, item));
     } else if (value !== undefined) {
@@ -60,6 +400,9 @@ export async function createTour(_prevState: any, formData: FormData) {
     }
   }
 
+  // ----------------------------------------
+  // 5️⃣ Append files
+  // ----------------------------------------
   const files = formData.getAll("files");
   files.forEach((file) => {
     if (file instanceof File) {
@@ -67,293 +410,421 @@ export async function createTour(_prevState: any, formData: FormData) {
     }
   });
 
+  // ----------------------------------------
+  // 6️⃣ Send to backend
+  // ----------------------------------------
   try {
-    const response = await serverFetch.post("/tour/create", { body: backendFormData });
-    const result = await response.json();
-    return result;
+    const response = await serverFetch.post("/tour/create", {
+      body: backendFormData,
+    });
+
+    return await response.json();
   } catch (error: any) {
-    console.error("Create tour error:", error);
+    console.error("❌ Create tour error:", error);
+
     return {
       success: false,
-      message: process.env.NODE_ENV === "development" ? error.message : "Failed to create tour",
-      formData: validationPayload,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to create tour",
     };
   }
 }
 
-
-
-
-export async function getAllTours(queryString?: string) {
-    try {
-        const response = await serverFetch.get(`/tour${queryString ? `?${queryString}` : ""}`, {
-            cache: "force-cache",
-            next: { tags: ["tours-list"] }
-        })
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.log(error);
-        return {
-            success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-        };
-    }
+// ---------------- GET ALL TOURS ----------------
+export async function getAllTours(queryString?: string): Promise<any> {
+  try {
+    // It's already using the queryString, so the change in the component above will work.
+    const response = await serverFetch.get(
+      `/tour${queryString ? `?${queryString}` : ""}`,
+      {
+        // cache: "force-cache",
+        cache: "no-cache",
+        // next: { tags: ["tours-list"] },
+      }
+    );
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      message: process.env.NODE_ENV === "development" ? error.message : "Something went wrong",
+    };
+  }
 }
 
-
-
-export async function getTourBySlug(slug: string) {
-    try {
-        const response = await serverFetch.get(`/tour/${slug}`)
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.log(error);
-        return {
-            success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-        };
-    }
+// ---------------- GET TOUR BY SLUG ----------------
+export async function getTourBySlug(slug: string): Promise<any> {
+  try {
+    const response = await serverFetch.get(`/tour/${slug}`);
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      message: process.env.NODE_ENV === "development" ? error.message : "Something went wrong",
+    };
+  }
 }
-
-
 
 // ---------------- UPDATE TOUR ----------------
-export async function updateTour(_prevState: any, formData: FormData, id: string) {
-  // Build validation payload (excluding files)
+// export async function updateTour(
+//   id: string, _prevState: any, formData: FormData
+// ): Promise<any> {
+//   const validationPayload = {
+//     title: formData.get("title") as string | undefined,
+//     description: formData.get("description") as string | undefined,
+//     location: formData.get("location") as string | undefined,
+//     costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
+//     startDate: formData.get("startDate") as string | undefined,
+//     endDate: formData.get("endDate") as string | undefined,
+//     tourType: formData.get("tourType") as string | undefined,
+//     included: formData.getAll("included") as string[],
+//     excluded: formData.getAll("excluded") as string[],
+//     amenities: formData.getAll("amenities") as string[],
+//     tourPlan: formData.getAll("tourPlan") as string[],
+//     maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
+//     minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
+//     division: formData.get("division") as string | undefined,
+//     departureLocation: formData.get("departureLocation") as string | undefined,
+//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+//     guides: formData.getAll("guides") as string[],
+//     discountDate: formData.get("discountDate") as string | undefined,
+//     discountPercentage: formData.get("discountPercentage") ? Number(formData.get("discountPercentage")) : undefined,
+//     deleteImages: formData.getAll("deleteImages") as string[],
+//   };
+
+//   // Validate using Zod
+//   const validatedPayload = zodValidator(validationPayload, updateTourZodSchema);
+//   if (!validatedPayload.success) {
+//     return {
+//       success: false,
+//       message: "Validation failed",
+//       formData: validationPayload,
+//       errors: validatedPayload.errors,
+//     };
+//   }
+
+//   const backendFormData = new FormData();
+//   for (const key in validatedPayload.data) {
+//     const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+//     if (Array.isArray(value)) {
+//       value.forEach((item) => backendFormData.append(key, item));
+//     } else if (value !== undefined) {
+//       backendFormData.append(key, String(value));
+//     }
+//   }
+
+//   const files = formData.getAll("files");
+//   files.forEach((file) => {
+//     if (file instanceof File) backendFormData.append("files", file);
+//   });
+
+//   try {
+//     const response = await serverFetch.patch(`/tour/${id}`, { body: backendFormData });
+//     const result = await response.json();
+//     return result;
+//   } catch (error: any) {
+//     console.error("Update tour error:", error);
+//     return {
+//       success: false,
+//       message: process.env.NODE_ENV === "development" ? error.message : "Failed to update tour",
+//       formData: validationPayload,
+//     };
+//   }
+// }
+export async function updateTour(
+  id: string,
+  _prevState: any,
+  formData: FormData
+): Promise<any> {
+
+  const parseNumber = (value: FormDataEntryValue | null) => {
+    if (!value || value === "") return undefined;
+    const num = Number(value);
+    return isNaN(num) ? undefined : num;
+  };
+
+  // ----------------------------------------
+  // 1️⃣ Build validation payload
+  // ----------------------------------------
   const validationPayload = {
     title: formData.get("title") as string | undefined,
     description: formData.get("description") as string | undefined,
     location: formData.get("location") as string | undefined,
-    costFrom: formData.get("costFrom") ? Number(formData.get("costFrom")) : undefined,
     startDate: formData.get("startDate") as string | undefined,
     endDate: formData.get("endDate") as string | undefined,
     tourType: formData.get("tourType") as string | undefined,
-    included: formData.getAll("included") as string[],
-    excluded: formData.getAll("excluded") as string[],
-    amenities: formData.getAll("amenities") as string[],
-    tourPlan: formData.getAll("tourPlan") as string[],
-    maxGuest: formData.get("maxGuest") ? Number(formData.get("maxGuest")) : undefined,
-    minAge: formData.get("minAge") ? Number(formData.get("minAge")) : undefined,
     division: formData.get("division") as string | undefined,
     departureLocation: formData.get("departureLocation") as string | undefined,
     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
-    guides: formData.getAll("guides") as string[],
     discountDate: formData.get("discountDate") as string | undefined,
-    discountPercentage: formData.get("discountPercentage")
-      ? Number(formData.get("discountPercentage"))
-      : undefined,
-    deleteImages: formData.getAll("deleteImages") as string[],
+
+    costFrom: parseNumber(formData.get("costFrom")),
+    maxGuest: parseNumber(formData.get("maxGuest")),
+    minAge: parseNumber(formData.get("minAge")),
+    discountPercentage: parseNumber(formData.get("discountPercentage")),
+
+    included: formData
+      .getAll("included")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    excluded: formData
+      .getAll("excluded")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    amenities: formData
+      .getAll("amenities")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    tourPlan: formData
+      .getAll("tourPlan")
+      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+    
   };
 
-  // Validate using Zod
-  const validatedPayload = zodValidator(validationPayload, updateTourZodSchema);
+  // ----------------------------------------
+  // 2️⃣ Zod validation
+  // ----------------------------------------
+  const validated = zodValidator(validationPayload, updateTourZodSchema);
 
-  if (!validatedPayload.success) {
+  if (!validated.success) {
     return {
       success: false,
       message: "Validation failed",
-      formData: validationPayload,
-      errors: validatedPayload.errors,
+      errors: validated.errors,
     };
   }
 
-  // Build FormData for backend (files included)
+  const data = validated.data;
+  if (!data) {
+    return { success: false, message: "Unexpected validation error" };
+  }
+
+  // ----------------------------------------
+  // 3️⃣ Normalize payload (PREVENT SERVER CRASH)
+  // ----------------------------------------
+  const normalizedPayload = {
+    ...data,
+    included: data.included ?? [],
+    excluded: data.excluded ?? [],
+    amenities: data.amenities ?? [],
+    tourPlan: data.tourPlan ?? [],
+    guides: data.guides ?? [],
+    deleteImages: data.deleteImages ?? [],
+  };
+
+  // ----------------------------------------
+  // 4️⃣ Convert to FormData
+  // ----------------------------------------
   const backendFormData = new FormData();
-  for (const key in validatedPayload.data) {
-    const value = validatedPayload.data[key as keyof typeof validatedPayload.data];
+
+  Object.entries(normalizedPayload).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach((item) => backendFormData.append(key, item));
+      value.forEach((v) => backendFormData.append(key, v));
     } else if (value !== undefined) {
       backendFormData.append(key, String(value));
     }
-  }
-
-  const files = formData.getAll("files");
-  files.forEach((file) => {
-    if (file instanceof File) {
-      backendFormData.append("files", file);
-    }
   });
 
+  // ----------------------------------------
+  // 5️⃣ Append files
+  // ----------------------------------------
+  formData.getAll("files").forEach((file) => {
+    if (file instanceof File) backendFormData.append("files", file);
+  });
+
+  // ----------------------------------------
+  // 6️⃣ Send to backend
+  // ----------------------------------------
   try {
-    const response = await serverFetch.patch(`/tour/${id}`, { body: backendFormData });
-    const result = await response.json();
-    return result;
+    const response = await serverFetch.patch(`/tour/${id}`, {
+      body: backendFormData, // ✅ DO NOT SET Content-Type
+    });
+
+    return await response.json();
   } catch (error: any) {
-    console.error("Update tour error:", error);
+    console.error("❌ Update tour error:", error);
+
     return {
       success: false,
-      message: process.env.NODE_ENV === "development" ? error.message : "Failed to update tour",
-      formData: validationPayload,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to update tour",
     };
   }
 }
 
+
 // ---------------- DELETE TOUR ----------------
-export async function deleteTour(id: string) {
-    try {
-        const response = await serverFetch.delete(`/tour/${id}`);
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Delete tour error:", error);
-        return { success: false, message: process.env.NODE_ENV === "development" ? error.message : "Failed to delete tour" };
-    }
+export async function deleteTour(id: string): Promise<any> {
+  try {
+    const response = await serverFetch.delete(`/tour/${id}`);
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error("Delete tour error:", error);
+    return {
+      success: false,
+      message: process.env.NODE_ENV === "development" ? error.message : "Failed to delete tour",
+    };
+  }
 }
-
-
 
 
 
 // tour types
 export async function createTourType(_prevState: any, formData: FormData) {
-    // Build validation payload
-    const validationPayload = {
-        name: formData.get("name") as string,
+  // Build validation payload
+  const validationPayload = {
+    name: formData.get("name") as string,
+  };
+
+  // Zod validation
+  const validatedPayload = zodValidator(validationPayload, createTourTypeZodSchema);
+
+  if (!validatedPayload.success && validatedPayload.errors) {
+    return {
+      success: false,
+      message: "Validation failed",
+      formData: validationPayload,
+      errors: validatedPayload.errors,
     };
+  }
 
-    // Zod validation
-    const validatedPayload = zodValidator(validationPayload, createTourTypeZodSchema);
+  if (!validatedPayload.data) {
+    return {
+      success: false,
+      message: "Validation failed",
+      formData: validationPayload,
+    };
+  }
 
-    if (!validatedPayload.success && validatedPayload.errors) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-            errors: validatedPayload.errors,
-        };
-    }
+  try {
+    const response = await serverFetch.post("/tour/create-tour-type", {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: validatedPayload.data.name }),
+    });
 
-    if (!validatedPayload.data) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-        };
-    }
-
-    try {
-        const response = await serverFetch.post("/tour/create-tour-type", {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: validatedPayload.data.name }),
-        });
-
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Create tour type error:", error);
-        return {
-            success: false,
-            message:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : "Failed to create tour type",
-            formData: validationPayload,
-        };
-    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error("Create tour type error:", error);
+    return {
+      success: false,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to create tour type",
+      formData: validationPayload,
+    };
+  }
 }
 
 
 
 export async function getAllTourTypes(queryString?: string) {
-    try {
-        const response = await serverFetch.get(`/tour/tour-types${queryString ? `?${queryString}` : ""}`, {
-            cache: "no-store",
-        })
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.log(error);
-        return {
-            success: false,
-            message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-        };
-    }
+  try {
+    const response = await serverFetch.get(`/tour/tour-types${queryString ? `?${queryString}` : ""}`, {
+      cache: "no-store",
+    })
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+    };
+  }
 }
 
 
 
 export async function getTourTypeById(id: string) {
-    try {
-        const response = await serverFetch.get(`/tour/tour-types/${id}`);
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Get single tour type error:", error);
-        return {
-            success: false,
-            message:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : "Failed to fetch tour type",
-        };
-    }
+  try {
+    const response = await serverFetch.get(`/tour/tour-types/${id}`);
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error("Get single tour type error:", error);
+    return {
+      success: false,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to fetch tour type",
+    };
+  }
 }
 
 
 export async function updateTourType(id: string, _prevState: any, formData: FormData) {
-    const validationPayload = {
-        name: formData.get("name") as string,
+  const validationPayload = {
+    name: formData.get("name") as string,
+  };
+
+  const validatedPayload = zodValidator(validationPayload, createTourTypeZodSchema);
+
+  if (!validatedPayload.success && validatedPayload.errors) {
+    return {
+      success: false,
+      message: "Validation failed",
+      formData: validationPayload,
+      errors: validatedPayload.errors,
     };
+  }
 
-    const validatedPayload = zodValidator(validationPayload, createTourTypeZodSchema);
+  if (!validatedPayload.data) {
+    return {
+      success: false,
+      message: "Validation failed",
+      formData: validationPayload,
+    };
+  }
 
-    if (!validatedPayload.success && validatedPayload.errors) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-            errors: validatedPayload.errors,
-        };
-    }
+  try {
+    const response = await serverFetch.patch(`/tour/tour-types/${id}`, {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: validatedPayload.data.name }),
+    });
 
-    if (!validatedPayload.data) {
-        return {
-            success: false,
-            message: "Validation failed",
-            formData: validationPayload,
-        };
-    }
-
-    try {
-        const response = await serverFetch.patch(`/tour/tour-types/${id}`, {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: validatedPayload.data.name }),
-        });
-
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Update tour type error:", error);
-        return {
-            success: false,
-            message:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : "Failed to update tour type",
-            formData: validationPayload,
-        };
-    }
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error("Update tour type error:", error);
+    return {
+      success: false,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to update tour type",
+      formData: validationPayload,
+    };
+  }
 }
 
 
 export async function deleteTourType(id: string) {
-    try {
-        const response = await serverFetch.delete(`/tour/tour-types/${id}`);
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Delete tour type error:", error);
-        return {
-            success: false,
-            message:
-                process.env.NODE_ENV === "development"
-                    ? error.message
-                    : "Failed to delete tour type",
-        };
-    }
+  try {
+    const response = await serverFetch.delete(`/tour/tour-types/${id}`);
+    const result = await response.json();
+    return result;
+  } catch (error: any) {
+    console.error("Delete tour type error:", error);
+    return {
+      success: false,
+      message:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Failed to delete tour type",
+    };
+  }
 }
 
 
