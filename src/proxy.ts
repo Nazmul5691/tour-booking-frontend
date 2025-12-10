@@ -97,10 +97,26 @@ export async function proxy(request: NextRequest) {
     }
 
     // Rule 5 : User is trying to access role based protected route
-    if (routerOwner === "ADMIN" || routerOwner === "DOCTOR" || routerOwner === "USER") {
-        if (userRole !== routerOwner) {
-            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url))
+    // if (routerOwner === "ADMIN" || routerOwner === "SUPER_ADMIN" ||  routerOwner === "DOCTOR" || routerOwner === "USER") {
+    //     if (userRole !== routerOwner) {
+    //         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url))
+    //     }
+    // }
+
+
+    // Role based protected route
+    if (routerOwner === "ADMIN") {
+        if (userRole !== "ADMIN" && userRole !== "SUPER_ADMIN") {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
         }
+    }
+
+    // if (routerOwner === "DOCTOR" && userRole !== "DOCTOR") {
+    //     return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
+    // }
+
+    if (routerOwner === "USER" && userRole !== "USER") {
+        return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
     }
 
     return NextResponse.next();

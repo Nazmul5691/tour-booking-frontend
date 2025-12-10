@@ -10,7 +10,7 @@ export type RouteConfig = {
     patterns: RegExp[],
 }
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/forgot-password-reset"];
+export const authRoutes = ["/login", "/register", "/forgot-password", "/forgot-password-reset", "/register-guide"];
 
 export const commonProtectedRoutes: RouteConfig = {
     exact: ["/my-profile", "/settings", "/change-password", "/reset-password"],
@@ -23,7 +23,7 @@ export const doctorProtectedRoutes: RouteConfig = {
 }
 
 export const adminProtectedRoutes: RouteConfig = {
-    patterns: [/^\/admin/], // Routes starting with /admin/*
+    patterns: [/^\/admin/, /^\/superadmin/], // Routes starting with /admin/*
     exact: [], // "/admins"
 }
 
@@ -52,13 +52,13 @@ export const isRouteMatches = (pathname: string, routes: RouteConfig): boolean =
     // if pathname === /dashboard/my-appointments => matches /^\/dashboard/ => true
 }
 
-export const getRouteOwner = (pathname: string): "ADMIN" | "DOCTOR" | "USER" | "COMMON" | null => {
-    if (isRouteMatches(pathname, adminProtectedRoutes)) {
-        return "ADMIN";
+export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "COMMON" | null => {
+     if (isRouteMatches(pathname, adminProtectedRoutes)) {
+        return "ADMIN"; // Treats both ADMIN and SUPER_ADMIN routes as "ADMIN"
     }
-    if (isRouteMatches(pathname, doctorProtectedRoutes)) {
-        return "DOCTOR";
-    }
+    // if (isRouteMatches(pathname, adminProtectedRoutes)) {
+    //     return "SUPER_ADMIN";
+    // }
     if (isRouteMatches(pathname, userProtectedRoutes)) {
         return "USER";
     }
@@ -69,12 +69,9 @@ export const getRouteOwner = (pathname: string): "ADMIN" | "DOCTOR" | "USER" | "
 }
 
 export const getDefaultDashboardRoute = (role: Role): string => {
-    if (role === "ADMIN") {
+    if (role === "ADMIN" || role === "SUPER_ADMIN") {
         return "/admin/dashboard";
     }
-    // if (role === "DOCTOR") {
-    //     return "/doctor/dashboard";
-    // }
     if (role === "GUIDE") {
         return "/guide/dashboard";
     }

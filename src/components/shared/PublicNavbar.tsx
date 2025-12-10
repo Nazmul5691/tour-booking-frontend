@@ -8,23 +8,18 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import LogoutButton from "./LogoutButton";
 import { getCookie } from "@/services/auth/tokenHandlers";
+import { getRoleFromAccessToken } from "@/lib/getRoleFromAccessToken";
+import { getDefaultDashboardRoute } from "@/lib/auth-utils";
+import { Role } from "@/types/user.interface";
 
 // const PublicNavbar = async () => {
 const PublicNavbar = () => {
-  const navItems = [
-    { href: "/", label: "Home" },
-    { href: "/allTours", label: "Tours" },
-    { href: "/destination", label: "Destination" },
-    { href: "/about", label: "About" },
-    { href: "/blog", label: "Blog" },
-    // { href: "/admin", label: "Dashboard" },
-    // { href: "/admin", label: "Dashboard" },
-    // { href: "/user", label: "Dashboard" },
-  ];
+
 
 
   const [scrolled, setScrolled] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -44,11 +39,28 @@ const PublicNavbar = () => {
       // ✅ Await is now safe inside this function
       const token = await getCookie("accessToken");
       setAccessToken(token);
+
+      if (token) {
+        const extractedRole = getRoleFromAccessToken(token) as Role;
+        setRole(extractedRole);
+      }
     };
 
     fetchToken();
   }, []); // Run only once on mount
   // const accessToken = await getCookie("accessToken");
+
+  const navItems = [
+    { href: "/", label: "Home" },
+    { href: "/allTours", label: "Tours" },
+    { href: "/destination", label: "Destination" },
+    { href: "/about", label: "About" },
+    { href: "/blog", label: "Blog" }
+  ];
+
+  if (role === "USER" || role === null) {
+    navItems.push({ href: "/register-guide", label: "Become a Guide" });
+  }
 
   return (
     <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${headerClass}`}>
@@ -63,6 +75,18 @@ const PublicNavbar = () => {
           />
         </Link>
 
+        {/* <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+          {navItems.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-white/90 hover:text-yellow-400 py-1.5 font-medium transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav> */}
+
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
           {navItems.map((link) => (
             <Link
@@ -73,6 +97,16 @@ const PublicNavbar = () => {
               {link.label}
             </Link>
           ))}
+
+          {/* ✅ Dashboard (only if logged in) */}
+          {accessToken && role && (
+            <Link
+              href={getDefaultDashboardRoute(role)}
+              className="text-white/90 hover:text-yellow-400 py-1.5 font-medium transition-colors"
+            >
+              Dashboard
+            </Link>
+          )}
         </nav>
 
         <div className="hidden md:flex items-center space-x-2">
@@ -100,14 +134,19 @@ const PublicNavbar = () => {
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <nav className="flex flex-col space-y-4 mt-8">
                 {navItems.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="text-lg font-medium"
-                  >
+                  <Link key={link.label} href={link.href} className="text-lg font-medium">
                     {link.label}
                   </Link>
                 ))}
+
+                {accessToken && role && (
+                  <Link
+                    href={getDefaultDashboardRoute(role)}
+                    className="text-lg font-medium"
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 <div className="border-t pt-4 flex flex-col space-y-4">
                   <div className="flex justify-center"></div>
                   <Link href="/login" className="text-lg font-medium">

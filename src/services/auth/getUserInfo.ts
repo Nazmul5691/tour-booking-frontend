@@ -77,6 +77,7 @@ export const getUserInfo = async (): Promise<IUser> => {
             return {
                 name:
                     result.data?.admin?.name ??
+                    result.data?.super_admin?.name ??
                     result.data?.doctor?.name ??
                     result.data?.user?.name ??
                     result.data?.name ??
