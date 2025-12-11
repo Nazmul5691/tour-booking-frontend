@@ -3,7 +3,7 @@ import { getDefaultDashboardRoute, isValidRedirectForRole } from "@/lib/auth-uti
 import { verifyAccessToken } from "@/lib/jwtHanlders";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zodValidator";
-import { forgotPasswordSchema, resetPasswordSchema } from "@/zod/auth.validation";
+import { changePasswordSchema, forgotPasswordSchema, resetPasswordSchema } from "@/zod/auth.validation";
 import { parse } from "cookie";
 import jwt from "jsonwebtoken";
 import { revalidateTag } from "next/cache";
@@ -389,4 +389,84 @@ export async function getNewAccessToken() {
         };
     }
 
+}
+
+
+export async function changeMyPassword(_prevState: any, formData: FormData) {
+    const payload = {
+        oldPassword: formData.get("oldPassword") as string,
+        newPassword: formData.get("newPassword") as string,
+        confirmPassword: formData.get("confirmPassword") as string,
+    };
+
+    // Validate
+    const validated = zodValidator(payload, changePasswordSchema);
+
+    if (!validated.success && validated.errors) {
+        return {
+            success: false,
+            message: "Validation failed",
+            formData: payload,
+            errors: validated.errors,
+        };
+    }
+
+    try {
+        const accessToken = await getCookie("accessToken");
+
+        if (!accessToken) {
+            throw new Error("User not authenticated");
+        }
+
+        // Verify token to get role
+        const verifiedToken = jwt.verify(
+            accessToken as string,
+            process.env.JWT_SECRET!
+        ) as jwt.JwtPayload;
+
+        const userRole: Role = verifiedToken.role;
+
+        // Call backend API
+        const response = await serverFetch.post("/auth/change-password", {
+            body: JSON.stringify({
+                oldPassword: payload.oldPassword,
+                newPassword: payload.newPassword,
+            }),
+            headers: {
+                "Authorization": accessToken,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            return {
+                success: false,
+                message: result.message || "Password change failed",
+                formData: payload,
+            };
+        }
+
+        // Revalidate user cache
+        await revalidateTag("user-info", { expire: 0 });
+
+        // Redirect back to dashboard
+        redirect(`${getDefaultDashboardRoute(userRole)}?passwordUpdated=true`);
+
+    } catch (error: any) {
+        // Handle Next.js redirect errors
+        if (error?.digest?.startsWith("NEXT_REDIRECT")) {
+            throw error;
+        }
+
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Something went wrong",
+            formData: payload,
+        };
+    }
 }

@@ -5,6 +5,7 @@
 import { serverFetch } from "@/lib/server-fetch";
 import { GUIDE_STATUS, IGuide } from "@/types/guide.interface";
 import { IUser, Role } from "@/types/user.interface";
+import { revalidateTag } from "next/cache";
 
 
 
@@ -49,7 +50,7 @@ export const getAllGuides = async (
     queryString?: string
 ) => {
     try {
-        
+
 
         // 2️⃣ Call backend API
         const response = await serverFetch.get(
@@ -172,6 +173,104 @@ export async function updateGuideStatus(
                 process.env.NODE_ENV === "development"
                     ? error.message
                     : "Something went wrong while updating guide status",
+        };
+    }
+}
+
+
+
+
+export type GetGuideApplicationsParams = {
+    page?: number;
+    limit?: number;
+    status?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+};
+
+export const getGuideApplications = async (
+    params: GetGuideApplicationsParams = {}
+) => {
+    const searchParams = new URLSearchParams();
+
+    // ✅ Dynamically attach query params
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            searchParams.append(key, String(value));
+        }
+    });
+
+    const response = await serverFetch.get(
+        `/guide/guide-applications?${searchParams.toString()}`,
+        {
+            cache: "no-store",
+            next: { tags: ["guide-applications"] },
+        }
+    );
+
+    const result = await response.json();
+
+    if (!result?.success) {
+        throw new Error(result?.message || "Failed to fetch guide applications");
+    }
+
+    return {
+        data: result.data,
+        meta: result.meta,
+    };
+};
+
+
+
+
+export async function updateApplicationStatusAction(
+    applicationId: string,
+    status: "APPROVED" | "REJECTED"
+) {
+    try {
+        if (!applicationId) {
+            return { success: false, message: "Application ID is required" };
+        }
+
+        if (!status) {
+            return { success: false, message: "Status is required" };
+        }
+
+        // PATCH request to backend
+        const response = await serverFetch.patch(
+            `/guide/guide-applications/${applicationId}`,
+            {
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status }),
+            }
+        );
+
+        const result = await response.json();
+
+        if (!result.success) {
+            return {
+                success: false,
+                message: result.message || "Failed to update application status",
+                data: null,
+            };
+        }
+
+        revalidateTag("guide-applications", "");
+
+        return {
+            success: true,
+            message: result.message || "Application status updated successfully",
+            data: result.data,
+        };
+    } catch (error: any) {
+        console.error("Update Application Status Error:", error);
+        return {
+            success: false,
+            message:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Something went wrong while updating application status",
+            data: null,
         };
     }
 }

@@ -95,3 +95,55 @@ export const updateGuideZodSchema = z.object({
     totalReviews: z.number().min(0).optional(),
     // documents: z.array(z.string()).min(1).optional()
 });
+
+
+// export const changePasswordSchema = z.object({
+//     oldPassword: z
+//         .string({ invalid_type_error: "Old password must be a string" })
+//         .min(8, { message: "Old password must be at least 8 characters long" }),
+
+//     newPassword: z
+//         .string({ invalid_type_error: "Password must be string" })
+//         .min(8, { message: "Password must be 8 character long" })
+//         .regex(/[A-Z]/, { message: "Password must include at least one uppercase letter" })
+//         .regex(/\d/, { message: "Password must include at least one digit" })
+//         .regex(/[!@#$%^&*]/, { message: "Password must include at least one special character" }),
+
+//     confirmPassword: z
+//         .string({ invalid_type_error: "Confirm password must be string" })
+//         .min(8, { message: "Confirm password must be 8 character long" })
+// })
+//     .refine(
+//         (data) => data.newPassword === data.confirmPassword,
+//         {
+//             message: "Passwords do not match",
+//             path: ["confirmPassword"],
+//         }
+//     );
+export const changePasswordSchema = z.object({
+    oldPassword: z
+        .string()
+        .min(8, { message: "Old password must be at least 8 characters long" }),
+
+    newPassword: z
+        .string()
+        .min(8, { message: "Password must be 8 characters long" })
+        .regex(/[A-Z]/, { message: "Password must include at least one uppercase letter" })
+        .regex(/\d/, { message: "Password must include at least one digit" })
+        .regex(/[!@#$%^&*]/, {
+            message: "Password must include at least one special character",
+        }),
+
+    confirmPassword: z
+        .string()
+        .min(8, { message: "Confirm password must be 8 characters long" }),
+})
+    .superRefine((data, ctx) => {
+        if (data.newPassword !== data.confirmPassword) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Passwords do not match",
+                path: ["confirmPassword"],
+            });
+        }
+    });

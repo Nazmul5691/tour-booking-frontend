@@ -62,10 +62,11 @@ import { serverFetch } from "@/lib/server-fetch";
 import { IUser } from "@/types/user.interface";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { getCookie } from "./tokenHandlers";
+import { GUIDE_STATUS } from "@/types/guide.interface";
 
 export const getUserInfo = async (): Promise<IUser> => {
     try {
-        const response = await serverFetch.get("/auth/me", {
+        const response = await serverFetch.get("/user/me", {
             cache: "force-cache",
             next: { tags: ["user-info"] },
         });
@@ -75,15 +76,10 @@ export const getUserInfo = async (): Promise<IUser> => {
         // ✅ Case 1: API returned user data properly
         if (result?.success && result?.data) {
             return {
-                name:
-                    result.data?.admin?.name ??
-                    result.data?.super_admin?.name ??
-                    result.data?.doctor?.name ??
-                    result.data?.user?.name ??
-                    result.data?.name ??
-                    "Unknown User",
+                name:result.data?.name ?? "Unknown User",
                 email: result.data?.email ?? "",
                 role: result.data?.role,
+                guideStatus: result.data?.guideStatus as GUIDE_STATUS | undefined,
                 ...result.data,
             };
         }
@@ -101,6 +97,7 @@ export const getUserInfo = async (): Promise<IUser> => {
             name: verifiedToken.name || "Unknown User",
             email: verifiedToken.email,
             role: verifiedToken.role,
+            guideStatus: undefined,
             auths: [],
         };
     } catch (error) {
@@ -111,6 +108,7 @@ export const getUserInfo = async (): Promise<IUser> => {
             name: "Unknown User",
             email: "",
             role: "USER" as IUser["role"],
+            guideStatus: undefined,
             auths: [],
         };
     }

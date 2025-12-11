@@ -8,6 +8,7 @@ import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
 import { getAllDivisions } from "@/services/admin/divisionsManagement";
 import { getAllTours, getAllTourTypes } from "@/services/admin/tourManagement";
+import { getUserInfo } from "@/services/auth/getUserInfo";
 import { Suspense } from "react";
 // Import the options definition from the client component to reuse the array
 
@@ -19,6 +20,8 @@ const AllToursPage = async ({
 }) => {
   const searchParamsObj = await searchParams;
   const queryString = queryStringFormatter(searchParamsObj);
+  const user = await getUserInfo();
+  // console.log(user);
 
   // Fetch tours, types, and divisions in parallel
   const [toursResponse, tourTypesResponse, divisionsResponse] = await Promise.all([
@@ -78,7 +81,7 @@ const AllToursPage = async ({
 
             {/* tour grid */}
             <Suspense fallback={<TableSkeleton columns={3} />}>
-              <TourGrid tours={tours} tourTypes={tourTypes} />
+              <TourGrid tours={tours} tourTypes={tourTypes} user={user} />
             </Suspense>
 
           </div>

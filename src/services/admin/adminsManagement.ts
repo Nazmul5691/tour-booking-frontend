@@ -72,10 +72,11 @@ import { createAdminZodSchema, updateAdminZodSchema } from "@/zod/admin.validati
 export const createAdmin = async (payload: Partial<IUser>) => {
     // 1️⃣ Validate input
     const validation = zodValidator(payload, createAdminZodSchema);
+
     if (!validation.success || !validation.data) {
         return {
             success: false,
-            message: "Validation failed",
+            message: "Fill the form. Password must be 8 characters long include one upper, one lower and one special character. Must input valid email address",
             errors: validation.errors,
             formData: payload,
         };

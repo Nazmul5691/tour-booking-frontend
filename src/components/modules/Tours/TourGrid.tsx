@@ -2,13 +2,15 @@
 
 import { ITour, ITourType } from "@/types/tour.interface";
 import TourCard from "./TourCard";
+import { IUser } from "@/types/user.interface";
 
 interface TourGridProps {
   tours: ITour[];
   tourTypes: ITourType[];
+  user: IUser
 }
 
-export default function TourGrid({ tours, tourTypes }: TourGridProps) {
+export default function TourGrid({ tours, tourTypes, user }: TourGridProps) {
   if (tours.length === 0) {
     return (
       <div className="text-center py-12">
@@ -25,7 +27,7 @@ export default function TourGrid({ tours, tourTypes }: TourGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
       {tours.map((tour) => (
-        <TourCard key={tour._id} item={tour} tourTypes={tourTypes} />
+        <TourCard key={tour._id} item={tour} tourTypes={tourTypes} user={user} />
       ))}
     </div>
   );
