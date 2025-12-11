@@ -452,8 +452,13 @@ export async function changeMyPassword(_prevState: any, formData: FormData) {
         await revalidateTag("user-info", { expire: 0 });
 
         // Redirect back to dashboard
-        redirect(`${getDefaultDashboardRoute(userRole)}?passwordUpdated=true`);
-
+        // redirect(`${getDefaultDashboardRoute(userRole)}?passwordUpdated=true`);
+        return {
+            success: true,
+            message: "Password changed successfully",
+            userRole,
+        };
+        
     } catch (error: any) {
         // Handle Next.js redirect errors
         if (error?.digest?.startsWith("NEXT_REDIRECT")) {

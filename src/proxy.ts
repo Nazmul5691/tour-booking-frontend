@@ -114,10 +114,17 @@ export async function proxy(request: NextRequest) {
     // if (routerOwner === "DOCTOR" && userRole !== "DOCTOR") {
     //     return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
     // }
+    
+    if (routerOwner === "GUIDE" && userRole !== "GUIDE") {
+        return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
+    }
 
     if (routerOwner === "USER" && userRole !== "USER") {
         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
     }
+
+
+    
 
     return NextResponse.next();
 }

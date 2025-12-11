@@ -40,6 +40,12 @@ export const userProtectedRoutes: RouteConfig = {
     exact: [], // "/dashboard"
 }
 
+
+export const guideProtectedRoutes: RouteConfig = {
+    patterns: [/^\/dashboard/], // Routes starting with /dashboard/*
+    exact: [], // "/dashboard"
+}
+
 export const isAuthRoute = (pathname: string) => {
     return authRoutes.some((route: string) => route === pathname);
 }
@@ -52,7 +58,7 @@ export const isRouteMatches = (pathname: string, routes: RouteConfig): boolean =
     // if pathname === /dashboard/my-appointments => matches /^\/dashboard/ => true
 }
 
-export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "COMMON" | null => {
+export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "GUIDE" | "COMMON" | null => {
      if (isRouteMatches(pathname, adminProtectedRoutes)) {
         return "ADMIN"; // Treats both ADMIN and SUPER_ADMIN routes as "ADMIN"
     }
@@ -61,6 +67,10 @@ export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "COMMON" | n
     // }
     if (isRouteMatches(pathname, userProtectedRoutes)) {
         return "USER";
+    }
+
+    if (isRouteMatches(pathname, guideProtectedRoutes)) {
+        return "GUIDE";
     }
     if (isRouteMatches(pathname, commonProtectedRoutes)) {
         return "COMMON";

@@ -472,6 +472,40 @@ export async function getTourBySlug(slug: string): Promise<any> {
 }
 
 
+export const getTourById = async (id: string) => {
+  try {
+    const res = await serverFetch.get(`/tour/id/${id}`);
+    const result = await res.json();
+
+    if (result.success) {
+      return result.data;
+    }
+
+    return null;
+  } catch (e) {
+    console.log("Error fetching tour:", e);
+    return null;
+  }
+};
+
+
+// export const getTourTypeById = async (id: string) => {
+//   try {
+//     const res = await serverFetch.get(`/tour/tour-types/${id}`);
+//     const result = await res.json();
+
+//     if (result.success) {
+//       return result.data;
+//     }
+
+//     return null;
+//   } catch (error) {
+//     console.error("Error fetching tour type:", error);
+//     return null;
+//   }
+// };
+
+
 export async function updateTour(
   id: string,
   _prevState: any,
@@ -691,7 +725,9 @@ export async function getTourTypeById(id: string) {
   try {
     const response = await serverFetch.get(`/tour/tour-types/${id}`);
     const result = await response.json();
-    return result;
+    console.log("get single tour type result ",result);
+    console.log("get single tour type result data",result.data);
+    return result.data;
   } catch (error: any) {
     console.error("Get single tour type error:", error);
     return {
