@@ -4,7 +4,7 @@ import { getUserInfo } from "@/services/auth/getUserInfo";
 
 export default async function AvailableToursPage() {
     const guideInfo = await getUserInfo();
-    console.log("guideinfo",guideInfo);
+    // console.log("guideinfo",guideInfo);
 
     return (
         <div className="p-4">

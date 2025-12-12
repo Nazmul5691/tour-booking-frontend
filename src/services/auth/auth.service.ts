@@ -10,7 +10,7 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { getUserInfo } from "./getUserInfo";
 import { deleteCookie, getCookie, setCookie } from "./tokenHandlers";
-import { Role } from "@/types/user.interface";
+import { IUser, Role } from "@/types/user.interface";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function updateMyProfile(formData: FormData) {
@@ -458,7 +458,7 @@ export async function changeMyPassword(_prevState: any, formData: FormData) {
             message: "Password changed successfully",
             userRole,
         };
-        
+
     } catch (error: any) {
         // Handle Next.js redirect errors
         if (error?.digest?.startsWith("NEXT_REDIRECT")) {
@@ -475,3 +475,104 @@ export async function changeMyPassword(_prevState: any, formData: FormData) {
         };
     }
 }
+
+
+
+// export const updateUser = async (formData: FormData) => {
+//     try {
+
+//        const id = formData.get("id") as string;
+
+//   const payload = {
+//     name: formData.get("name") || undefined,
+//     phone: formData.get("phone") || undefined,
+//     address: formData.get("address") || undefined,
+//   };
+
+//   const response = await serverFetch.patch(`/user/${id}`, {
+//     body: JSON.stringify(payload),
+//   });
+
+//   const result = await response.json();
+
+//   revalidateTag("user-info", { expire: 0 });
+
+//   return result;
+//     } catch (error: any) {
+//         console.log(error);
+//         return {
+//             success: false,
+//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
+//         };
+//     }
+// };
+
+
+// export const updateUser = async (formData: FormData) => {
+//     // Expect formData to include: id, name, phone, address
+//     const userId = formData.get("id") as string;
+
+//     const response = await serverFetch.patch(`/user/${userId}`, {
+//         body: formData,
+//     });
+
+//     const result = await response.json();
+
+//     // Revalidate user cache
+//     revalidateTag("user-info", { expire: 0 });
+
+//     return result; // plain JSON as returned from backend
+// };
+
+
+export const updateUser = async (
+    _: any, 
+    formData: FormData
+) => {
+    const id = formData.get("id") as string;
+
+    // --- Only extract fields a regular user is authorized to change ---
+    const name = formData.get("name") as string | null;
+    const phone = formData.get("phone") as string | null;
+    const address = formData.get("address") as string | null;
+
+    // 1. Build the INNER payload object (the actual user data)
+    const updatePayload: Partial<IUser> = {};
+    if (name) updatePayload.name = name;
+    
+    // Include phone as it is handled in the service for existence check
+    // If the field is blank in the form, it will be set to `undefined` or kept as a string
+    if (phone) updatePayload.phone = phone || undefined; 
+    
+    if (address) updatePayload.address = address || undefined; 
+
+    // --- Double-stringification to satisfy the backend's validateRequest middleware ---
+    
+    // 2. Stringify the INNER payload
+    const stringifiedInnerData = JSON.stringify(updatePayload);
+
+    // 3. Build the OUTER payload
+    const finalRequestBody = {
+        data: stringifiedInnerData,
+    };
+    
+    // 4. Stringify the OUTER payload for transport
+    try {
+        const response = await serverFetch.patch(`/user/${id}`, {
+            body: JSON.stringify(finalRequestBody), 
+        });
+
+        const result = await response.json();
+        console.log('updated user data:', result);
+
+        if (!response.ok) {
+             throw new Error(result.message || "Failed to update user");
+        }
+
+        // revalidateTag("user-info", { expire: 0 });
+
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};

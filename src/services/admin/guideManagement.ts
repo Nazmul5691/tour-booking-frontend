@@ -274,3 +274,18 @@ export async function updateApplicationStatusAction(
         };
     }
 }
+
+
+
+export const getMyApplicationsForTourGuide = async () => {
+  try {
+    const res = await serverFetch.get("/guide/tour-guide-application");
+    const result = await res.json()
+        
+    return result.data;
+    
+  } catch (error) {
+    console.error("Error fetching guide applications:", error);
+    return [];
+  }
+};

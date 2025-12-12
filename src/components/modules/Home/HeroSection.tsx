@@ -391,7 +391,7 @@ export default function HeroSection() {
         fetchDivisions();
     }, []);
 
-    const searchPath = selectedDivision ? `/tours?division=${selectedDivision}` : "#";
+    const searchPath = selectedDivision ? `/allTours?division=${selectedDivision}` : "#";
 
     return (
         <section

@@ -77,7 +77,7 @@ export const guideNavItems: NavSection[] = [
                 title: "AvailableTours",
                 href: "/guide/dashboard/available-tours",
                 icon: "Calendar", // ✅ String
-                badge: "3",
+                // badge: "3",
                 roles: ["GUIDE"] as Role[],
             },
             {

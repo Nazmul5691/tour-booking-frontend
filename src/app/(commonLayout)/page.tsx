@@ -3,7 +3,7 @@
 // import Steps from "@/components/modules/Home/Steps";
 // import Testimonials from "@/components/modules/Home/Testimonials";
 // import TopRatedDoctors from "@/components/modules/Home/TopRatedDoctors";
-import Blogs from "@/components/modules/Home/Blogs";
+// import Blogs from "@/components/modules/Home/Blogs";
 import Carousel from "@/components/modules/Home/Carosouel";
 import DiscoverTours from "@/components/modules/Home/DiscoverTours";
 import Faq from "@/components/modules/Home/Faq";
@@ -37,7 +37,7 @@ export default function Home() {
         <Milestone />
         <ParallaxSection />
         <Faq />
-        <Blogs />
+        {/* <Blogs /> */}
         <StartAdventure />
       </main>
     </>

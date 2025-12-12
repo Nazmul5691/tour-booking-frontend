@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ParallaxSection() {
     return (
@@ -21,13 +22,15 @@ export default function ParallaxSection() {
                     Travel isn’t a luxury, <br /> it’s a way of life!
                 </h1>
                 <p className="mt-4 text-gray-200 max-w-2xl mx-auto text-base md:text-lg">
-                    Discover breathtaking destinations and authentic experiences — 
+                    Discover breathtaking destinations and authentic experiences —
                     crafted just for you.
                 </p>
 
-                <Button className="mt-8 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 hover:cursor-pointer text-white font-semibold px-8 py-3 rounded-full">
-                    Explore Tours
-                </Button>
+                <Link href="/allTours" >
+                    <Button className="mt-8 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 hover:cursor-pointer text-white font-semibold px-8 py-3 rounded-full">
+                        Explore Tours
+                    </Button>
+                </Link>
             </div>
         </section>
     );

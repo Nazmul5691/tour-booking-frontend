@@ -167,12 +167,12 @@ export default function Carousel(): JSX.Element {
 
                                         <p className="text-sm mb-4 h-10">{card.details}</p>
 
-                                        <button
+                                        {/* <button
                                             className={`w-full py-2 rounded-lg text-white font-semibold bg-linear-to-br from-yellow-400 via-orange-500 hover:cursor-pointer to-pink-500 hover:opacity-90 transition-all shadow-md ${!isActive ? "opacity-70" : "opacity-100"
                                                 }`}
                                         >
                                             View Package
-                                        </button>
+                                        </button> */}
                                     </div>
 
                                     {/* --- Price Tag --- */}

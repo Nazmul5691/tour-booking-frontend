@@ -10,10 +10,10 @@ export type RouteConfig = {
     patterns: RegExp[],
 }
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/forgot-password-reset", "/register-guide", "/apply-for-tour-as-guide"];
+export const authRoutes = ["/login", "/register", "/forgot-password", "/forgot-password-reset",  "/apply-for-tour-as-guide"];
 
 export const commonProtectedRoutes: RouteConfig = {
-    exact: ["/my-profile", "/settings", "/change-password", "/reset-password"],
+    exact: ["/my-profile", "/settings", "/change-password", "/reset-password", "/register-guide",],
     patterns: [], // [/password/change-password, /password/reset-password => /password/*]
 }
 

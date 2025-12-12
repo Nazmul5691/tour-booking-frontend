@@ -725,8 +725,8 @@ export async function getTourTypeById(id: string) {
   try {
     const response = await serverFetch.get(`/tour/tour-types/${id}`);
     const result = await response.json();
-    console.log("get single tour type result ",result);
-    console.log("get single tour type result data",result.data);
+    // console.log("get single tour type result ",result);
+    // console.log("get single tour type result data",result.data);
     return result.data;
   } catch (error: any) {
     console.error("Get single tour type error:", error);

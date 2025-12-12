@@ -1,4 +1,5 @@
-import GuideRegisterForm from "@/components/guide-registration-form";
+
+import RegisterForm from "@/components/register-form";
 import {
   Card,
   CardContent,
@@ -20,7 +21,7 @@ const RegisterPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <GuideRegisterForm />
+              <RegisterForm />
             </CardContent>
           </Card>
         </div>

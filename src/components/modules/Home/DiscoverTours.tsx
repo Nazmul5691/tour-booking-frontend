@@ -21,7 +21,7 @@ export default function DiscoverTours() {
             setTours(toursData?.data || []); // FIXED
             setLoading(false);
         };
-        
+
         fetchTours();
     }, []);
 
@@ -125,12 +125,14 @@ export default function DiscoverTours() {
 
             {/* Load More Button */}
             <div className="text-center mt-12">
-                <Button
-                    variant="secondary"
-                    className="text-white bg-linear-to-r hover:cursor-pointer from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 font-semibold px-6 py-2 rounded-full"
-                >
-                    Explore All Tours
-                </Button>
+                <Link href="/allTours">
+                    <Button
+                        variant="secondary"
+                        className="text-white bg-linear-to-r hover:cursor-pointer from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 font-semibold px-6 py-2 rounded-full"
+                    >
+                        Explore All Tours
+                    </Button>
+                </Link>
             </div>
         </section>
     );
