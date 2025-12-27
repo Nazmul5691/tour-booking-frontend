@@ -28,7 +28,7 @@ const MyBookingsPage = async ({
 
   return (
     <div className="space-y-6">
-      {/* <TourManagementHeader
+      <TourManagementHeader
         divisions={divisions}
         tourTypes={tourTypes}
       />
@@ -36,9 +36,7 @@ const MyBookingsPage = async ({
       
       <Suspense fallback={<TableSkeleton columns={5} rows={10} />}>
         <ToursTable tours={tours} divisions={divisions} tourTypes={tourTypes} />
-      </Suspense> */}
-
-        <h1>This is my bookings page</h1>
+      </Suspense>
     </div>
   );
 };
