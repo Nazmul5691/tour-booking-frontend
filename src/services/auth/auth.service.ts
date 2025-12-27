@@ -525,54 +525,195 @@ export async function changeMyPassword(_prevState: any, formData: FormData) {
 // };
 
 
-export const updateUser = async (
-    _: any, 
-    formData: FormData
-) => {
-    const id = formData.get("id") as string;
+// export const updateUser = async (
+//     _: any,
+//     formData: FormData
+// ) => {
+//     const id = formData.get("id") as string;
 
-    // --- Only extract fields a regular user is authorized to change ---
+//     // --- Only extract fields a regular user is authorized to change ---
+//     const name = formData.get("name") as string | null;
+//     const phone = formData.get("phone") as string | null;
+//     const address = formData.get("address") as string | null;
+
+//     // 1. Build the INNER payload object (the actual user data)
+//     const updatePayload: Partial<IUser> = {};
+//     if (name) updatePayload.name = name;
+
+//     // Include phone as it is handled in the service for existence check
+//     // If the field is blank in the form, it will be set to `undefined` or kept as a string
+//     if (phone) updatePayload.phone = phone || undefined;
+
+//     if (address) updatePayload.address = address || undefined;
+
+//     // --- Double-stringification to satisfy the backend's validateRequest middleware ---
+
+//     // 2. Stringify the INNER payload
+//     const stringifiedInnerData = JSON.stringify(updatePayload);
+
+//     // 3. Build the OUTER payload
+//     const finalRequestBody = {
+//         data: stringifiedInnerData,
+//     };
+
+//     // 4. Stringify the OUTER payload for transport
+//     try {
+//         // const response = await serverFetch.patch(`/user/${id}`, {
+//         //     body: JSON.stringify(finalRequestBody), 
+//         // });
+
+//         const response = await serverFetch.patch(`/user/${id}`, {
+//             body: JSON.stringify(finalRequestBody),
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+
+//         const result = await response.json();
+//         console.log('updated user data:', result);
+
+//         if (!response.ok) {
+//             throw new Error(result.message || "Failed to update user");
+//         }
+
+//         // revalidateTag("user-info", { expire: 0 });
+
+//         return result;
+//     } catch (error) {
+//         throw error;
+//     }
+// };
+
+
+// export const updateUser = async (_: any, formData: FormData) => {
+//     const id = formData.get("id") as string;
+//     const name = formData.get("name") as string | null;
+//     const phone = formData.get("phone") as string | null;
+//     const address = formData.get("address") as string | null;
+
+//     // Build the payload
+//     const updatePayload: Partial<IUser> = {};
+//     if (name) updatePayload.name = name;
+//     if (phone) updatePayload.phone = phone;
+//     if (address) updatePayload.address = address;
+
+//     // Single stringification wrapped in 'data' property
+//     const requestBody = {
+//         data: JSON.stringify(updatePayload),
+//     };
+
+//     try {
+//         const response = await serverFetch.patch(`/user/${id}`, {
+//             body: JSON.stringify(requestBody),
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+
+//         const result = await response.json();
+//         console.log('updated user data:', result);
+
+//         if (!response.ok) {
+//             throw new Error(result.message || "Failed to update user");
+//         }
+
+//         return result;
+//     } catch (error) {
+//         throw error;
+//     }
+// };
+
+
+
+// export const updateUser = async (_: any, formData: FormData) => {
+//     const id = formData.get("id") as string;
+//     const name = formData.get("name") as string | null;
+//     const phone = formData.get("phone") as string | null;
+//     const address = formData.get("address") as string | null;
+
+//     // Build the payload - only include non-empty values
+//     const updatePayload: Partial<IUser> = {};
+//     if (name?.trim()) updatePayload.name = name.trim();
+//     if (phone?.trim()) updatePayload.phone = phone.trim();
+//     if (address?.trim()) updatePayload.address = address.trim();
+
+//     const requestBody = {
+//         data: JSON.stringify(updatePayload),
+//     };
+
+//     try {
+//         const response = await serverFetch.patch(`/user/${id}`, {
+//             body: JSON.stringify(requestBody),
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+
+//         const result = await response.json();
+//         console.log('Update response:', result);
+
+//         // If response is not ok, throw error with backend message
+//         if (!response.ok) {
+//             throw new Error(result.message || "Failed to update user");
+//         }
+
+//         return result;
+//     } catch (error: any) {
+//         // Re-throw the error to be handled in the component
+//         throw error;
+//     }
+// };
+
+
+
+export const updateUser = async (_: any, formData: FormData) => {
+    const id = formData.get("id") as string;
     const name = formData.get("name") as string | null;
     const phone = formData.get("phone") as string | null;
     const address = formData.get("address") as string | null;
 
-    // 1. Build the INNER payload object (the actual user data)
+    // Build the payload - only include non-empty values
     const updatePayload: Partial<IUser> = {};
-    if (name) updatePayload.name = name;
-    
-    // Include phone as it is handled in the service for existence check
-    // If the field is blank in the form, it will be set to `undefined` or kept as a string
-    if (phone) updatePayload.phone = phone || undefined; 
-    
-    if (address) updatePayload.address = address || undefined; 
+    if (name?.trim()) updatePayload.name = name.trim();
+    if (phone?.trim()) updatePayload.phone = phone.trim();
+    if (address?.trim()) updatePayload.address = address.trim();
 
-    // --- Double-stringification to satisfy the backend's validateRequest middleware ---
-    
-    // 2. Stringify the INNER payload
-    const stringifiedInnerData = JSON.stringify(updatePayload);
-
-    // 3. Build the OUTER payload
-    const finalRequestBody = {
-        data: stringifiedInnerData,
+    const requestBody = {
+        data: JSON.stringify(updatePayload),
     };
-    
-    // 4. Stringify the OUTER payload for transport
+
     try {
         const response = await serverFetch.patch(`/user/${id}`, {
-            body: JSON.stringify(finalRequestBody), 
+            body: JSON.stringify(requestBody),
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         const result = await response.json();
-        console.log('updated user data:', result);
+        console.log('Update response:', result);
 
+        // If response is not ok, extract and throw proper error
         if (!response.ok) {
-             throw new Error(result.message || "Failed to update user");
+            // Check if it's a Zod validation error with errorSources
+            if (result.errorSources && Array.isArray(result.errorSources) && result.errorSources.length > 0) {
+                // Extract all error messages from errorSources
+                const errorMessages = result.errorSources
+                    .map((err: any) => err.message)
+                    .join('. ');
+                throw new Error(errorMessages);
+            }
+            
+            // Otherwise use the main message
+            throw new Error(result.message || "Failed to update user");
         }
 
-        // revalidateTag("user-info", { expire: 0 });
-
+        revalidateTag("user-info", { expire: 0 });
+        
         return result;
-    } catch (error) {
+
+    } catch (error: any) {
+        // Re-throw the error to be handled in the component
         throw error;
     }
 };
