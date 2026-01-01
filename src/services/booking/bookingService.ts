@@ -607,7 +607,7 @@ export async function cancelBooking(id: string): Promise<any> {
         const result = await response.json();
 
         // Revalidate the bookings page
-        revalidatePath("/my-bookings");
+        revalidatePath("/dashboard/my-bookings");
 
         return result;
     } catch (error: any) {
@@ -663,7 +663,7 @@ export async function deleteBooking(id: string): Promise<any> {
         const result = await response.json();
 
         // Revalidate the bookings page
-        revalidatePath("/my-bookings");
+        revalidatePath("/dashboard/my-bookings");
         revalidatePath("/admin/bookings");
 
         return result;

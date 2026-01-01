@@ -1,4 +1,5 @@
-import PaymentSuccess from "@/components/modules/Booking/PaymentSucces";
+import PaymentSuccess from "@/components/modules/Booking/PaymentSuccess";
+
 
 
 export default function PaymentSuccessPage() {

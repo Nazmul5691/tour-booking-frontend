@@ -47,7 +47,7 @@ export default function PaymentCancel() {
 
           <div className="space-y-2">
             <Button
-              onClick={() => router.push("/my-bookings")}
+              onClick={() => router.push("/dashboard/my-bookings")}
               className="w-full"
             >
               View My Bookings

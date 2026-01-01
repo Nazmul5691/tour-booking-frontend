@@ -106,12 +106,12 @@ export const userNavItems: NavSection[] = [
                 icon: "Calendar", // ✅ String
                 roles: ["USER"] as Role[],
             },
-            // {
-            //     title: "Book Tours",
-            //     href: "/allTours",
-            //     icon: "ClipboardList", // ✅ String
-            //     roles: ["USER"] as Role[],
-            // },
+            {
+                title: "Download Invoice",
+                href: "/dashboard/download-invoice",
+                icon: "ClipboardList", // ✅ String
+                roles: ["USER"] as Role[],
+            },
         ],
     },
 
