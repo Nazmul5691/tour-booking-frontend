@@ -1,4 +1,405 @@
 
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// "use server";
+
+// import { serverFetch } from "@/lib/server-fetch";
+// import { revalidatePath } from "next/cache";
+
+// // ============================================
+// // INTERFACES
+// // ============================================
+
+// export interface IBooking {
+//     _id: string;
+//     user: {
+//         _id: string;
+//         name: string;
+//         email: string;
+//     };
+//     tour: {
+//         _id: string;
+//         title: string;
+//         slug: string;
+//         location: string;
+//     };
+//     payment?: string;
+//     guestCount: number;
+//     status: "PENDING" | "CANCEL" | "COMPLETE" | "FAILED";
+//     baseAmount?: number;
+//     discountPercentage?: number;
+//     amountAfterDiscount?: number;
+//     discountDate?: Date;
+//     guide?: string;
+//     guideFee?: number;
+//     companyEarning?: number;
+//     createdAt?: string;
+//     updatedAt?: string;
+// }
+
+// export interface IBookingMeta {
+//     page: number;
+//     limit: number;
+//     total: number;
+//     totalPage: number;
+// }
+
+// export interface IBookingResponse {
+//     success: boolean;
+//     message: string;
+//     data: IBooking[];
+//     meta: IBookingMeta;
+// }
+
+// // ============================================
+// // GET MY BOOKINGS
+// // ============================================
+
+// export async function getMyBookings(queryString?: string): Promise<IBookingResponse> {
+//     try {
+//         const response = await serverFetch.get(
+//             `/booking/my-bookings${queryString ? `?${queryString}` : ""}`,
+//             {
+//                 cache: "no-store",
+//             }
+//         );
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to fetch bookings");
+//         }
+
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.error("Get my bookings error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to fetch bookings",
+//             data: [],
+//             meta: {
+//                 page: 1,
+//                 limit: 10,
+//                 total: 0,
+//                 totalPage: 0,
+//             },
+//         };
+//     }
+// }
+
+// // ============================================
+// // GET BOOKING BY ID
+// // ============================================
+
+// export async function getBookingById(id: string): Promise<any> {
+//     try {
+//         const response = await serverFetch.get(`/booking/${id}`);
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to fetch booking");
+//         }
+
+//         const result = await response.json();
+//         return result.data;
+//     } catch (error: any) {
+//         console.error("Get booking by ID error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to fetch booking",
+//         };
+//     }
+// }
+
+// // ============================================
+// // CANCEL BOOKING (UPDATE STATUS)
+// // ============================================
+
+// export async function cancelBooking(id: string): Promise<any> {
+//     try {
+//         const response = await serverFetch.patch(`/booking/${id}`, {
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ status: "CANCEL" }),
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to cancel booking");
+//         }
+
+//         const result = await response.json();
+
+//         // Revalidate the bookings page
+//         revalidatePath("/my-bookings");
+
+//         return result;
+//     } catch (error: any) {
+//         console.error("Cancel booking error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to cancel booking",
+//         };
+//     }
+// }
+
+// // ============================================
+// // CREATE BOOKING (If you need this in the future)
+// // ============================================
+
+// export async function createBooking(
+//     _prevState: any,
+//     formData: FormData
+// ): Promise<any> {
+//     const parseNumber = (value: FormDataEntryValue | null) => {
+//         if (value === null || value === "") return undefined;
+//         const num = Number(value);
+//         return isNaN(num) ? undefined : num;
+//     };
+
+//     const bookingPayload = {
+//         tour: formData.get("tour") as string,
+//         guestCount: parseNumber(formData.get("guestCount")),
+//         guide: formData.get("guide") as string | undefined,
+//     };
+
+//     try {
+//         const response = await serverFetch.post("/booking/create", {
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(bookingPayload),
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to create booking");
+//         }
+
+//         const result = await response.json();
+
+//         // Revalidate the bookings page
+//         revalidatePath("/my-bookings");
+
+//         return result;
+//     } catch (error: any) {
+//         console.error("Create booking error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to create booking",
+//         };
+//     }
+// }
+
+// // ============================================
+// // UPDATE BOOKING STATUS (Admin/Guide functionality)
+// // ============================================
+
+// export async function updateBookingStatus(
+//     id: string,
+//     status: "PENDING" | "CANCEL" | "COMPLETE" | "FAILED"
+// ): Promise<any> {
+//     try {
+//         const response = await serverFetch.patch(`/booking/${id}`, {
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({ status }),
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to update booking status");
+//         }
+
+//         const result = await response.json();
+
+//         // Revalidate the bookings page
+//         revalidatePath("/my-bookings");
+//         revalidatePath("/admin/bookings");
+
+//         return result;
+//     } catch (error: any) {
+//         console.error("Update booking status error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to update booking status",
+//         };
+//     }
+// }
+
+// // ============================================
+// // DELETE BOOKING (Permanent deletion - Admin only)
+// // ============================================
+
+// export async function deleteBooking(id: string): Promise<any> {
+//     try {
+//         const response = await serverFetch.delete(`/booking/${id}`);
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to delete booking");
+//         }
+
+//         const result = await response.json();
+
+//         // Revalidate the bookings page
+//         revalidatePath("/my-bookings");
+//         revalidatePath("/admin/bookings");
+
+//         return result;
+//     } catch (error: any) {
+//         console.error("Delete booking error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to delete booking",
+//         };
+//     }
+// }
+
+// // ============================================
+// // GET ALL BOOKINGS (Admin functionality)
+// // ============================================
+
+// export async function getAllBookings(queryString?: string): Promise<IBookingResponse> {
+//     try {
+//         const response = await serverFetch.get(
+//             `/booking${queryString ? `?${queryString}` : ""}`,
+//             {
+//                 cache: "no-store",
+//             }
+//         );
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to fetch all bookings");
+//         }
+
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.error("Get all bookings error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to fetch bookings",
+//             data: [],
+//             meta: {
+//                 page: 1,
+//                 limit: 10,
+//                 total: 0,
+//                 totalPage: 0,
+//             },
+//         };
+//     }
+// }
+
+// // ============================================
+// // GET BOOKING STATISTICS (Dashboard)
+// // ============================================
+
+// export async function getBookingStatistics(): Promise<any> {
+//     try {
+//         const response = await serverFetch.get("/booking/statistics", {
+//             cache: "no-store",
+//         });
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to fetch statistics");
+//         }
+
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.error("Get booking statistics error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to fetch statistics",
+//         };
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export async function getMyBookings(queryString?: string): Promise<IBookingResponse> {
+//     try {
+//         const response = await serverFetch.get(
+//             `/booking/my-bookings${queryString ? `?${queryString}` : ""}`,
+//             {
+//                 cache: "no-store",
+//             }
+//         );
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to fetch bookings");
+//         }
+
+//         const result = await response.json();
+//         return result;
+//     } catch (error: any) {
+//         console.error("Get my bookings error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development" 
+//                 ? error.message 
+//                 : "Failed to fetch bookings",
+//             data: [],
+//             meta: {
+//                 page: 1,
+//                 limit: 10,
+//                 total: 0,
+//                 totalPage: 0,
+//             },
+//         };
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use server";
@@ -52,6 +453,78 @@ export interface IBookingResponse {
 }
 
 // ============================================
+// CREATE BOOKING (Returns Payment URL Directly)
+// ============================================
+
+export async function createBooking(formData: FormData): Promise<any> {
+    const parseNumber = (value: FormDataEntryValue | null) => {
+        if (value === null || value === "") return undefined;
+        const num = Number(value);
+        return isNaN(num) ? undefined : num;
+    };
+
+    const bookingPayload = {
+        tour: formData.get("tour") as string,
+        guestCount: parseNumber(formData.get("guestCount")),
+    };
+
+    try {
+        console.log("🔵 Creating booking with payment...", bookingPayload);
+
+        // Create booking - backend handles payment initialization
+        const response = await serverFetch.post("/booking", {
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(bookingPayload),
+        });
+
+        console.log("🔵 Response status:", response.status);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("❌ Booking failed:", errorData);
+
+            // Handle specific error messages
+            if (errorData.message?.includes("update your profile")) {
+                throw new Error("Please update your profile (phone & address) before booking");
+            }
+
+            throw new Error(errorData.message || "Failed to create booking");
+        }
+
+        const result = await response.json();
+        console.log("✅ Booking result:", result);
+
+        if (!result.success || !result.data) {
+            throw new Error(result.message || "Failed to create booking");
+        }
+
+        // Backend returns { payment: paymentURL, booking: bookingData }
+        if (!result.data.payment) {
+            throw new Error("Payment URL not received");
+        }
+
+        // Revalidate the bookings page
+        revalidatePath("/dashboard/my-bookings");
+
+        console.log("✅ Payment URL:", result.data.payment);
+
+        // Return payment URL for redirect
+        return {
+            success: true,
+            message: result.message || "Booking created successfully",
+            payment: result.data.payment,
+            booking: result.data.booking,
+        };
+    } catch (error: any) {
+        console.error("❌ Create booking error:", error);
+        return {
+            success: false,
+            message: error.message || "Failed to create booking",
+        };
+    }
+}
+
+// ============================================
 // GET MY BOOKINGS
 // ============================================
 
@@ -63,7 +536,7 @@ export async function getMyBookings(queryString?: string): Promise<IBookingRespo
                 cache: "no-store",
             }
         );
-        
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Failed to fetch bookings");
@@ -75,8 +548,8 @@ export async function getMyBookings(queryString?: string): Promise<IBookingRespo
         console.error("Get my bookings error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
+            message: process.env.NODE_ENV === "development"
+                ? error.message
                 : "Failed to fetch bookings",
             data: [],
             meta: {
@@ -96,7 +569,7 @@ export async function getMyBookings(queryString?: string): Promise<IBookingRespo
 export async function getBookingById(id: string): Promise<any> {
     try {
         const response = await serverFetch.get(`/booking/${id}`);
-        
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Failed to fetch booking");
@@ -108,8 +581,8 @@ export async function getBookingById(id: string): Promise<any> {
         console.error("Get booking by ID error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
+            message: process.env.NODE_ENV === "development"
+                ? error.message
                 : "Failed to fetch booking",
         };
     }
@@ -132,103 +605,44 @@ export async function cancelBooking(id: string): Promise<any> {
         }
 
         const result = await response.json();
-        
+
         // Revalidate the bookings page
         revalidatePath("/my-bookings");
-        
+
         return result;
     } catch (error: any) {
         console.error("Cancel booking error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
+            message: process.env.NODE_ENV === "development"
+                ? error.message
                 : "Failed to cancel booking",
         };
     }
 }
 
 // ============================================
-// CREATE BOOKING (If you need this in the future)
+// GET INVOICE DOWNLOAD URL
 // ============================================
 
-export async function createBooking(
-    _prevState: any,
-    formData: FormData
-): Promise<any> {
-    const parseNumber = (value: FormDataEntryValue | null) => {
-        if (value === null || value === "") return undefined;
-        const num = Number(value);
-        return isNaN(num) ? undefined : num;
-    };
-
-    const bookingPayload = {
-        tour: formData.get("tour") as string,
-        guestCount: parseNumber(formData.get("guestCount")),
-        guide: formData.get("guide") as string | undefined,
-    };
-
+export async function getInvoiceDownloadUrl(paymentId: string): Promise<any> {
     try {
-        const response = await serverFetch.post("/booking/create", {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(bookingPayload),
-        });
+        const response = await serverFetch.get(`/payment/invoice/${paymentId}`);
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to create booking");
+            throw new Error(errorData.message || "Failed to get invoice");
         }
 
         const result = await response.json();
-        
-        // Revalidate the bookings page
-        revalidatePath("/my-bookings");
-        
-        return result;
+        return result.data;
     } catch (error: any) {
-        console.error("Create booking error:", error);
+        console.error("Get invoice error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
-                : "Failed to create booking",
-        };
-    }
-}
-
-// ============================================
-// UPDATE BOOKING STATUS (Admin/Guide functionality)
-// ============================================
-
-export async function updateBookingStatus(
-    id: string,
-    status: "PENDING" | "CANCEL" | "COMPLETE" | "FAILED"
-): Promise<any> {
-    try {
-        const response = await serverFetch.patch(`/booking/${id}`, {
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to update booking status");
-        }
-
-        const result = await response.json();
-        
-        // Revalidate the bookings page
-        revalidatePath("/my-bookings");
-        revalidatePath("/admin/bookings");
-        
-        return result;
-    } catch (error: any) {
-        console.error("Update booking status error:", error);
-        return {
-            success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
-                : "Failed to update booking status",
+            message: process.env.NODE_ENV === "development"
+                ? error.message
+                : "Failed to get invoice",
         };
     }
 }
@@ -247,18 +661,18 @@ export async function deleteBooking(id: string): Promise<any> {
         }
 
         const result = await response.json();
-        
+
         // Revalidate the bookings page
         revalidatePath("/my-bookings");
         revalidatePath("/admin/bookings");
-        
+
         return result;
     } catch (error: any) {
         console.error("Delete booking error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
+            message: process.env.NODE_ENV === "development"
+                ? error.message
                 : "Failed to delete booking",
         };
     }
@@ -276,7 +690,7 @@ export async function getAllBookings(queryString?: string): Promise<IBookingResp
                 cache: "no-store",
             }
         );
-        
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Failed to fetch all bookings");
@@ -288,8 +702,8 @@ export async function getAllBookings(queryString?: string): Promise<IBookingResp
         console.error("Get all bookings error:", error);
         return {
             success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
+            message: process.env.NODE_ENV === "development"
+                ? error.message
                 : "Failed to fetch bookings",
             data: [],
             meta: {
@@ -298,34 +712,6 @@ export async function getAllBookings(queryString?: string): Promise<IBookingResp
                 total: 0,
                 totalPage: 0,
             },
-        };
-    }
-}
-
-// ============================================
-// GET BOOKING STATISTICS (Dashboard)
-// ============================================
-
-export async function getBookingStatistics(): Promise<any> {
-    try {
-        const response = await serverFetch.get("/booking/statistics", {
-            cache: "no-store",
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to fetch statistics");
-        }
-
-        const result = await response.json();
-        return result;
-    } catch (error: any) {
-        console.error("Get booking statistics error:", error);
-        return {
-            success: false,
-            message: process.env.NODE_ENV === "development" 
-                ? error.message 
-                : "Failed to fetch statistics",
         };
     }
 }
