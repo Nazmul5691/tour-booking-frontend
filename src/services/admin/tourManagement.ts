@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 
 
 
@@ -506,135 +506,265 @@ export const getTourById = async (id: string) => {
 // };
 
 
+// export async function updateTour(
+//   id: string,
+//   _prevState: any,
+//   formData: FormData
+// ): Promise<any> {
+
+//   const parseNumber = (value: FormDataEntryValue | null) => {
+//     if (!value || value === "") return undefined;
+//     const num = Number(value);
+//     return isNaN(num) ? undefined : num;
+//   };
+
+//   // ----------------------------------------
+//   // 1️⃣ Build validation payload & Collect all array fields
+//   // ----------------------------------------
+//   const validationPayload = {
+//     title: formData.get("title") as string | undefined,
+//     description: formData.get("description") as string | undefined,
+//     location: formData.get("location") as string | undefined,
+//     startDate: formData.get("startDate") as string | undefined,
+//     endDate: formData.get("endDate") as string | undefined,
+//     tourType: formData.get("tourType") as string | undefined,
+//     division: formData.get("division") as string | undefined,
+//     departureLocation: formData.get("departureLocation") as string | undefined,
+//     arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+//     discountDate: formData.get("discountDate") as string | undefined,
+
+//     costFrom: parseNumber(formData.get("costFrom")),
+//     maxGuest: parseNumber(formData.get("maxGuest")),
+//     minAge: parseNumber(formData.get("minAge")),
+//     discountPercentage: parseNumber(formData.get("discountPercentage")),
+
+//     included: formData
+//       .getAll("included")
+//       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+//     excluded: formData
+//       .getAll("excluded")
+//       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+//     amenities: formData
+//       .getAll("amenities")
+//       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+//     tourPlan: formData
+//       .getAll("tourPlan")
+//       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+//     deleteImages: formData
+//       .getAll("deleteImages")
+//       .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+//   };
+
+//   // ----------------------------------------
+//   // 2️⃣ Zod validation (if successful, proceed)
+//   // ----------------------------------------
+//   const validated = zodValidator(validationPayload, updateTourZodSchema);
+
+//   if (!validated.success) {
+//     return {
+//       success: false,
+//       message: "Validation failed",
+//       errors: validated.errors,
+//     };
+//   }
+
+//   const data = validated.data;
+
+//   // ✅ FIX: Conditional check for 'data'
+//   if (!data) {
+//     return { success: false, message: "Unexpected validation error: Data is missing." };
+//   }
+
+//   // ----------------------------------------
+//   // 3️⃣ Normalize payload & Convert to FormData for server
+//   // ----------------------------------------
+//   const backendFormData = new FormData();
+
+//   const normalizedPayload = {
+//     ...data,
+//     included: data.included ?? [],
+//     excluded: data.excluded ?? [],
+//     amenities: data.amenities ?? [],
+//     tourPlan: data.tourPlan ?? [],
+//     deleteImages: data.deleteImages ?? [],
+//   };
+
+
+//   Object.entries(normalizedPayload).forEach(([key, value]) => {
+//     if (Array.isArray(value)) {
+//       value.forEach((v) => backendFormData.append(key, v));
+//     } else if (value !== undefined) {
+//       backendFormData.append(key, String(value));
+//     }
+//   });
+
+//   // ----------------------------------------
+//   // 4️⃣ Append file objects
+//   // ----------------------------------------
+//   formData.getAll("files").forEach((file) => {
+//     if (file instanceof File) backendFormData.append("files", file);
+//   });
+
+//   // ----------------------------------------
+//   // 5️⃣ Send to backend
+//   // ----------------------------------------
+//   try {
+//     const response = await serverFetch.patch(`/tour/${id}`, {
+//       body: backendFormData,
+//     });
+
+//     if (!response.ok) {
+//       let errorData = { message: `HTTP Error ${response.status}` };
+//       try {
+//         errorData = await response.json();
+//       } catch (e) { } // Silent catch for JSON parsing failure
+//       throw new Error(errorData.message);
+//     }
+
+//     return await response.json();
+//   } catch (error: any) {
+//     console.error("❌ Update tour error:", error.message);
+
+//     return {
+//       success: false,
+//       message: error.message
+//     };
+//   }
+// }
+
 export async function updateTour(
-  id: string,
-  _prevState: any,
-  formData: FormData
+    id: string,
+    _prevState: any,
+    formData: FormData
 ): Promise<any> {
 
-  const parseNumber = (value: FormDataEntryValue | null) => {
-    if (!value || value === "") return undefined;
-    const num = Number(value);
-    return isNaN(num) ? undefined : num;
-  };
-
-  // ----------------------------------------
-  // 1️⃣ Build validation payload & Collect all array fields
-  // ----------------------------------------
-  const validationPayload = {
-    title: formData.get("title") as string | undefined,
-    description: formData.get("description") as string | undefined,
-    location: formData.get("location") as string | undefined,
-    startDate: formData.get("startDate") as string | undefined,
-    endDate: formData.get("endDate") as string | undefined,
-    tourType: formData.get("tourType") as string | undefined,
-    division: formData.get("division") as string | undefined,
-    departureLocation: formData.get("departureLocation") as string | undefined,
-    arrivalLocation: formData.get("arrivalLocation") as string | undefined,
-    discountDate: formData.get("discountDate") as string | undefined,
-
-    costFrom: parseNumber(formData.get("costFrom")),
-    maxGuest: parseNumber(formData.get("maxGuest")),
-    minAge: parseNumber(formData.get("minAge")),
-    discountPercentage: parseNumber(formData.get("discountPercentage")),
-
-    included: formData
-      .getAll("included")
-      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
-
-    excluded: formData
-      .getAll("excluded")
-      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
-
-    amenities: formData
-      .getAll("amenities")
-      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
-
-    tourPlan: formData
-      .getAll("tourPlan")
-      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
-
-    deleteImages: formData
-      .getAll("deleteImages")
-      .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
-  };
-
-  // ----------------------------------------
-  // 2️⃣ Zod validation (if successful, proceed)
-  // ----------------------------------------
-  const validated = zodValidator(validationPayload, updateTourZodSchema);
-
-  if (!validated.success) {
-    return {
-      success: false,
-      message: "Validation failed",
-      errors: validated.errors,
+    const parseNumber = (value: FormDataEntryValue | null) => {
+        if (!value || value === "") return undefined;
+        const num = Number(value);
+        return isNaN(num) ? undefined : num;
     };
-  }
 
-  const data = validated.data;
+    // ----------------------------------------
+    // 1️⃣ Build validation payload
+    // ----------------------------------------
+    const validationPayload = {
+        title: formData.get("title") as string | undefined,
+        description: formData.get("description") as string | undefined,
+        location: formData.get("location") as string | undefined,
+        startDate: formData.get("startDate") as string | undefined,
+        endDate: formData.get("endDate") as string | undefined,
+        tourType: formData.get("tourType") as string | undefined,
+        division: formData.get("division") as string | undefined,
+        departureLocation: formData.get("departureLocation") as string | undefined,
+        arrivalLocation: formData.get("arrivalLocation") as string | undefined,
+        discountDate: formData.get("discountDate") as string | undefined,
 
-  // ✅ FIX: Conditional check for 'data'
-  if (!data) {
-    return { success: false, message: "Unexpected validation error: Data is missing." };
-  }
+        costFrom: parseNumber(formData.get("costFrom")),
+        maxGuest: parseNumber(formData.get("maxGuest")),
+        minAge: parseNumber(formData.get("minAge")),
+        discountPercentage: parseNumber(formData.get("discountPercentage")),
 
-  // ----------------------------------------
-  // 3️⃣ Normalize payload & Convert to FormData for server
-  // ----------------------------------------
-  const backendFormData = new FormData();
+        included: formData
+            .getAll("included")
+            .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
 
-  const normalizedPayload = {
-    ...data,
-    included: data.included ?? [],
-    excluded: data.excluded ?? [],
-    amenities: data.amenities ?? [],
-    tourPlan: data.tourPlan ?? [],
-    deleteImages: data.deleteImages ?? [],
-  };
+        excluded: formData
+            .getAll("excluded")
+            .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
 
+        amenities: formData
+            .getAll("amenities")
+            .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
 
-  Object.entries(normalizedPayload).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((v) => backendFormData.append(key, v));
-    } else if (value !== undefined) {
-      backendFormData.append(key, String(value));
+        tourPlan: formData
+            .getAll("tourPlan")
+            .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+
+        deleteImages: formData
+            .getAll("deleteImages")
+            .filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+    };
+
+    // ----------------------------------------
+    // 2️⃣ Zod validation
+    // ----------------------------------------
+    const validated = zodValidator(validationPayload, updateTourZodSchema);
+
+    if (!validated.success) {
+        return {
+            success: false,
+            message: "Validation failed",
+            errors: validated.errors,
+        };
     }
-  });
 
-  // ----------------------------------------
-  // 4️⃣ Append file objects
-  // ----------------------------------------
-  formData.getAll("files").forEach((file) => {
-    if (file instanceof File) backendFormData.append("files", file);
-  });
+    const data = validated.data;
 
-  // ----------------------------------------
-  // 5️⃣ Send to backend
-  // ----------------------------------------
-  try {
-    const response = await serverFetch.patch(`/tour/${id}`, {
-      body: backendFormData,
+    if (!data) {
+        return { success: false, message: "Unexpected validation error: Data is missing." };
+    }
+
+    // ----------------------------------------
+    // 3️⃣ Build FormData for backend
+    // ----------------------------------------
+    const backendFormData = new FormData();
+
+    // Add all validated fields
+    Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((v) => backendFormData.append(key, v));
+        } else if (value !== undefined && value !== null) {
+            backendFormData.append(key, String(value));
+        }
     });
 
-    if (!response.ok) {
-      let errorData = { message: `HTTP Error ${response.status}` };
-      try {
-        errorData = await response.json();
-      } catch (e) { } // Silent catch for JSON parsing failure
-      throw new Error(errorData.message);
+    // ----------------------------------------
+    // 4️⃣ ✅ FIX: Only append files if they exist
+    // ----------------------------------------
+    const files = formData.getAll("files");
+    const validFiles = files.filter((file): file is File => 
+        file instanceof File && file.size > 0
+    );
+
+    validFiles.forEach((file) => {
+        backendFormData.append("files", file);
+    });
+
+    // ----------------------------------------
+    // 5️⃣ Send to backend
+    // ----------------------------------------
+    try {
+        const response = await serverFetch.patch(`/tour/${id}`, {
+            body: backendFormData,
+        });
+
+        if (!response.ok) {
+            let errorData = { message: `HTTP Error ${response.status}` };
+            try {
+                errorData = await response.json();
+            } catch (e) {
+                console.error("Failed to parse error response:", e);
+            }
+            throw new Error(errorData.message);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error: any) {
+        console.error("❌ Update tour error:", error.message);
+
+        return {
+            success: false,
+            message: error.message || "Failed to update tour",
+        };
     }
-
-    return await response.json();
-  } catch (error: any) {
-    console.error("❌ Update tour error:", error.message);
-
-    return {
-      success: false,
-      message: error.message
-    };
-  }
 }
+
+
 
 // ---------------- DELETE TOUR ----------------
 export async function deleteTour(id: string): Promise<any> {
