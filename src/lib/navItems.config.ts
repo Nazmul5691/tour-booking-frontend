@@ -103,13 +103,19 @@ export const userNavItems: NavSection[] = [
             {
                 title: "My Bookings",
                 href: "/dashboard/my-bookings",
-                icon: "Calendar", // ✅ String
+                icon: "Calendar", 
+                roles: ["USER"] as Role[],
+            },
+            {
+                title: "Review & Ratings",
+                href: "/dashboard/review",
+                icon: "Star", 
                 roles: ["USER"] as Role[],
             },
             {
                 title: "Download Invoice",
                 href: "/dashboard/download-invoice",
-                icon: "ClipboardList", // ✅ String
+                icon: "Download",
                 roles: ["USER"] as Role[],
             },
         ],

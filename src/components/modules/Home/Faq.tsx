@@ -6,7 +6,7 @@ import FaqCard from "./FaqCard";
 
 export default function Faq() {
     return (
-        <section className="relative bg-linear-to-b from-sky-50 to-white py-10 lg:pb-0 lg:pt-15 overflow-hidden">
+        <section className="relative bg-linear-to-b from-sky-50 to-white lg:py-10 lg:pb-0 lg:pt-15 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-16">
 
                 {/* FAQ Section Heading */}

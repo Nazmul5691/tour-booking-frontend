@@ -34,25 +34,35 @@ const Milestone = () => {
                     Explore the world, your adventure starts with us!
                 </h1>
             </div> */}
-            <div className="milestone mb-7">
+            <div className="milestone mb-7 milestone flex flex-col md:flex-row justify-between md:gap-20 text-center">
                 {/* use custom css */}
-                <div>
-                    <h1><Counter endValue={50} duration={2000} resetTrigger={resetTrigger} />+</h1>
+                <div className="milestone-item">
+                    <h1 className="text-4xl md:text-5xl font-bold text-blue-700">
+                        <Counter endValue={50} duration={2000} resetTrigger={resetTrigger} />+
+                    </h1>
                     <p>Destinations Over BD</p>
                 </div>
-                <div>
-                    <h1><Counter endValue={200} duration={2000} resetTrigger={resetTrigger} />+</h1>
+                <div className="milestone-item">
+                    <h1 className="text-4xl md:text-5xl font-bold text-blue-700">
+                        <Counter endValue={200} duration={2000} resetTrigger={resetTrigger} />+
+                    </h1>
                     <p>Booking Completed</p>
                 </div>
-                <div>
-                    <h1><Counter endValue={300} duration={2000} resetTrigger={resetTrigger} />+</h1>
+                <div className="milestone-item">
+                    <h1 className="text-4xl md:text-5xl font-bold text-blue-700">
+                        <Counter endValue={300} duration={2000} resetTrigger={resetTrigger} />+
+                    </h1>
                     <p>Client Globally</p>
                 </div>
-                <div>
-                    <h1><Counter endValue={70} duration={2000} resetTrigger={resetTrigger} />+</h1>
+                <div className="milestone-item">
+                    <h1 className="text-4xl md:text-5xl font-bold text-blue-700">
+                        <Counter endValue={70} duration={2000} resetTrigger={resetTrigger} />+
+                    </h1>
                     <p>Providers Registered</p>
                 </div>
             </div>
+
+
             <div className='flex items-center justify-center pb-10'>
                 <Link href="/allTours">
                     <button className="py-2 w-[280px] h-12 px-2 hover:cursor-pointer rounded-sm  text-white bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:to-rose-600 duration-300 flex items-center justify-center overflow-hidden hover:overflow-visible relative group">
