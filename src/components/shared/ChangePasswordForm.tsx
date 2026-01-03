@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 "use client";
+
 import { changeMyPassword } from "@/services/auth/auth.service";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -34,37 +33,6 @@ export const ChangePasswordForm = () => {
     const togglePassword = (field: "old" | "new" | "confirm") => {
         setShowPassword({ ...showPassword, [field]: !showPassword[field] });
     };
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     setLoading(true);
-
-    //     try {
-    //         const form = new FormData();
-    //         form.append("oldPassword", formData.oldPassword);
-    //         form.append("newPassword", formData.newPassword);
-    //         form.append("confirmPassword", formData.confirmPassword);
-
-    //         const result = await changeMyPassword(null, form);
-
-    //         if (result.success) {
-    //             toast.success(result.message);
-
-    //             // Redirect after 1 second
-    //             setTimeout(() => {
-    //                 router.push(`/dashboard`); // Or use result.userRole to customize route
-    //             }, 500);
-    //         } else {
-    //             toast.error(result.errors?.[0]?.message || result.message || "Failed to change password");
-    //         }
-
-    //     } catch (error: any) {
-    //         toast.error(error?.message || "Something went wrong");
-    //     } finally {
-    //         setLoading(false);
-    //         setFormData({ oldPassword: "", newPassword: "", confirmPassword: "" });
-    //     }
-    // };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

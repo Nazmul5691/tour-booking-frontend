@@ -7,6 +7,8 @@ import { IsActive } from "@/types/user.interface";
 import { updateUserZodSchema } from "@/zod/user.validation";
 
 
+
+
 export async function getAllUsers(queryString?: string) {
     try {
         const response = await serverFetch.get(`/user/all-users${queryString ? `?${queryString}` : ""}`,
@@ -29,6 +31,7 @@ export async function getAllUsers(queryString?: string) {
 }
 
 
+
 export async function getSingleUserById(id: string) {
     try {
         const response = await serverFetch.get(`user/${id}`)
@@ -42,6 +45,7 @@ export async function getSingleUserById(id: string) {
         };
     }
 }
+
 
 
 export async function updateUser(id: string, _prevState: any, formData: FormData) {
@@ -89,6 +93,8 @@ export async function updateUser(id: string, _prevState: any, formData: FormData
 }
 
 
+
+
 export async function updateUserStatus(
     userId: string,
     isActive: IsActive
@@ -105,10 +111,7 @@ export async function updateUserStatus(
     }
 }
 
-/**
- * SOFT DELETE PATIENT
- * API: DELETE /patient/soft/:id
- */
+
 export async function deleteUser(id: string) {
     try {
         const response = await serverFetch.delete(`/user/${id}`)

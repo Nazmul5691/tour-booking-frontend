@@ -1,62 +1,6 @@
 
 "use client";
 
-// import { DateCell } from "@/components/shared/cell/DateCell";
-// // import { StatusBadgeCell } from "@/components/shared/cell/StatusBadgeCell";
-// import { UserInfoCell } from "@/components/shared/cell/UserInfoCell";
-// import { Column } from "@/components/shared/ManagementTable";
-// import { IUser } from "@/types/user.interface";
-
-// export const userColumns: Column<IUser>[] = [
-//   {
-//     header: "User",
-//     accessor: (user) => (
-//       <UserInfoCell
-//         name={user.name}
-//         email={user.email}
-//         photo={user.picture}
-//       />
-//     ),
-//     sortKey: "name",
-//   },
-//   {
-//     header: "Guide Status",
-//     accessor: (user) => (
-//       <div className="flex flex-col">
-//         <span className="text-sm">
-//           {user.guideStatus === "APPROVED" ? "Verified Guide" : "Normal User"}
-//         </span>
-//       </div>
-//     ),
-//   },
-//   {
-//     header: "Contact",
-//     accessor: (user) => (
-//       <div className="flex flex-col">
-//         <span className="text-sm">{user.phone}</span>
-//       </div>
-//     ),
-//   },
-//   {
-//     header: "Address",
-//     accessor: (user) => (
-//       <span className="text-sm">{user.address || "N/A"}</span>
-//     ),
-//   },
-//   // {
-//   //   header: "Status",
-//   //   accessor: (user) => <StatusBadgeCell isDeleted={user.isDeleted} />,
-//   // },
-//   {
-//     header: "Joined",
-//     accessor: (user) => <DateCell date={user.createdAt} />,
-//     sortKey: "createdAt",
-//   },
-// ];
-
-
-
-
 
 import { Column } from "@/components/shared/ManagementTable";
 import { IUser } from "@/types/user.interface";

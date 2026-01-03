@@ -6,7 +6,7 @@ const Counter = ({ endValue, duration, resetTrigger }: { endValue: number; durat
 
     useEffect(() => {
         let start = 0;
-        const increment = endValue / (duration / 16.67); // 16.67ms per frame at 60fps
+        const increment = endValue / (duration / 16.67); 
         const interval = setInterval(() => {
             start += increment;
             if (start >= endValue) {

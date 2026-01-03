@@ -1,4 +1,4 @@
-// app/guide/dashboard/page.tsx
+
 import { getUserInfo } from "@/services/auth/getUserInfo";
 import { redirect } from "next/navigation";
 import { getGuideInfo, getGuideStats } from "@/services/guide/guideStats";

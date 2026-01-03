@@ -7,14 +7,14 @@ export interface ITourType {
 }
 
 export interface ITour {
-    _id: string; // Add the unique identifier (standard for frontend data)
+    _id: string; 
     title: string;
     slug: string;
     description?: string;
-    images?: string[]; // Array of image URLs
+    images?: string[]; 
     location?: string;
     costFrom?: number;
-    // Dates are typically returned as ISO 8601 strings from the backend
+    
     startDate?: string; 
     endDate?: string; 
     departureLocation?: string;
@@ -26,16 +26,15 @@ export interface ITour {
     maxGuest?: number;
     minAge?: number;
     
-    // Foreign Key References
-    // Backend ObjectId (Types.ObjectId) is represented as string or the populated object on the frontend
+    
     division: string | IDivision; 
     tourType: string | ITourType;
-    guides?: string[] | IGuide[]; // Array of ID strings or populated guide objects
+    guides?: string[] | IGuide[]; 
     
-    // Other fields
+   
     deleteImages?: string[]; 
     averageRating?: number;
     totalReviews?: number;
-    discountDate?: string; // Stored as Date in Mongoose, retrieved as string
+    discountDate?: string; 
     discountPercentage?: number;
 }

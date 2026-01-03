@@ -37,18 +37,6 @@ const LoginForm = ({ redirect }: { redirect?: string }) => {
             <InputFieldError field="email" state={state} />
           </Field>
 
-          {/* Password */}
-          {/* <Field>
-            <FieldLabel htmlFor="password">Password</FieldLabel>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              //   required
-            />
-            <InputFieldError field="password" state={state} />
-          </Field> */}
           <Field className="relative">
             <FieldLabel htmlFor="password">Password</FieldLabel>
             <div className="relative w-full">

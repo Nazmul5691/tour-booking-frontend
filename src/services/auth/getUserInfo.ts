@@ -1,59 +1,3 @@
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// "use server"
-
-// import { serverFetch } from "@/lib/server-fetch";
-// import { IUser } from "@/types/user.interface";
-// import jwt, { JwtPayload } from "jsonwebtoken";
-// import { getCookie } from "./tokenHandlers";
-
-// export const getUserInfo = async (): Promise<IUser | any> => {
-//     let userInfo: IUser | any;
-//     try {
-
-//         const response = await serverFetch.get("/auth/me", {
-//             cache: "force-cache",
-//             next: { tags: ["user-info"] }
-//         })
-
-//         const result = await response.json();
-
-//         if (result.success) {
-//             const accessToken = await getCookie("accessToken");
-
-//             if (!accessToken) {
-//                 throw new Error("No access token found");
-//             }
-
-//             const verifiedToken = jwt.verify(accessToken, process.env.JWT_SECRET as string) as JwtPayload;
-
-//             userInfo = {
-//                 name: verifiedToken.name || "Unknown User",
-//                 email: verifiedToken.email,
-//                 role: verifiedToken.role,
-//             }
-//         }
-
-//         userInfo = {
-//             name: result.data.admin?.name || result.data.doctor?.name || result.data.user?.name || result.data.name || "Unknown User",
-//             ...result.data
-//         };
-
-
-
-//         return userInfo;
-//     } catch (error: any) {
-//         console.log(error);
-//         return {
-//             id: "",
-//             name: "Unknown User",
-//             email: "",
-//             role: "PATIENT",
-//         };
-//     }
-
-// }
-
-
 
 
 "use server";
@@ -73,7 +17,7 @@ export const getUserInfo = async (): Promise<IUser> => {
 
         const result = await response.json();
 
-        // ✅ Case 1: API returned user data properly
+        //  API returned user data properly
         if (result?.success && result?.data) {
             return {
                 name:result.data?.name ?? "Unknown User",
@@ -84,7 +28,7 @@ export const getUserInfo = async (): Promise<IUser> => {
             };
         }
 
-        // ✅ Case 2: API failed → fallback to JWT
+        //  API failed → fallback to JWT
         const accessToken = await getCookie("accessToken");
         if (!accessToken) throw new Error("No access token");
 
@@ -103,7 +47,7 @@ export const getUserInfo = async (): Promise<IUser> => {
     } catch (error) {
         console.error("getUserInfo error:", error);
 
-        // ✅ Final fallback (never breaks UI)
+        // Final fallback (never breaks UI)
         return {
             name: "Unknown User",
             email: "",

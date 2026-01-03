@@ -1,3 +1,5 @@
+"use client";
+
 import { Column } from "@/components/shared/ManagementTable";
 import { ITour } from "@/types/tour.interface";
 import { IDivision } from "@/types/division.interface";

@@ -1,4 +1,4 @@
-// import TourDetailsBanner from "../Tours/TourDetailsBanner";
+
 
 export default function BookingDetails() {
     return (

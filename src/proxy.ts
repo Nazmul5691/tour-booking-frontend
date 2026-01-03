@@ -9,7 +9,7 @@ import { Role } from './types/user.interface';
 
 
 
-// This function can be marked `async` if using `await` inside
+
 export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const hasTokenRefreshedParam = request.nextUrl.searchParams.has('tokenRefreshed');
@@ -48,7 +48,7 @@ export async function proxy(request: NextRequest) {
     }
 
     const routerOwner = getRouteOwner(pathname);
-    //path = /doctor/appointments => "DOCTOR"
+    //path = /guide/availableTours => "Guide"
     //path = /my-profile => "COMMON"
     //path = /login => null
 
@@ -73,36 +73,13 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
     }
 
-    // Rule 3 : User need password change
-
-    // if (accessToken) {
-    //     const userInfo = await getUserInfo();
-    //     if (userInfo.needPasswordChange) {
-    //         if (pathname !== "/reset-password") {
-    //             const resetPasswordUrl = new URL("/reset-password", request.url);
-    //             resetPasswordUrl.searchParams.set("redirect", pathname);
-    //             return NextResponse.redirect(resetPasswordUrl);
-    //         }
-    //         return NextResponse.next();
-    //     }
-
-    //     if (userInfo && !userInfo.needPasswordChange && pathname === '/reset-password') {
-    //         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
-    //     }
-    // }
 
     // Rule 4 : User is trying to access common protected route
     if (routerOwner === "COMMON") {
         return NextResponse.next();
     }
 
-    // Rule 5 : User is trying to access role based protected route
-    // if (routerOwner === "ADMIN" || routerOwner === "SUPER_ADMIN" ||  routerOwner === "DOCTOR" || routerOwner === "USER") {
-    //     if (userRole !== routerOwner) {
-    //         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url))
-    //     }
-    // }
-
+   
 
     // Role based protected route
     if (routerOwner === "ADMIN") {
@@ -111,9 +88,7 @@ export async function proxy(request: NextRequest) {
         }
     }
 
-    // if (routerOwner === "DOCTOR" && userRole !== "DOCTOR") {
-    //     return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));
-    // }
+    
     
     if (routerOwner === "GUIDE" && userRole !== "GUIDE") {
         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as Role), request.url));

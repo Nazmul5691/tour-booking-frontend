@@ -9,41 +9,17 @@ import { revalidateTag } from "next/cache";
 
 
 
+export type GetGuideApplicationsParams = {
+    page?: number;
+    limit?: number;
+    status?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+};
 
-// export async function getAllGuides(queryString?: string, currentUserRole?: Role, currentUserId?: string) {
-//     try {
-//         const response = await serverFetch.get(
-//             `/guide/${queryString ? `?${queryString}` : ""}`
-//         );
-//         const result = await response.json();
 
-//         if (!result.success) return result;
 
-//         // Filter users based on role
-//         let filteredData: IUser[] = result.data || [];
 
-//         filteredData = filteredData.filter((user: IUser) => {
-//             // Only show ADMIN or SUPER_ADMIN
-//             if (![Role.ADMIN, Role.SUPER_ADMIN].includes(user.role)) return false;
-
-//             // If current user is ADMIN, only show their own record
-//             if (currentUserRole === Role.ADMIN && user._id !== currentUserId) return false;
-
-//             return true;
-//         });
-
-//         return {
-//             ...result,
-//             data: filteredData,
-//         };
-//     } catch (error: any) {
-//         console.log(error);
-//         return {
-//             success: false,
-//             message: process.env.NODE_ENV === "development" ? error.message : "Something went wrong",
-//         };
-//     }
-// }
 
 
 export const getAllGuides = async (
@@ -51,8 +27,6 @@ export const getAllGuides = async (
 ) => {
     try {
 
-
-        // 2️⃣ Call backend API
         const response = await serverFetch.get(
             `/guide/${queryString ? `?${queryString}` : ""}`
         );
@@ -61,7 +35,6 @@ export const getAllGuides = async (
 
         if (!result.success) return result;
 
-        // 3️⃣ Return the guides as-is; backend already filters APPROVED guides
         return result;
     } catch (error: any) {
         console.error("Get All Guides Error:", error);
@@ -114,37 +87,11 @@ export const getSingleGuide = async (
 
 
 
-// export async function updateGuideStatus(
-//     userId: string,
-//     status: GUIDE_STATUS
-// ) {
-//     try {
-//         const response = await serverFetch.patch(`/guide/approvedStatus/${userId}`, {
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ status }),
-//         });
-//         return await response.json();
-//     } catch (error: any) {
-//         console.error(error);
-//         return { success: false, message: error.message || "Something went wrong" };
-//     }
-// }
-
-
-
-
 export async function updateGuideStatus(
     id: string,
     status: GUIDE_STATUS
 ) {
     try {
-        // if (!guideId) {
-        //     return { success: false, message: "Guide ID is required" };
-        // }
-
-        // if (!status) {
-        //     return { success: false, message: "Status is required" };
-        // }
 
         const response = await serverFetch.patch(`/guide/approvedStatus/${id}`, {
             headers: { "Content-Type": "application/json" },
@@ -179,21 +126,12 @@ export async function updateGuideStatus(
 
 
 
-
-export type GetGuideApplicationsParams = {
-    page?: number;
-    limit?: number;
-    status?: string;
-    sortBy?: string;
-    sortOrder?: "asc" | "desc";
-};
-
 export const getGuideApplications = async (
     params: GetGuideApplicationsParams = {}
 ) => {
     const searchParams = new URLSearchParams();
 
-    // ✅ Dynamically attach query params
+    // Dynamically attach query params
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             searchParams.append(key, String(value));
@@ -222,7 +160,6 @@ export const getGuideApplications = async (
 
 
 
-
 export async function updateApplicationStatusAction(
     applicationId: string,
     status: "APPROVED" | "REJECTED"
@@ -236,7 +173,7 @@ export async function updateApplicationStatusAction(
             return { success: false, message: "Status is required" };
         }
 
-        // PATCH request to backend
+        
         const response = await serverFetch.patch(
             `/guide/guide-applications/${applicationId}`,
             {

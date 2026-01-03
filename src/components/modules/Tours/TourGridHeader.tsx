@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-// Define the sort options here so the client component can use them internally
+
 export const tourSortOptions = [
     { label: "Recommended", value: "" },
     { label: "Price: low to high", value: "costFrom" },
@@ -14,14 +14,9 @@ export const tourSortOptions = [
 ];
 
 interface TourHeaderProps {
-    // countText is passed as a prop from the Server Component
     countText: string;
 }
 
-/**
- * Client component to display tour count and handle sorting functionality
- * by updating the URL search parameters.
- */
 export default function TourGridHeader({
     countText,
 }: TourHeaderProps) {

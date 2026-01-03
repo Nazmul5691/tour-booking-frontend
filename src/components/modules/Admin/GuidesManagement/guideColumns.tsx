@@ -12,7 +12,6 @@ export const GuideColumns: Column<IGuide>[] = [
         header: "Guide Name",
         accessor: (guide) =>
             typeof guide.user === "object" && guide.user !== null
-                // FIX: Add type assertion (as IUser) to resolve TS error
                 ? (guide.user as IUser).name
                 : "N/A",
     },
@@ -20,7 +19,6 @@ export const GuideColumns: Column<IGuide>[] = [
         header: "Email",
         accessor: (guide) =>
             typeof guide.user === "object" && guide.user !== null
-                // FIX: Add type assertion (as IUser) to resolve TS error
                 ? (guide.user as IUser).email
                 : "N/A",
     },
@@ -54,7 +52,6 @@ export const GuideColumns: Column<IGuide>[] = [
             <DateCell
                 date={
                     typeof guide.user === "object" && guide.user !== null
-                        // FIX: Add type assertion (as IUser) to resolve TS error
                         ? (guide.user as IUser).createdAt
                         : guide.createdAt
                 }

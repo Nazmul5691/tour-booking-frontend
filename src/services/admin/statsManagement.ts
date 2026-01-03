@@ -3,9 +3,6 @@
 
 import { serverFetch } from "@/lib/server-fetch";
 
-// ============================================
-// INTERFACES
-// ============================================
 
 export interface IUserStats {
     totalUsers: number;
@@ -84,10 +81,8 @@ export interface IPaymentStats {
     }>;
 }
 
-// ============================================
-// GET USER STATS
-// ============================================
 
+// GET USER STATS
 export async function getUserStats(): Promise<{
     success: boolean;
     message: string;
@@ -118,10 +113,9 @@ export async function getUserStats(): Promise<{
     }
 }
 
-// ============================================
-// GET TOUR STATS
-// ============================================
 
+
+// GET TOUR STATS
 export async function getTourStats(): Promise<{
     success: boolean;
     message: string;
@@ -152,10 +146,9 @@ export async function getTourStats(): Promise<{
     }
 }
 
-// ============================================
-// GET BOOKING STATS
-// ============================================
 
+
+// GET BOOKING STATS
 export async function getBookingStats(): Promise<{
     success: boolean;
     message: string;
@@ -186,10 +179,9 @@ export async function getBookingStats(): Promise<{
     }
 }
 
-// ============================================
-// GET PAYMENT STATS
-// ============================================
 
+
+// GET PAYMENT STATS
 export async function getPaymentStats(): Promise<{
     success: boolean;
     message: string;
@@ -220,10 +212,10 @@ export async function getPaymentStats(): Promise<{
     }
 }
 
-// ============================================
-// GET ALL STATS (Combined)
-// ============================================
 
+
+
+// GET ALL STATS 
 export async function getAllStats() {
     const [userStats, tourStats, bookingStats, paymentStats] = await Promise.all([
         getUserStats(),

@@ -20,7 +20,7 @@ export default function GetAvailableTours({ guideInfo }: any) {
                 const tour = await getTourById(id);
                 if (!tour) continue;
 
-                // FIXED: now returns correct object
+                
                 const tourType = tour.tourType
                     ? await getTourTypeById(tour.tourType._id)
                     : null;

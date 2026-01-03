@@ -10,7 +10,8 @@ import {
     getMyBookings,
 } from "@/services/booking/bookingService";
 
-// Define interfaces specifically for this component
+
+
 interface IPayment {
     _id: string;
     status: string;
@@ -24,7 +25,7 @@ interface ITour {
     title: string;
     slug: string;
     location: string;
-    startDate?: string; // Make it optional since it might not always be present
+    startDate?: string; 
 }
 
 interface IBooking {
@@ -86,7 +87,6 @@ export default function InvoiceDownload() {
             const invoiceUrl = await getInvoiceDownloadUrl(paymentId);
 
             if (invoiceUrl) {
-                // Open invoice in new tab
                 window.open(invoiceUrl, "_blank");
                 toast.success("Invoice opened successfully");
             } else {

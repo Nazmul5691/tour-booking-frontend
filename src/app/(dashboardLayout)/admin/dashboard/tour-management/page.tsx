@@ -1,4 +1,4 @@
-// app/admin/dashboard/tour-management/page.tsx
+
 import TourFilters from "@/components/modules/Admin/TourManagement/TourFilters";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Suspense } from "react";

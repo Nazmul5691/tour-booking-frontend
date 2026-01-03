@@ -16,7 +16,7 @@ type PageProps = {
 };
 
 export default async function TourApplicationForm({ params }: PageProps) {
-    const { id } = await params; // ✅ IMPORTANT
+    const { id } = await params; 
 
     console.log("✅ Current id Received:", id);
 

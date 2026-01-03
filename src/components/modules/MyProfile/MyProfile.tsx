@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-
-
 "use client";
 
 import { useState, useTransition } from "react";
@@ -37,50 +33,6 @@ const MyProfile = ({ userInfo }: MyProfileProps) => {
   //   }
   // };
 
-  // const wrappedUpdateUser = async (formData: FormData) => {
-  //   formData.append("id", userInfo._id as string);
-
-  //   // Reset messages
-  //   setError(null);
-  //   setSuccess(null);
-
-  //   startTransition(async () => {
-  //     try {
-  //       const result = await updateUser(null, formData);
-
-  //       if (result?.success) {
-  //         setSuccess("✅ Profile updated successfully!");
-  //         setPreviewImage(null);
-  //         router.refresh();
-  //       } else {
-  //         setError("Something went wrong during the update process.");
-  //       }
-  //     } catch (err: any) {
-  //       // Extract error message
-  //       const errorMessage = err.message || "Something went wrong. Please try again.";
-
-  //       // Map backend errors to user-friendly messages
-  //       if (errorMessage.includes("phone number is already taken")) {
-  //         setError("⚠️ This phone number is already registered. Please use a different phone number.");
-  //       } else if (errorMessage.includes("Phone number must be valid for Bangladesh")) {
-  //         setError("📱 Please enter a valid Bangladesh phone number (Format: 01XXXXXXXXX or +8801XXXXXXXXX)");
-  //       } else if (errorMessage.includes("Name too short")) {
-  //         setError("✏️ Name must be at least 2 characters long.");
-  //       } else if (errorMessage.includes("Name too long")) {
-  //         setError("✏️ Name cannot exceed 50 characters.");
-  //       } else if (errorMessage.includes("Address cannot exceed")) {
-  //         setError("📍 Address cannot exceed 200 characters.");
-  //       } else if (errorMessage.includes("not authorized")) {
-  //         setError("🔒 You don't have permission to perform this action.");
-  //       } else if (errorMessage.includes("User not found")) {
-  //         setError("❌ User not found.");
-  //       } else {
-  //         // Show the original error message for unhandled cases
-  //         setError(errorMessage);
-  //       }
-  //     }
-  //   });
-  // };
 
   const wrappedUpdateUser = async (formData: FormData) => {
     formData.append("id", userInfo._id as string);
@@ -102,7 +54,7 @@ const MyProfile = ({ userInfo }: MyProfileProps) => {
       } catch (err: any) {
         const errorMessage = err.message || "Something went wrong. Please try again.";
 
-        // This will now properly match the Zod error message
+        
         if (errorMessage.includes("Phone number must be valid for Bangladesh")) {
           setError("📱 Please enter a valid Bangladesh phone number (Format: 01XXXXXXXXX or +8801XXXXXXXXX)");
         } else if (errorMessage.includes("phone number is already taken")) {
@@ -118,7 +70,6 @@ const MyProfile = ({ userInfo }: MyProfileProps) => {
         } else if (errorMessage.includes("User not found")) {
           setError("❌ User not found.");
         } else {
-          // Show the original error message
           setError(errorMessage);
         }
       }

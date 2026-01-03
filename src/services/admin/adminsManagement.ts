@@ -6,71 +6,9 @@ import { zodValidator } from "@/lib/zodValidator";
 import { IsActive, IUser, Role } from "@/types/user.interface";
 import { createAdminZodSchema, updateAdminZodSchema } from "@/zod/admin.validation";
 
-/**
- * CREATE ADMIN
- * API: POST /user/create-admin
- */
-// export async function createAdmin(_prevState: any, formData: FormData) {
-//     // Build validation payload
-//     const validationPayload = {
-//         name: formData.get("name") as string,
-//         email: formData.get("email") as string,
-//         contactNumber: formData.get("contactNumber") as string,
-//         password: formData.get("password") as string,
-//         profilePhoto: formData.get("file") as File,
-//     };
 
-//     const validatedPayload = zodValidator(validationPayload, createAdminZodSchema);
-
-//     if (!validatedPayload.success && validatedPayload.errors) {
-//         return {
-//             success: validatedPayload.success,
-//             message: "Validation failed",
-//             formData: validationPayload,
-//             errors: validatedPayload.errors,
-//         }
-//     }
-
-//     if (!validatedPayload.data) {
-//         return {
-//             success: false,
-//             message: "Validation failed",
-//             formData: validationPayload,
-//         }
-//     }
-//     const backendPayload = {
-//         password: validatedPayload.data.password,
-//         admin: {
-//             name: validatedPayload.data.name,
-//             email: validatedPayload.data.email,
-//             contactNumber: validatedPayload.data.contactNumber,
-//             password: validatedPayload.data.password,
-//         }
-//     };
-//     const newFormData = new FormData()
-//     newFormData.append("data", JSON.stringify(backendPayload))
-//     newFormData.append("file", formData.get("file") as Blob)
-//     try {
-
-
-//         const response = await serverFetch.post("/user/create-admin", {
-//             body: newFormData,
-//         });
-
-//         const result = await response.json();
-//         return result;
-//     } catch (error: any) {
-//         console.error("Create admin error:", error);
-//         return {
-//             success: false,
-//             message: process.env.NODE_ENV === 'development' ? error.message : 'Failed to create admin',
-//             formData: validationPayload
-//         };
-//     }
-// }
 
 export const createAdmin = async (payload: Partial<IUser>) => {
-    // 1️⃣ Validate input
     const validation = zodValidator(payload, createAdminZodSchema);
 
     if (!validation.success || !validation.data) {
@@ -83,7 +21,7 @@ export const createAdmin = async (payload: Partial<IUser>) => {
     }
 
     try {
-        // 2️⃣ Send JSON directly to backend
+        
         const response = await serverFetch.post("/user/create-admin", {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(validation.data),
@@ -104,24 +42,6 @@ export const createAdmin = async (payload: Partial<IUser>) => {
         };
     }
 };
-/**
- * GET ALL ADMINS
- * API: GET /admin?queryParams
- */
-// export async function getAdmins(queryString?: string) {
-//     try {
-//         const response = await serverFetch.get(`/user/all-users/${queryString ? `?${queryString}` : ""}`);
-//         const result = await response.json();
-//         return result;
-//     } catch (error: any) {
-//         console.log(error);
-//         return {
-//             success: false,
-//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-//         };
-//     }
-// }
-
 
 
 
@@ -179,6 +99,8 @@ export async function getAdminById(id: string) {
     }
 }
 
+
+
 /**
  * UPDATE ADMIN
  * API: PATCH /admin/:id
@@ -188,23 +110,6 @@ export async function updateAdmin(id: string, _prevState: any, formData: FormDat
         name: formData.get("name") as string,
         contactNumber: formData.get("contactNumber") as string,
     };
-
-    /*
-    // Server-side validation
-        const validation = updateAdminZodSchema.safeParse(validationPayload);
-        if (!validation.success) {
-            const errors = validation.error.issues.map((err: any) => ({
-                field: err.path[0] as string,
-                message: err.message,
-            }));
-            return {
-                success: false,
-                message: "Validation failed",
-                formData: validationPayload,
-                errors,
-            };
-        }
-    */
 
     const validation = zodValidator(validationPayload, updateAdminZodSchema);
     if (!validation.success && validation.errors) {
@@ -241,6 +146,8 @@ export async function updateAdmin(id: string, _prevState: any, formData: FormDat
     }
 }
 
+
+
 /**
  * SOFT DELETE ADMIN
  * API: DELETE /admin/soft/:id
@@ -258,6 +165,8 @@ export async function softDeleteAdmin(id: string) {
         };
     }
 }
+
+
 
 /**
  * HARD DELETE ADMIN
@@ -277,13 +186,14 @@ export async function softDeleteAdmin(id: string) {
 //     }
 // }
 
+
+
 export const deleteAdmin = async (id: string) => {
     try {
-        // Call backend route
         const response = await serverFetch.delete(`/user/${id}`);
         const result = await response.json();
 
-        return result; // { success, message, data: null }
+        return result; 
     } catch (error: any) {
         console.error("Delete admin error:", error);
         return {

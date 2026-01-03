@@ -1,57 +1,9 @@
-// import Link from 'next/link';
-
-// function PublicFooter() {
-//   return (
-//     <footer className="border-t bg-background">
-//       <div className="container mx-auto px-4 py-8">
-//         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-//           <div>
-//             <h3 className="font-bold mb-2">PH Doc</h3>
-//             <p className="text-sm text-muted-foreground">Your health is our priority. We are here to provide the best medical services.</p>
-//           </div>
-//           <div>
-//             <h3 className="font-semibold mb-2">Quick Links</h3>
-//             <ul className="space-y-2 text-sm">
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Home</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">About Us</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Services</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
-//             </ul>
-//           </div>
-//           <div>
-//             <h3 className="font-semibold mb-2">Support</h3>
-//             <ul className="space-y-2 text-sm">
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Help Center</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
-//               <li><Link href="#" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
-//             </ul>
-//           </div>
-//           <div>
-//             <h3 className="font-semibold mb-2">Contact Us</h3>
-//             <p className="text-sm text-muted-foreground">
-//               123 Medical Lane<br />
-//               Health City, HC 12345<br />
-//               contact@phdoc.com
-//             </p>
-//           </div>
-//         </div>
-//         <div className="mt-8 border-t pt-4 text-center text-sm text-muted-foreground">
-//           &copy; {new Date().getFullYear()} PH Doc. All Rights Reserved.
-//         </div>
-//       </div>
-//     </footer>
-//   );
-// }
-// export default PublicFooter;
 
 
+import Image from "next/image"; 
+import Link from "next/link"; 
 
-import Image from "next/image"; // 1. Import Next.js Image component
-import Link from "next/link"; // For better routing context
 
-// Helper Component for Footer Columns
-// Assuming this component uses TypeScript based on the original prompt
 interface FooterColumnProps {
   title: string;
   links: string[];
@@ -77,7 +29,7 @@ function FooterColumn({ title, links }: FooterColumnProps) {
   );
 }
 
-// Main Footer Component (Default: Server Component in Next.js)
+
 export default function Footer() {
   const socialLinks = [
     {
@@ -108,11 +60,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Branding */}
           <div>
-            <Image // 2. Changed <img> to <Image>
+            <Image 
               src="/images/dream-tour.png"
               alt="Dream Tour Logo"
-              width={100} // Added required width
-              height={48} // Added required height (based on h-12, assuming standard ratio)
+              width={100} 
+              height={48} 
               className="h-12 w-auto"
             />
 
@@ -171,11 +123,9 @@ export default function Footer() {
 
         {/* Footer Image at the end */}
         <div className="mt-8">
-          <Image // 3. Changed <img> to <Image>
+          <Image 
             src="/images/footer-img.png"
             alt="Footer Decoration"
-            // Since this is full-width, use fill or explicit large dimensions.
-            // Using explicit large width/height for static footer image:
             width={1200} 
             height={300}
             className="w-full h-auto object-cover"

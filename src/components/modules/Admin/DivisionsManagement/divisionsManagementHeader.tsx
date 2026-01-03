@@ -1,8 +1,4 @@
 
-
-
-
-
 "use client";
 
 import ManagementPageHeader from "@/components/shared/ManagementPageHeader";

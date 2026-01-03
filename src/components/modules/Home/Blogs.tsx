@@ -51,7 +51,7 @@ export default function Blogs() {
         },
     ];
 
-    // Function to truncate description to first 12 words
+    
     const truncateDescription = (text: string, words = 12) => {
         const wordArray = text.split(" ");
         if (wordArray.length <= words) return text;

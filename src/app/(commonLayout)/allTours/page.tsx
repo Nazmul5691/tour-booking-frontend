@@ -10,7 +10,6 @@ import { getAllDivisions } from "@/services/admin/divisionsManagement";
 import { getAllTours, getAllTourTypes } from "@/services/admin/tourManagement";
 import { getUserInfo } from "@/services/auth/getUserInfo";
 import { Suspense } from "react";
-// Import the options definition from the client component to reuse the array
 
 
 const AllToursPage = async ({

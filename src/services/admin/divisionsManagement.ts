@@ -8,13 +8,12 @@ import { createDivisionZodSchema } from "@/zod/division.validation";
 
 
 export async function createDivision(_prevState: any, formData: FormData) {
-    // ✅ Build validation payload (NO FILE HERE)
     const validationPayload = {
         name: formData.get("name") as string,
         description: formData.get("description") as string | undefined,
     };
 
-    // ✅ Zod validation
+    
     const validatedPayload = zodValidator(
         validationPayload,
         createDivisionZodSchema
@@ -37,7 +36,7 @@ export async function createDivision(_prevState: any, formData: FormData) {
         };
     }
 
-    // ✅ Build FormData for backend (multer compatible)
+    
     const backendFormData = new FormData();
     backendFormData.append("name", validatedPayload.data.name);
 

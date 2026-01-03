@@ -14,6 +14,8 @@ export interface IGuideStats {
     availableTours: number;
 }
 
+
+
 export async function getGuideStats(): Promise<{
     success: boolean;
     message: string;
@@ -43,6 +45,9 @@ export async function getGuideStats(): Promise<{
         };
     }
 }
+
+
+
 
 export async function getGuideInfo(): Promise<any> {
     try {

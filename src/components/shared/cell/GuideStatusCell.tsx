@@ -1,95 +1,5 @@
 
 
-
-// "use client";
-
-// import { useRouter } from "next/navigation";
-// import { useTransition, useState } from "react";
-// import { toast } from "sonner";
-// import { GUIDE_STATUS, IGuide } from "@/types/guide.interface";
-// import { updateGuideStatus } from "@/services/admin/guideManagement";
-// import clsx from "clsx";
-
-// import {
-//     Tooltip,
-//     TooltipContent,
-//     TooltipProvider,
-//     TooltipTrigger,
-// } from "@/components/ui/tooltip";
-
-// interface Props {
-//     user: IGuide;
-// }
-
-// export default function GuideStatusCell({ user }: Props) {
-//     const router = useRouter();
-//     const [, startTransition] = useTransition();
-//     const [loading, setLoading] = useState(false);
-
-//     const handleToggleStatus = async () => {
-//         try {
-//             setLoading(true);
-
-//             const newStatus =
-//                 user.status === GUIDE_STATUS.APPROVED
-//                     ? GUIDE_STATUS.REJECTED
-//                     : GUIDE_STATUS.APPROVED;
-
-//             const result = await updateGuideStatus(user._id!, newStatus);
-
-//             if (result.success) {
-//                 toast.success(
-//                     newStatus === GUIDE_STATUS.APPROVED
-//                         ? "Guide verified"
-//                         : "Guide blocked"
-//                 );
-//                 startTransition(() => router.refresh());
-//             } else {
-//                 toast.error(result.message);
-//             }
-//         } catch {
-//             toast.error("Failed to update guide status");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     const tooltipText =
-//         user.status === GUIDE_STATUS.APPROVED
-//             ? "Click to block this guide"
-//             : "Click to verify this guide";
-
-//     return (
-//         <TooltipProvider>
-//             <Tooltip>
-//                 <TooltipTrigger asChild>
-//                     <span
-//                         onClick={handleToggleStatus}
-//                         className={clsx(
-//                             "cursor-pointer font-semibold px-3 py-1 rounded-full text-xs inline-block",
-//                             loading && "opacity-50 pointer-events-none",
-//                             user.status === GUIDE_STATUS.APPROVED
-//                                 ? "bg-green-100 text-green-700"
-//                                 : "bg-red-100 text-red-700"
-//                         )}
-//                     >
-//                         {loading
-//                             ? "Updating..."
-//                             : user.status === GUIDE_STATUS.APPROVED
-//                                 ? "VERIFIED"
-//                                 : "BLOCKED"}
-//                     </span>
-//                 </TooltipTrigger>
-
-//                 <TooltipContent side="top" align="center">
-//                     <span className="text-xs">{tooltipText}</span>
-//                 </TooltipContent>
-//             </Tooltip>
-//         </TooltipProvider>
-//     );
-// }
-
-
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -123,7 +33,7 @@ export default function GuideStatusCell({ user }: Props) {
             case GUIDE_STATUS.APPROVED:
                 return GUIDE_STATUS.REJECTED;
             case GUIDE_STATUS.REJECTED:
-                return GUIDE_STATUS.APPROVED; // You can also go to PENDING if needed
+                return GUIDE_STATUS.APPROVED; 
             default:
                 return GUIDE_STATUS.PENDING;
         }

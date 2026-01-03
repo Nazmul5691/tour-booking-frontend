@@ -15,7 +15,7 @@ import { IUser, Role } from "@/types/user.interface";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function updateMyProfile(formData: FormData) {
     try {
-        // Create a new FormData with the data property
+        
         const uploadFormData = new FormData();
 
         // Get all form fields except the file
@@ -52,12 +52,14 @@ export async function updateMyProfile(formData: FormData) {
     }
 }
 
+
+
 // Reset Password
 export async function resetPassword(_prevState: any, formData: FormData) {
 
     const redirectTo = formData.get('redirect') || null;
 
-    // Build validation payload
+    
     const validationPayload = {
         newPassword: formData.get("newPassword") as string,
         confirmPassword: formData.get("confirmPassword") as string,
@@ -136,61 +138,8 @@ export async function resetPassword(_prevState: any, formData: FormData) {
 }
 
 
-// export async function forgetPassword(_prevState: any, formData: FormData) {
-//     try {
-//         const email = formData.get("email") as string;
 
-//         // Validate email
-//         const validated = zodValidator({ email }, forgotPasswordSchema);
-//         if (!validated.success && validated.errors) {
-//             return {
-//                 success: false,
-//                 message: "Validation failed",
-//                 formData: { email },
-//                 errors: validated.errors,
-//             };
-//         }
-
-//         // Call backend API
-//         const res = await serverFetch.post("/auth/forgot-password", {
-//             body: JSON.stringify({ email }),
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//         });
-
-//         const result = await res.json();
-
-//         if (!result.success) {
-//             return {
-//                 success: false,
-//                 message: result.message || "Failed to send reset link",
-//                 formData: { email },
-//             };
-//         }
-
-//         return {
-//             success: true,
-//             message: result.message || "Reset link sent successfully",
-//         };
-//     } catch (error: any) {
-//         return {
-//             success: false,
-//             message:
-//                 process.env.NODE_ENV === "development"
-//                     ? error.message
-//                     : "Something went wrong",
-//             formData: { email: formData.get("email") as string },
-//         };
-//     }
-// }
-
-
-
-
-/**
- * Forget Password server action
- */
+ // Forget Password 
 export async function forgetPassword(_prevState: any, formData: FormData) {
     try {
         const email = (formData.get("email") as string) || "";
@@ -207,7 +156,7 @@ export async function forgetPassword(_prevState: any, formData: FormData) {
             };
         }
 
-        // Call backend API
+       
         const res = await serverFetch.post("/auth/forgot-password", {
             body: JSON.stringify({ email }),
             headers: {
@@ -251,7 +200,7 @@ export async function forgotPasswordReset(_prevState: any, formData: FormData) {
         confirmPassword: formData.get("confirmPassword") as string,
     };
 
-    // Validate
+    
     const validated = zodValidator(
         { newPassword: payload.newPassword, confirmPassword: payload.confirmPassword },
         resetPasswordSchema
@@ -266,7 +215,7 @@ export async function forgotPasswordReset(_prevState: any, formData: FormData) {
         };
     }
 
-    // Call backend
+    
     const res = await serverFetch.post("/auth/forgot-password-reset", {
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },
@@ -275,6 +224,8 @@ export async function forgotPasswordReset(_prevState: any, formData: FormData) {
     const result = await res.json();
     return result;
 }
+
+
 
 
 export async function getNewAccessToken() {

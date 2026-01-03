@@ -1,4 +1,4 @@
-// app/my-bookings/page.tsx
+
 
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Suspense } from "react";
@@ -15,7 +15,7 @@ const MyBookingsPage = async ({
   const searchParamsObj = await searchParams;
   const queryString = queryStringFormatter(searchParamsObj);
 
-  // ✅ USE getMyBookings HERE
+ 
   const bookingsRes = await getMyBookings(queryString);
   const bookings = bookingsRes?.data ?? [];
   const meta = bookingsRes?.meta;

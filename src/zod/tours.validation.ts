@@ -26,6 +26,7 @@ export const createTourZodSchema = z.object({
     // files will be handled separately via FormData
 });
 
+
 // ---------------- UPDATE TOUR ----------------
 export const updateTourZodSchema = z.object({
     title: z.string().optional(),

@@ -9,22 +9,22 @@ import { Button } from "./ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "./ui/field";
 import { Input } from "./ui/input";
 import { registerUser } from "@/services/auth/registerUser";
-import { Eye, EyeOff } from "lucide-react"; // ShadCN uses lucide-react for icons
+import { Eye, EyeOff } from "lucide-react"; 
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false); // toggle password
+  const [showPassword, setShowPassword] = useState(false); 
   const [state, formAction, isPending] = useActionState(registerUser, null);
 
-  // Show toast for server-side errors
+  
   useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
-      if (state.values) setFormData(state.values); // restore values
+      if (state.values) setFormData(state.values); 
     }
   }, [state]);
 
-  // Handle input change
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -75,7 +75,7 @@ const RegisterForm = () => {
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={handleChange}
-                className="pr-10" // space for the icon
+                className="pr-10" 
               />
               <button
                 type="button"

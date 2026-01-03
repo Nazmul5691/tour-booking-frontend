@@ -1,7 +1,7 @@
-import HeartbeatLoader from "@/components/shared/HearbeatLoader";
+import TourLoader from "@/components/shared/TourLoader";
 
 const GlobalLoading = () => {
-  return <HeartbeatLoader />;
+  return <TourLoader variant="compass" text="Loading amazing tours..." />;
 };
 
 export default GlobalLoading;

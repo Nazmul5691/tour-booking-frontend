@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import type { JSX } from "react/jsx-runtime";
 import Image from "next/image";
 
-// ✅ Card type definition
+
 interface Card {
     id: number;
     title: string;
@@ -14,7 +14,7 @@ interface Card {
     rating: number;
 }
 
-// ✅ Sample Data
+
 const cards: Card[] = [
     {
         id: 1,
@@ -77,7 +77,7 @@ export default function Carousel(): JSX.Element {
     const prevCard = () =>
         setCurrentIndex((prev) => (prev - 1 + totalCards) % totalCards);
 
-    // 🌀 Card positioning style logic
+    
     const getCardStyle = (index: number): CSSProperties => {
         const distance = index - currentIndex;
         const sign = Math.sign(distance);
