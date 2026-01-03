@@ -1,3 +1,138 @@
+// "use client";
+
+// import { ChevronLeft, ChevronRight } from "lucide-react";
+// import { useRouter, useSearchParams } from "next/navigation";
+// import { useTransition } from "react";
+// import { Button } from "../ui/button";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "../ui/select";
+
+// interface TablePaginationProps {
+//   currentPage: number;
+//   totalPages: number;
+// }
+
+// const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
+//   const router = useRouter();
+//   const [isPending, startTransition] = useTransition();
+//   const searchParams = useSearchParams();
+
+//   const navigateToPage = (newPage: number) => {
+//     const params = new URLSearchParams(searchParams.toString());
+//     params.set("page", newPage.toString());
+
+//     startTransition(() => {
+//       router.push(`?${params.toString()}`);
+//     });
+//   };
+
+//   const changeLimit = (newLimit: string) => {
+//     const params = new URLSearchParams(searchParams.toString());
+//     params.set("limit", newLimit);
+//     params.set("page", "1"); // Reset to first page when changing limit
+
+//     startTransition(() => {
+//       router.push(`?${params.toString()}`);
+//     });
+//   };
+
+//   const currentLimit = searchParams.get("limit") || "10";
+
+//   // if (totalPages <= 1) {
+//   //   return null;
+//   // }
+
+//   return (
+//     <div className="flex items-center justify-center gap-2">
+//       <Button
+//         variant="outline"
+//         size="sm"
+//         onClick={() => navigateToPage(currentPage - 1)}
+//         disabled={currentPage <= 1 || isPending}
+//       >
+//         <ChevronLeft className="h-4 w-4 mr-1" />
+//         Previous
+//       </Button>
+
+//       <div className="flex items-center gap-1">
+//         {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+//           let pageNumber;
+
+//           if (totalPages <= 5) {
+//             pageNumber = index + 1;
+//           } else if (currentPage <= 3) {
+//             pageNumber = index + 1;
+//           } else if (currentPage >= totalPages - 2) {
+//             pageNumber = totalPages - 4 + index;
+//           } else {
+//             pageNumber = currentPage - 2 + index;
+//           }
+//           return (
+//             <Button
+//               key={pageNumber}
+//               variant={pageNumber === currentPage ? "default" : "outline"}
+//               size="sm"
+//               onClick={() => navigateToPage(pageNumber)}
+//               disabled={isPending}
+//               className="w-10"
+//             >
+//               {pageNumber}
+//             </Button>
+//           );
+//         })}
+//       </div>
+
+//       <Button
+//         variant="outline"
+//         size="sm"
+//         onClick={() => navigateToPage(currentPage + 1)}
+//         disabled={currentPage === totalPages || isPending}
+//       >
+//         Next
+//         <ChevronRight className="h-4 w-4 ml-1" />
+//       </Button>
+
+//       <span className="text-sm text-muted-foreground ml-2">
+//         {/* Page 9 of 20 */}
+//         Page {currentPage} of {totalPages}
+//       </span>
+
+//       {/* Items per page selector */}
+//       <div className="flex items-center gap-2">
+//         <span className="text-sm text-muted-foreground">Items per page:</span>
+//         <Select
+//           value={currentLimit}
+//           onValueChange={changeLimit}
+//           disabled={isPending}
+//         >
+//           <SelectTrigger className="w-[70px] h-8">
+//             <SelectValue />
+//           </SelectTrigger>
+//           <SelectContent>
+//             <SelectItem value="1">1</SelectItem>
+//             <SelectItem value="5">5</SelectItem>
+//             <SelectItem value="10">10</SelectItem>
+//             <SelectItem value="20">20</SelectItem>
+//             <SelectItem value="50">50</SelectItem>
+//             <SelectItem value="100">100</SelectItem>
+//           </SelectContent>
+//         </Select>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TablePagination;
+
+
+
+
+
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -48,80 +183,94 @@ const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
   // }
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigateToPage(currentPage - 1)}
-        disabled={currentPage <= 1 || isPending}
-      >
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        Previous
-      </Button>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2">
+      {/* Navigation controls */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigateToPage(currentPage - 1)}
+          disabled={currentPage <= 1 || isPending}
+          className="sm:flex"
+        >
+          <ChevronLeft className="h-4 w-4 sm:mr-1" />
+          <span className="hidden sm:inline">Previous</span>
+        </Button>
 
-      <div className="flex items-center gap-1">
-        {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
-          let pageNumber;
+        {/* Page numbers - show fewer on mobile */}
+        <div className="flex items-center gap-1">
+          {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+            let pageNumber;
 
-          if (totalPages <= 5) {
-            pageNumber = index + 1;
-          } else if (currentPage <= 3) {
-            pageNumber = index + 1;
-          } else if (currentPage >= totalPages - 2) {
-            pageNumber = totalPages - 4 + index;
-          } else {
-            pageNumber = currentPage - 2 + index;
-          }
-          return (
-            <Button
-              key={pageNumber}
-              variant={pageNumber === currentPage ? "default" : "outline"}
-              size="sm"
-              onClick={() => navigateToPage(pageNumber)}
-              disabled={isPending}
-              className="w-10"
-            >
-              {pageNumber}
-            </Button>
-          );
-        })}
+            if (totalPages <= 5) {
+              pageNumber = index + 1;
+            } else if (currentPage <= 3) {
+              pageNumber = index + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNumber = totalPages - 4 + index;
+            } else {
+              pageNumber = currentPage - 2 + index;
+            }
+            
+            // On mobile, only show current page and adjacent pages
+            const shouldShowOnMobile = Math.abs(pageNumber - currentPage) <= 1;
+            
+            return (
+              <Button
+                key={pageNumber}
+                variant={pageNumber === currentPage ? "default" : "outline"}
+                size="sm"
+                onClick={() => navigateToPage(pageNumber)}
+                disabled={isPending}
+                className={`w-10 ${!shouldShowOnMobile ? 'hidden sm:flex' : ''}`}
+              >
+                {pageNumber}
+              </Button>
+            );
+          })}
+        </div>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigateToPage(currentPage + 1)}
+          disabled={currentPage === totalPages || isPending}
+          className="sm:flex"
+        >
+          <span className="hidden sm:inline">Next</span>
+          <ChevronRight className="h-4 w-4 sm:ml-1" />
+        </Button>
       </div>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => navigateToPage(currentPage + 1)}
-        disabled={currentPage === totalPages || isPending}
-      >
-        Next
-        <ChevronRight className="h-4 w-4 ml-1" />
-      </Button>
+      {/* Page info and items per page */}
+      <div className="flex items-center gap-2 sm:gap-2">
+        <span className="text-sm text-muted-foreground sm:ml-2">
+          Page {currentPage} of {totalPages}
+        </span>
 
-      <span className="text-sm text-muted-foreground ml-2">
-        {/* Page 9 of 20 */}
-        Page {currentPage} of {totalPages}
-      </span>
-
-      {/* Items per page selector */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
-        <Select
-          value={currentLimit}
-          onValueChange={changeLimit}
-          disabled={isPending}
-        >
-          <SelectTrigger className="w-[70px] h-8">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">1</SelectItem>
-            <SelectItem value="5">5</SelectItem>
-            <SelectItem value="10">10</SelectItem>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Items per page selector */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground hidden sm:inline">
+            Items per page:
+          </span>
+          <Select
+            value={currentLimit}
+            onValueChange={changeLimit}
+            disabled={isPending}
+          >
+            <SelectTrigger className="w-[70px] h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="5">5</SelectItem>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );

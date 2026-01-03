@@ -260,8 +260,8 @@ const PublicNavbar = () => {
             <Link
               href={getDefaultDashboardRoute(role)}
               className={`py-1.5 font-medium transition-colors ${pathname.startsWith("/dashboard")
-                  ? "text-yellow-400"
-                  : "text-white/90 hover:text-yellow-400"
+                ? "text-yellow-400"
+                : "text-white/90 hover:text-yellow-400"
                 }`}
             >
               Dashboard
@@ -316,9 +316,16 @@ const PublicNavbar = () => {
                 )}
 
                 <div className="border-t pt-4 flex flex-col space-y-4">
-                  <Link href="/login" className="text-lg font-medium">
+                  {/* <Link href="/login" className="text-lg font-medium">
                     <Button>Login</Button>
-                  </Link>
+                  </Link> */}
+                  {accessToken ? (
+                    <LogoutButton />
+                  ) : (
+                    <Link href="/login" className="text-lg font-medium">
+                      <Button>Login</Button>
+                    </Link>
+                  )}
                 </div>
               </nav>
             </SheetContent>
