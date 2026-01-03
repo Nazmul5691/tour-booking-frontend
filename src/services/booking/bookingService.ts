@@ -436,6 +436,7 @@ export interface IBooking {
     companyEarning?: number;
     createdAt?: string;
     updatedAt?: string;
+    hasReview?: boolean;
 }
 
 export interface IBookingMeta {

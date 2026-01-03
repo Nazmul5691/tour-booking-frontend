@@ -1,3 +1,5 @@
+// review main page
+
 import Review from "@/components/modules/Review/ReviewPage";
 
 export default function ReviewPage() {

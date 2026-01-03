@@ -235,20 +235,45 @@ export default function Review() {
     fetchPendingReviews();
   }, []);
 
+  // const fetchPendingReviews = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await getMyBookings();
+      
+  //     // Ensure we extract the array correctly
+  //     const allBookings: IBooking[] = response?.data || [];
+
+  //     // 2. Filter using IBooking type to resolve the overload mismatch
+  //     const completedBookings = allBookings.filter((booking: IBooking) => 
+  //       booking.status === "COMPLETE" && !booking.hasReview
+  //     );
+
+  //     // 3. Cast to Booking[] for the state (since they are now compatible)
+  //     setBookings(completedBookings as Booking[]);
+  //   } catch (error) {
+  //     console.error("Error fetching bookings:", error);
+  //     toast.error("Failed to load bookings");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchPendingReviews = async () => {
     try {
       setLoading(true);
       const response = await getMyBookings();
       
-      // Ensure we extract the array correctly
+      console.log("All bookings:", response?.data); // ✅ Debug log
+      
       const allBookings: IBooking[] = response?.data || [];
 
-      // 2. Filter using IBooking type to resolve the overload mismatch
+      // ✅ Filter COMPLETE bookings WITHOUT reviews
       const completedBookings = allBookings.filter((booking: IBooking) => 
         booking.status === "COMPLETE" && !booking.hasReview
       );
 
-      // 3. Cast to Booking[] for the state (since they are now compatible)
+      console.log("Completed bookings without reviews:", completedBookings); // ✅ Debug log
+
       setBookings(completedBookings as Booking[]);
     } catch (error) {
       console.error("Error fetching bookings:", error);
