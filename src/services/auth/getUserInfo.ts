@@ -11,7 +11,7 @@ import { GUIDE_STATUS } from "@/types/guide.interface";
 export const getUserInfo = async (): Promise<IUser> => {
     try {
         const response = await serverFetch.get("/user/me", {
-            cache: "force-cache",
+            cache: "no-store",
             next: { tags: ["user-info"] },
         });
 

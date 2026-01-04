@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,8 +33,10 @@ export default function RootLayout({
       >
         {children}
         <Toaster position="bottom-right" richColors />
-        <LoginSuccessToast />
-        <LogoutSuccessToast />
+        <Suspense fallback={null}>
+          <LoginSuccessToast />
+          <LogoutSuccessToast />
+        </Suspense>
       </body>
     </html>
   );
