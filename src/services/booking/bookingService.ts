@@ -213,7 +213,29 @@ export async function cancelBooking(id: string): Promise<any> {
 
 
 // GET INVOICE DOWNLOAD URL
-export async function getInvoiceDownloadUrl(paymentId: string): Promise<any> {
+// export async function getInvoiceDownloadUrl(paymentId: string): Promise<any> {
+//     try {
+//         const response = await serverFetch.get(`/payment/invoice/${paymentId}`);
+
+//         if (!response.ok) {
+//             const errorData = await response.json();
+//             throw new Error(errorData.message || "Failed to get invoice");
+//         }
+
+//         const result = await response.json();
+//         return result.data;
+//     } catch (error: any) {
+//         console.error("Get invoice error:", error);
+//         return {
+//             success: false,
+//             message: process.env.NODE_ENV === "development"
+//                 ? error.message
+//                 : "Failed to get invoice",
+//         };
+//     }
+// }
+
+export async function getInvoiceDownloadUrl(paymentId: string): Promise<string | null> {
     try {
         const response = await serverFetch.get(`/payment/invoice/${paymentId}`);
 
@@ -223,15 +245,20 @@ export async function getInvoiceDownloadUrl(paymentId: string): Promise<any> {
         }
 
         const result = await response.json();
-        return result.data;
+        
+        // Handle string or object response
+        if (typeof result.data === 'string') {
+            return result.data;
+        }
+        
+        if (result.data?.invoiceUrl) {
+            return result.data.invoiceUrl;
+        }
+        
+        return null;
     } catch (error: any) {
         console.error("Get invoice error:", error);
-        return {
-            success: false,
-            message: process.env.NODE_ENV === "development"
-                ? error.message
-                : "Failed to get invoice",
-        };
+        throw error;
     }
 }
 

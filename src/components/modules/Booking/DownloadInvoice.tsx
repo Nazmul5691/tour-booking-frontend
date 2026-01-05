@@ -5,8 +5,8 @@
 import { useEffect, useState } from "react";
 import { Download, FileText, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { 
-    getInvoiceDownloadUrl, 
+import {
+    getInvoiceDownloadUrl,
     getMyBookings,
 } from "@/services/booking/bookingService";
 
@@ -25,7 +25,7 @@ interface ITour {
     title: string;
     slug: string;
     location: string;
-    startDate?: string; 
+    startDate?: string;
 }
 
 interface IBooking {
@@ -63,12 +63,12 @@ export default function InvoiceDownload() {
         try {
             setLoading(true);
             const response = await getMyBookings();
-            
+
             if (response.success && response.data) {
                 // Filter only COMPLETE bookings with PAID payments
                 const paidBookings = response.data.filter(
-                    (booking) => 
-                        booking.status === "COMPLETE" && 
+                    (booking) =>
+                        booking.status === "COMPLETE" &&
                         (booking.payment as any)?.status === "PAID"
                 );
                 setBookings(paidBookings as unknown as IBooking[]);
@@ -81,24 +81,45 @@ export default function InvoiceDownload() {
         }
     };
 
+    // const handleDownloadInvoice = async (paymentId: string, tourTitle: string) => {
+    //     try {
+    //         setDownloadingId(paymentId);
+    //         const invoiceUrl = await getInvoiceDownloadUrl(paymentId);
+
+    //         if (invoiceUrl) {
+    //             window.open(invoiceUrl, "_blank");
+    //             toast.success("Invoice opened successfully");
+    //         } else {
+    //             toast.error("Invoice URL not found");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error downloading invoice:", error);
+    //         toast.error("Failed to download invoice");
+    //     } finally {
+    //         setDownloadingId(null);
+    //     }
+    // };
+
     const handleDownloadInvoice = async (paymentId: string, tourTitle: string) => {
         try {
             setDownloadingId(paymentId);
             const invoiceUrl = await getInvoiceDownloadUrl(paymentId);
 
             if (invoiceUrl) {
+                console.log("Opening invoice URL:", invoiceUrl); // Debug log
                 window.open(invoiceUrl, "_blank");
                 toast.success("Invoice opened successfully");
             } else {
                 toast.error("Invoice URL not found");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error downloading invoice:", error);
-            toast.error("Failed to download invoice");
+            toast.error(error.message || "Failed to download invoice");
         } finally {
             setDownloadingId(null);
         }
     };
+
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return "N/A";
