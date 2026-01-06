@@ -7,6 +7,7 @@ import ToursTable from "@/components/modules/Admin/TourManagement/tourTable";
 import { getAllDivisions } from "@/services/admin/divisionsManagement";
 import { queryStringFormatter } from "@/lib/formatters";
 import TourManagementHeader from "@/components/modules/Admin/TourManagement/toursManagementHeader";
+import TablePagination from "@/components/shared/TablePagination";
 
 const AdminTourManagementPage = async ({
   searchParams,
@@ -25,6 +26,10 @@ const AdminTourManagementPage = async ({
   const tourTypes = tourTypesRes?.data ?? [];
 
 
+   const totalPages = Math.ceil(
+    (toursRes?.meta?.total || 1) / (toursRes?.meta?.limit || 1)
+  );
+
 
   return (
     <div className="space-y-6">
@@ -36,6 +41,10 @@ const AdminTourManagementPage = async ({
       
       <Suspense fallback={<TableSkeleton columns={5} rows={10} />}>
         <ToursTable tours={tours} divisions={divisions} tourTypes={tourTypes} />
+         <TablePagination
+                  currentPage={toursRes?.meta?.page || 1}
+                  totalPages={totalPages || 1}
+                />
       </Suspense>
     </div>
   );
