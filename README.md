@@ -1,36 +1,251 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌏 Dream Tour — Tour Booking Platform (Bangladesh)
 
-## Getting Started
+A modern, scalable, and role-based **tour booking web application** built with **Next.js App Router**, designed specifically for exploring and booking tours across **Bangladesh** 🇧🇩.
 
-First, run the development server:
+Dream Tour provides a smooth experience for **travelers**, **tour guides**, and **administrators**, with clean UI, protected dashboards, secure online payments, and a transparent **review & rating system**.
+
+---
+
+## 🚀 Project Overview
+
+**Dream Tour** is a full-featured tour booking frontend that allows users to:
+
+- Browse tours across Bangladesh
+- View detailed tour pages
+- Book tours securely
+- Complete payments via **SSLCommerz**
+- Submit reviews & ratings after tours
+- Manage bookings, payments, and reviews
+- Apply as a tour guide
+- Access role-based dashboards (User, Guide, Admin)
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend Core
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+
+### UI & Styling
+- Tailwind CSS v4
+- Radix UI
+- Lucide Icons
+- Framer Motion
+- Sonner (Toast notifications)
+
+### Forms & Validation
+- React Hook Form
+- Zod
+
+### Utilities & Integrations
+- JWT (Authentication handling)
+- SSLCommerz (Payment Gateway – Bangladesh)
+- Date-fns
+- React Leaflet (Maps)
+
+---
+
+## 💳 Payment System (SSLCommerz)
+
+Dream Tour integrates **SSLCommerz**, the most widely used payment gateway in Bangladesh, for secure online payments.
+
+### Payment Features
+- Secure tour booking payments
+- Redirect-based checkout flow
+- Payment success, failure, and cancel handling
+- Backend payment verification support
+- Seamless user experience
+
+### Payment Routes
+- `/dashboard/payment-success`
+- `/dashboard/payment-fail`
+- `/dashboard/payment-cancel`
+
+---
+
+## ⭐ Review & Rating System
+
+Dream Tour includes a **verified review & rating system** to ensure transparency and trust.
+
+### Review Features
+- Only **booked users** can submit reviews
+- Star-based rating system
+- Review submission from user dashboard
+- Reviews displayed on tour details page
+- Prevents duplicate reviews for the same booking
+
+### Review Routes
+- `/dashboard/review`
+- `/tours/[slug]` (public review display)
+
+---
+
+## 👥 User Roles
+
+| Role | Description |
+|-----|------------|
+| USER | Browse tours, book tours, pay online, submit reviews & manage bookings |
+| GUIDE | Apply for tours, manage guide applications |
+| ADMIN | Manage users, guides, tours, divisions, tour types, and reviews |
+| SUPER_ADMIN | Same as Admin with extended permissions |
+
+---
+
+## 🗂 Folder Structure (Simplified)
+
+```txt
+src/
+├── app/
+│   ├── (commonLayout)
+│   ├── (dashboardLayout)
+│   │   ├── (commonProtectedLayout)
+│   │   ├── (userDashboardLayout)
+│   │   │   ├── my-bookings
+│   │   │   ├── review
+│   │   │   ├── payment-success
+│   │   │   ├── payment-fail
+│   │   │   └── payment-cancel
+│   │   └── admin/
+│   ├── auth/
+│   ├── allTours/
+│   ├── tours/[slug]/
+│   ├── bookTour/
+│   ├── about-us/
+│   ├── contact-us/
+│   ├── error.tsx
+│   ├── not-found.tsx
+│   └── layout.tsx
+│
+├── components/
+│   ├── modules/
+│   ├── shared/
+│   └── ui/
+│
+├── hooks/
+├── lib/
+│   ├── auth-utils.ts
+│   ├── jwtHandlers.ts
+│   ├── serverFetch.ts
+│   ├── navItems.config.ts
+│   └── formatters.ts
+│
+├── services/
+│   ├── admin/
+│   ├── auth/
+│   ├── booking/
+│   ├── guide/
+│   ├── review/
+│   └── user/
+│
+├── zod/
+│   ├── auth.validation.ts
+│   ├── booking.validation.ts
+│   ├── division.validation.ts
+│   ├── tours.validation.ts
+│   ├── review.validation.ts
+│   └── user.validation.ts
+│
+├── types/
+└── proxy.ts
+```
+
+---
+
+## 🔐 Authentication & Route Protection
+
+- JWT-based authentication
+- Access & refresh token handling
+- Secure cookie-based auth
+- Auto token refresh
+- Role-based route protection
+
+All routing and auth rules are handled centrally via:
+
+```ts
+src/proxy.ts
+```
+
+---
+
+## 🧭 Role-Based Navigation
+
+Navigation menus are generated dynamically based on user roles:
+
+- **Common**: Dashboard, Profile
+- **User**: My Bookings, Reviews, Download Invoice
+- **Guide**: Available Tours, Applications
+- **Admin**: User, Guide, Tour, Division & Tour Type Management
+
+Configuration file:
+```ts
+lib/navItems.config.ts
+```
+
+---
+
+## 📦 Key Features
+
+### 🌍 Public
+- Tour listing
+- Dynamic tour details
+- Public reviews & ratings
+- About & Contact pages
+
+### 👤 User Dashboard
+- Tour booking
+- SSLCommerz payment
+- Booking history
+- Reviews & ratings management
+- Invoice download
+- Profile & password management
+
+### 🧑‍✈️ Guide Dashboard
+- Available tours
+- Guide applications
+- Profile management
+
+### 🛠 Admin Dashboard
+- Admin management
+- User management
+- Guide management
+- Tour management
+- Division management
+- Tour type management
+- Review moderation
+
+---
+
+## ⚙️ Scripts
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run start
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛡 Architecture Principles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- App Router–first architecture
+- Feature-based component separation
+- Clean service layer
+- Centralized auth, payment & review flow
+- Role-based UI enforcement
+- Scalable dashboard layouts
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📝 License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+MIT License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 👤 Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Developed by **Md. Nazmul Islam**  
+Frontend Engineer | MERN & Next.js Developer
