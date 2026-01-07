@@ -25,7 +25,6 @@ Dream Tour provides a smooth experience for **travelers**, **tour guides**, and 
 
 ### Frontend Core
 - Next.js 16 (App Router)
-- React 19
 - TypeScript
 
 ### UI & Styling
@@ -73,7 +72,6 @@ Dream Tour includes a **verified review & rating system** to ensure transparency
 - Only **booked users** can submit reviews
 - Star-based rating system
 - Review submission from user dashboard
-- Reviews displayed on tour details page
 - Prevents duplicate reviews for the same booking
 
 ### Review Routes
@@ -248,4 +246,4 @@ MIT License
 ## 👤 Author
 
 Developed by **Md. Nazmul Islam**  
-Frontend Engineer | MERN & Next.js Developer
+
