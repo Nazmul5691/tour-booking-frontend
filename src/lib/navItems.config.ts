@@ -12,6 +12,11 @@ export const getCommonNavItems = (role: Role): NavSection[] => {
         {
             items: [
                 {
+                    title: "Home",
+                    href: `/`,
+                    icon: "Home"
+                },
+                {
                     title: "Dashboard",
                     href: defaultDashboard,
                     icon: "LayoutDashboard",
