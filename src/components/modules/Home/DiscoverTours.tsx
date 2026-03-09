@@ -9,6 +9,7 @@ import { MapPin, Calendar, Users, Clock, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import TourSkeleton from "./TourSkeleton";
 
 export default function DiscoverTours() {
 
@@ -28,14 +29,16 @@ export default function DiscoverTours() {
     }, []);
 
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-[60vh] text-lg text-muted-foreground">
-                Loading tours...
-            </div>
-        );
-    }
-
+    // if (loading) {
+    //     return (
+    //         <div className="flex items-center justify-center h-[60vh] text-lg text-muted-foreground">
+    //             Loading tours...
+    //         </div>
+    //     );
+    // }
+    
+    if(loading) return <TourSkeleton />
+ 
     // Helper function to calculate duration in days
     const calculateDays = (start: string, end: string) => {
         const startDate = new Date(start);
