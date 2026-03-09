@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { Suspense } from "react";
+import TourChatBot from "@/components/shared/TourChatBot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
           <LoginSuccessToast />
           <LogoutSuccessToast />
         </Suspense>
+         <TourChatBot />
       </body>
     </html>
   );
