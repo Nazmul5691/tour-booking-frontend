@@ -17,12 +17,14 @@ export default function StartAdventure() {
                     <p className="text-white/90 max-w-md">
                         Let us help you create the perfect journey. Our travel experts are ready to craft your dream vacation.
                     </p>
-                    <Button
-                        variant="secondary"
-                        className="bg-white text-orange-600 hover:cursor-pointer hover:bg-orange-100 rounded-full px-6 py-2 font-semibold"
-                    >
-                        Explore Tours
-                    </Button>
+                    <a href="/allTours">
+                        <Button
+                            variant="secondary"
+                            className="bg-white text-orange-600 hover:cursor-pointer hover:bg-orange-100 rounded-full px-6 py-2 font-semibold"
+                        >
+                            Explore Tours
+                        </Button>
+                    </a>
                 </div>
 
                 {/* Right Image */}

@@ -163,7 +163,7 @@ export default function DiscoverTours() {
 
                                 {/* CTA Button - always at bottom */}
                                 <Link href={`/allTours/tours/${tour.slug}`} className="block mt-auto pt-4">
-                                    <Button className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group/btn">
+                                    <Button className="w-full bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 hover:from-yellow-500 hover:via-orange-600 hover:to-pink-600 text-white font-bold px-8 py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 text-base">
                                         <span>Explore This Tour</span>
                                         <ArrowRight size={18} className="ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                                     </Button>

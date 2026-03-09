@@ -4,7 +4,7 @@ export default function TourBanner() {
             className="relative flex items-center justify-center min-h-[400px] bg-cover bg-center bg-no-repeat"
             style={{
                 backgroundImage:
-                    "url('https://res.cloudinary.com/dh3ej57qw/image/upload/v1755101202/srercee5tp-1755101202176-image3-jpg.jpg')",
+                    "url('https://res.cloudinary.com/dh3ej57qw/image/upload/v1755550046/yk3e6ljk32i-1755550039409-image3-jpg.jpg')",
             }}
         >
             {/* Overlay */}
@@ -22,13 +22,17 @@ export default function TourBanner() {
                     experiences — all curated just for you by <span className="text-xl bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 bg-clip-text text-transparent">Dream Tour</span>.
                 </p>
 
-                <div className="mt-6">
+                {/* <div className="mt-6">
                     <a
-                        href="/destination"
                         className="inline-block px-6 py-3 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:from-yellow-500 hover:to-rose-600 transition-all duration-300"
                     >
-                        Explore Destinations
+                        Plan Your Adventure
                     </a>
+                </div> */}
+                <div className="mt-6">
+                    <button className="px-6 py-3 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:from-yellow-500 hover:to-rose-600 transition-all duration-300 cursor-pointer">
+                        Plan Your Adventure
+                    </button>
                 </div>
             </div>
         </section>
