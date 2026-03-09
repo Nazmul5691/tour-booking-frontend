@@ -44,7 +44,7 @@ export default function HeroSection() {
             className="relative flex items-center pt-10 lg:pt-0 justify-center min-h-screen bg-cover bg-center bg-no-repeat"
             style={{
                 backgroundImage:
-                    "url('https://res.cloudinary.com/dh3ej57qw/image/upload/v1755101202/srercee5tp-1755101202176-image3-jpg.jpg')",
+                    "url('https://res.cloudinary.com/dh3ej57qw/image/upload/v1755550046/yk3e6ljk32i-1755550039409-image3-jpg.jpg')",
             }}
         >
             <div className="absolute inset-0 bg-black/60" />
