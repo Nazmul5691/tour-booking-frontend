@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { getAllTours } from "@/services/admin/tourManagement";
@@ -10,7 +11,7 @@ interface Message {
     text: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const buildSystemPrompt = (tours: any[]) => {
     const tourList = tours
         .map(
@@ -56,7 +57,6 @@ export default function TourChatBot() {
     ]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [tours, setTours] = useState<any[]>([]);
     const [toursLoading, setToursLoading] = useState(false);
     const bottomRef = useRef<HTMLDivElement>(null);
@@ -105,12 +105,13 @@ export default function TourChatBot() {
                 ...prev,
                 { role: "assistant", text: result.data as string },
             ]);
-        } catch {
+        } catch (error: any) {
             setMessages((prev) => [
                 ...prev,
                 {
                     role: "assistant",
-                    text: "⚠️ Something went wrong. Please try again later.",
+                    // text: "⚠️ Something went wrong. Please try again later.",
+                    text: `⚠️ Error: ${error.message}`,
                 },
             ]);
         } finally {
@@ -176,11 +177,10 @@ export default function TourChatBot() {
                                 className={`flex items-end gap-2 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                             >
                                 <div
-                                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                                        msg.role === "assistant"
+                                    className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.role === "assistant"
                                             ? "bg-linear-to-r from-yellow-400 to-orange-500"
                                             : "bg-gray-300"
-                                    }`}
+                                        }`}
                                 >
                                     {msg.role === "assistant" ? (
                                         <Bot className="w-4 h-4 text-white" />
@@ -190,11 +190,10 @@ export default function TourChatBot() {
                                 </div>
 
                                 <div
-                                    className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                                        msg.role === "assistant"
+                                    className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === "assistant"
                                             ? "bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-sm"
                                             : "bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white rounded-tr-sm"
-                                    }`}
+                                        }`}
                                 >
                                     {msg.text}
                                 </div>
