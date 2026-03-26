@@ -23,10 +23,10 @@ export default function TourGridHeader({
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // 1. Read current sort value from URL
+    
     const currentSort = searchParams.get("sort") || "";
 
-    // 2. Function to update the URL with new search parameters
+   
     const createQueryString = useCallback(
         (name: string, value: string) => {
             const params = new URLSearchParams(searchParams.toString());
@@ -41,7 +41,7 @@ export default function TourGridHeader({
         [searchParams]
     );
 
-    // 3. Handlers
+    
     const handleSortChange = (value: string) => {
         const queryString = createQueryString("sort", value);
         router.push(`?${queryString}`);

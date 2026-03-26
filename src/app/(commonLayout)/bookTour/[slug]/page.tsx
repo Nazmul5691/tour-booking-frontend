@@ -16,7 +16,7 @@ const BookingDetailsPage = async ({ params }: { params: Promise<{ slug: string }
         user = userRes || null;
     } catch (err) {
         console.log("User not logged in", err);
-        user = null; // if 404, just set null
+        user = null; 
     }
 
     const [tourRes, tourTypesRes, divisionsRes] = await Promise.all([

@@ -46,23 +46,7 @@ export default function LocationMapClient({ locationName }: Props) {
     });
 
     return (
-        // <MapContainer
-        //     center={position}
-        //     zoom={11}
-        //     scrollWheelZoom={false}
-        //     className="h-64 w-full rounded-xl overflow-hidden"
-        // >
-        //     <TileLayer
-        //         attribution='&copy; OpenStreetMap'
-        //         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        //     />
-        //     <Marker position={position} icon={customIcon}>
-        //         <Popup>{locationName}</Popup>
-        //         <Tooltip permanent direction="top">
-        //             {locationName}
-        //         </Tooltip>
-        //     </Marker>
-        // </MapContainer>
+       
         <MapContainer
             center={position}
             zoom={11}

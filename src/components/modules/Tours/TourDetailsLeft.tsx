@@ -116,7 +116,7 @@ export default function TourDetailsLeft({ tour, tourTypes, divisions }: TourDeta
                 </div>
             </div>
 
-            {/* Gallery - Removed since images are now shown at top */}
+           
             
             {/* Location Map */}
             <div className="bg-gray-100 p-5 rounded-md">

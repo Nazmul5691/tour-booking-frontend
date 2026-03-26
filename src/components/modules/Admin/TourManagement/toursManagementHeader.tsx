@@ -19,7 +19,7 @@ const TourManagementHeader = ({ divisions, tourTypes }: Props) => {
     // onSuccess callback passed to the dialog
     const handleSuccess = () => {
         console.log("Tour created/updated successfully!");
-        // Optionally trigger table refresh if needed
+       
     };
 
     return (

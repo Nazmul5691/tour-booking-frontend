@@ -37,7 +37,6 @@ export default function ApplicationForTourGuide({ getGuideApplicationForTour }: 
 
     const handleStatusChange = (id: string, status: "APPROVED" | "REJECTED") => {
         startTransition(() => {
-            // NOTE: You might want to add error handling/toasts here if updateApplicationStatusAction doesn't handle them internally
             updateApplicationStatusAction(id, status);
         });
     };

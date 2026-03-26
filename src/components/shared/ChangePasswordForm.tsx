@@ -64,7 +64,7 @@ export const ChangePasswordForm = () => {
             toast.error(error?.message || "Something went wrong");
         } finally {
             setLoading(false);
-            // Removed the setFormData call from here
+            // Removed the setFormData call from here to prevent clearing the form on error
         }
     };
 

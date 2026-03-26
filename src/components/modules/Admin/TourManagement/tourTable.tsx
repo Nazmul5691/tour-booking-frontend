@@ -55,14 +55,11 @@ const ToursTable = ({ tours, divisions, tourTypes }: Props) => {
       />
 
       <TourFormDialog
-        // 🚀 FIX: Pass the 'open' and 'onClose' props to control the dialog
         open={!!edit}
         onClose={() => setEdit(null)}
         onSuccess={refresh}
-        // 🚀 FIX: Rename the prop from 'tour' to 'initialTourData'
         initialTourData={edit ?? undefined}
         allDivisions={divisions}
-        // Pass tourTypes as required by the updated props
         tourTypes={tourTypes}
       />
 

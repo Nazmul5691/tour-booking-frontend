@@ -212,28 +212,7 @@ export async function cancelBooking(id: string): Promise<any> {
 }
 
 
-// GET INVOICE DOWNLOAD URL
-// export async function getInvoiceDownloadUrl(paymentId: string): Promise<any> {
-//     try {
-//         const response = await serverFetch.get(`/payment/invoice/${paymentId}`);
 
-//         if (!response.ok) {
-//             const errorData = await response.json();
-//             throw new Error(errorData.message || "Failed to get invoice");
-//         }
-
-//         const result = await response.json();
-//         return result.data;
-//     } catch (error: any) {
-//         console.error("Get invoice error:", error);
-//         return {
-//             success: false,
-//             message: process.env.NODE_ENV === "development"
-//                 ? error.message
-//                 : "Failed to get invoice",
-//         };
-//     }
-// }
 
 export async function getInvoiceDownloadUrl(paymentId: string): Promise<string | null> {
     try {

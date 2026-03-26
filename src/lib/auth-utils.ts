@@ -4,7 +4,7 @@
 
 import { Role } from "@/types/user.interface";
 
-//   patterns: [/^\/dashboard/, /^\/patient/], // Routes starting with /dashboard/* /patient/*
+//   patterns: [/^\/dashboard/, /^\/user/], // Routes starting with /dashboard/* /user/*
 export type RouteConfig = {
     exact: string[],
     patterns: RegExp[],
@@ -17,22 +17,12 @@ export const commonProtectedRoutes: RouteConfig = {
     patterns: [], // [/password/change-password, /password/reset-password => /password/*]
 }
 
-export const doctorProtectedRoutes: RouteConfig = {
-    patterns: [/^\/doctor/], // Routes starting with /doctor/* , /assitants, /appointments/*
-    exact: [], // "/assistants"
-}
 
 export const adminProtectedRoutes: RouteConfig = {
     patterns: [/^\/admin/, /^\/superadmin/], // Routes starting with /admin/*
     exact: [], // "/admins"
 }
 
-// export const patientProtectedRoutes: RouteConfig = {
-//     patterns: [
-//         /^\/dashboard/,
-//     ],  // Routes starting with /dashboard/*
-//     exact: [], // "/dashboard"
-// }
 
 
 export const userProtectedRoutes: RouteConfig = {

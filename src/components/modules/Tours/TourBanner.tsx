@@ -22,13 +22,7 @@ export default function TourBanner() {
                     experiences — all curated just for you by <span className="text-xl bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 bg-clip-text text-transparent">Dream Tour</span>.
                 </p>
 
-                {/* <div className="mt-6">
-                    <a
-                        className="inline-block px-6 py-3 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:from-yellow-500 hover:to-rose-600 transition-all duration-300"
-                    >
-                        Plan Your Adventure
-                    </a>
-                </div> */}
+                
                 <div className="mt-6">
                     <button className="px-6 py-3 bg-linear-to-r from-yellow-400 via-orange-500 to-pink-500 text-white font-semibold rounded-full shadow-lg hover:from-yellow-500 hover:to-rose-600 transition-all duration-300 cursor-pointer">
                         Plan Your Adventure

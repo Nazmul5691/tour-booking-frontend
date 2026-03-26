@@ -81,24 +81,7 @@ export default function InvoiceDownload() {
         }
     };
 
-    // const handleDownloadInvoice = async (paymentId: string, tourTitle: string) => {
-    //     try {
-    //         setDownloadingId(paymentId);
-    //         const invoiceUrl = await getInvoiceDownloadUrl(paymentId);
-
-    //         if (invoiceUrl) {
-    //             window.open(invoiceUrl, "_blank");
-    //             toast.success("Invoice opened successfully");
-    //         } else {
-    //             toast.error("Invoice URL not found");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error downloading invoice:", error);
-    //         toast.error("Failed to download invoice");
-    //     } finally {
-    //         setDownloadingId(null);
-    //     }
-    // };
+    
 
     const handleDownloadInvoice = async (paymentId: string, tourTitle: string) => {
         try {

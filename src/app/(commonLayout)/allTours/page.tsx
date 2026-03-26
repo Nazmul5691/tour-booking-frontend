@@ -22,7 +22,7 @@ const AllToursPage = async ({
   const user = await getUserInfo();
   // console.log(user);
 
-  // Fetch tours, types, and divisions in parallel
+  
   const [toursResponse, tourTypesResponse, divisionsResponse] = await Promise.all([
     getAllTours(queryString),
     getAllTourTypes(),
@@ -34,10 +34,10 @@ const AllToursPage = async ({
   const divisions = divisionsResponse?.data || [];
   const totalTours = toursResponse?.meta?.total || 0;
 
-  // Logic for Tour Count Header Text (Server-side calculation)
+  
   const isFiltered = !!searchParamsObj.division || !!searchParamsObj.tourType || !!searchParamsObj.searchTerm;
 
-  // Check if the current request has a sort parameter applied
+  
   const isSorted = !!searchParamsObj.sort;
   const isFilteredOrSorted = isFiltered || isSorted;
 
@@ -72,10 +72,10 @@ const AllToursPage = async ({
 
           <div className="col-span-12 md:col-span-9">
 
-            {/* Header: Tour Count + Sort By (Client Component handles interaction) */}
+           
             <TourGridHeader
               countText={countText}
-            // Sort logic is now internal to TourGridHeader.tsx
+            
             />
 
             {/* tour grid */}

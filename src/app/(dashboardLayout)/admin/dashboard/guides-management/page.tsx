@@ -1,8 +1,4 @@
 
-
-
-
-
 import ApplicationForTourGuide from "@/components/modules/Admin/GuidesManagement/applicationForTourGuide";
 import GuideFilter from "@/components/modules/Admin/GuidesManagement/guideFilter";
 import GuideTable from "@/components/modules/Admin/GuidesManagement/guideTable";

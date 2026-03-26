@@ -14,7 +14,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime, getInitials } from "@/lib/formatters";
 import { IGuide } from "@/types/guide.interface";
-// Assuming you have IUser defined in a types file
 import { IUser } from "@/types/user.interface";
 import { Mail, Phone, User } from "lucide-react";
 

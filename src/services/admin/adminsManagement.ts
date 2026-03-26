@@ -168,24 +168,6 @@ export async function softDeleteAdmin(id: string) {
 
 
 
-/**
- * HARD DELETE ADMIN
- * API: DELETE /admin/:id
- */
-// export async function deleteAdmin(id: string) {
-//     try {
-//         const response = await serverFetch.delete(`/admin/${id}`)
-//         const result = await response.json();
-//         return result;
-//     } catch (error: any) {
-//         console.log(error);
-//         return {
-//             success: false,
-//             message: `${process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'}`
-//         };
-//     }
-// }
-
 
 
 export const deleteAdmin = async (id: string) => {

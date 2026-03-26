@@ -4,7 +4,6 @@ import { Column } from "@/components/shared/ManagementTable";
 import { DateCell } from "@/components/shared/cell/DateCell";
 import GuideStatusCell from "@/components/shared/cell/GuideStatusCell";
 import { IGuide } from "@/types/guide.interface";
-// Assuming you have IUser defined in a types file
 import { IUser } from "@/types/user.interface";
 
 export const GuideColumns: Column<IGuide>[] = [
