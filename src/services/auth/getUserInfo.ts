@@ -6,11 +6,10 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { getCookie } from "./tokenHandlers";
 import { GUIDE_STATUS } from "@/types/guide.interface";
 
-export const getUserInfo = async (): Promise<IUser | null> => {  // ✅ null return করতে পারবে
+export const getUserInfo = async (): Promise<IUser | null> => {
     try {
-        // ✅ আগে token আছে কিনা চেক করো
         const accessToken = await getCookie("accessToken");
-        if (!accessToken) return null; // ← login নেই, null দাও
+        if (!accessToken) return null; // ✅ token নেই মানে login নেই
 
         const response = await serverFetch.get("/user/me", {
             cache: "no-store",
@@ -45,7 +44,7 @@ export const getUserInfo = async (): Promise<IUser | null> => {  // ✅ null ret
 
     } catch (error) {
         console.error("getUserInfo error:", error);
-        return null; // ✅ error হলে null — dummy object না
+        return null; // ✅ error হলে null
     }
 };
 

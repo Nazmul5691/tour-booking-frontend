@@ -7,7 +7,7 @@ import { IUser } from "@/types/user.interface";
 interface TourGridProps {
   tours: ITour[];
   tourTypes: ITourType[];
-  user: IUser
+  user: IUser | null;
 }
 
 export default function TourGrid({ tours, tourTypes, user }: TourGridProps) {
