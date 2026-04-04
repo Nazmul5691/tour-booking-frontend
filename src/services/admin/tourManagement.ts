@@ -145,8 +145,11 @@ export async function getAllTours(queryString?: string): Promise<any> {
   try {
     const response = await serverFetch.get(
       `/tour${queryString ? `?${queryString}` : ""}`,
+      // {
+      //   cache: "no-store", 
+      // }
       {
-        cache: "no-store", 
+        cache: "force-cache", 
       }
     );
     const result = await response.json();

@@ -8,8 +8,10 @@ import HeroSection from "@/components/modules/Home/HeroSection";
 import Milestone from "@/components/modules/Home/Milestone";
 import ParallaxSection from "@/components/modules/Home/ParallaxSection";
 import StartAdventure from "@/components/modules/Home/StartAdventure";
+import TourSkeleton from "@/components/modules/Home/TourSkeleton";
 import WhyBookWithUs from "@/components/modules/Home/WhyBookWithUs";
 import Head from "next/head";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -23,18 +25,21 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <main>
         <HeroSection />
         <div className="bg-gray-100">
-          <DiscoverTours />
+          <Suspense fallback={<TourSkeleton />}>
+            <DiscoverTours />
+          </Suspense>
         </div>
+
         <Carousel />
         <WhyBookWithUs />
         <Milestone />
         <ParallaxSection />
         <Faq />
-        
+
         <StartAdventure />
       </main>
     </>
