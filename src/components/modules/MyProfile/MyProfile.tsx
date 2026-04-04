@@ -14,7 +14,7 @@ import { IUser } from "@/types/user.interface";
 import { getInitials } from "@/lib/formatters";
 
 interface MyProfileProps {
-  userInfo: IUser;
+  userInfo: IUser | null;
 }
 
 const MyProfile = ({ userInfo }: MyProfileProps) => {
