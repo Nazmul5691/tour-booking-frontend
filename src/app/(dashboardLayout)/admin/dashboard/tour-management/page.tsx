@@ -1,4 +1,4 @@
-
+export const dynamic = "force-dynamic";
 import TourFilters from "@/components/modules/Admin/TourManagement/TourFilters";
 import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { Suspense } from "react";

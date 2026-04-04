@@ -1,4 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { ChangePasswordForm } from "@/components/shared/ChangePasswordForm";
+
+
 
 const ChangePasswordPage = () => {
   return (
