@@ -6,6 +6,7 @@ import GuideDashboard from "@/components/modules/Guide/GuideDashboard";
 
 export default async function GuideDashboardPage() {
     const userInfo = await getUserInfo();
+    if (!userInfo) redirect("/login");
 
     // Check if user is a guide
     if (userInfo.role !== "GUIDE" || userInfo.guideStatus !== "APPROVED") {

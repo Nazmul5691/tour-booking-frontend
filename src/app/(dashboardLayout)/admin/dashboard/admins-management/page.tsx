@@ -6,6 +6,7 @@ import { TableSkeleton } from "@/components/shared/TableSkeleton";
 import { queryStringFormatter } from "@/lib/formatters";
 import { getAdmins } from "@/services/admin/adminsManagement";
 import { getUserInfo } from "@/services/auth/getUserInfo";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 const AdminAdminsManagementPage = async ({
@@ -17,6 +18,7 @@ const AdminAdminsManagementPage = async ({
   const queryString = queryStringFormatter(searchParamsObj);
   const adminsResult = await getAdmins(queryString);
   const loggedInUser = await getUserInfo();
+  if (!loggedInUser) redirect("/login");
   const loggedInUserRole = loggedInUser.role;
 
   const totalPages = Math.ceil(
