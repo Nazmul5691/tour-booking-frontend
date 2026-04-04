@@ -9,7 +9,7 @@ import { GUIDE_STATUS } from "@/types/guide.interface";
 export const getUserInfo = async (): Promise<IUser | null> => {
     try {
         const accessToken = await getCookie("accessToken");
-        if (!accessToken) return null; // ✅ token নেই মানে login নেই
+        if (!accessToken) return null; 
 
         const response = await serverFetch.get("/user/me", {
             cache: "no-store",
@@ -44,7 +44,7 @@ export const getUserInfo = async (): Promise<IUser | null> => {
 
     } catch (error) {
         console.error("getUserInfo error:", error);
-        return null; // ✅ error হলে null
+        return null; 
     }
 };
 
